@@ -50,7 +50,7 @@ class ModelRenderer {
 
       // 3. 加载抖音官方AR-Three库（强制使用，不支持原生Three.js）
       try {
-        const { getThree, ARThree } = require('../../miniprogram_npm/@douyin-microapp/microapp-ar-three/three');
+        const { getThree, ARThree } = require('../../miniprogram_npm/@douyin-microapp/microapp-ar-three/index');
         // 初始化ARThree实例（绑定canvas，确保环境适配）
         this.arThree = new ARThree({ canvas: this.canvas });
         // 通过AR实例获取适配后的Three对象

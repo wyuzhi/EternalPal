@@ -1,0 +1,1 @@
+{"version":3,"file":"node_modules/three/src/renderers/shaders/ShaderChunk/lights_toon_fragment.glsl.js","names":[],"sources":["node_modules/three/src/renderers/shaders/ShaderChunk/lights_toon_fragment.glsl.js"],"sourcesContent":["export default /* glsl */`\nToonMaterial material;\nmaterial.diffuseColor = diffuseColor.rgb;\n`;\n"],"mappings":"cAAyB","ignoreList":[]}

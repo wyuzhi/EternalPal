@@ -1,0 +1,2 @@
+import{CylinderGeometry}from"./CylinderGeometry.js";class ConeGeometry extends CylinderGeometry{constructor(e=1,t=1,r=32,n=1,o=!1,a=0,h=2*Math.PI){super(0,e,t,r,n,o,a,h),this.type="ConeGeometry",this.parameters={radius:e,height:t,radialSegments:r,heightSegments:n,openEnded:o,thetaStart:a,thetaLength:h}}static fromJSON(e){return new ConeGeometry(e.radius,e.height,e.radialSegments,e.heightSegments,e.openEnded,e.thetaStart,e.thetaLength)}}export{ConeGeometry};
+//# sourceMappingURL=ConeGeometry.js.map

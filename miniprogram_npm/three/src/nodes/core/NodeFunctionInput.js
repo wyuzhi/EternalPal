@@ -1,0 +1,2 @@
+class NodeFunctionInput{constructor(t,n,i=null,o="",u=!1){this.type=t,this.name=n,this.count=i,this.qualifier=o,this.isConst=u}}NodeFunctionInput.isNodeFunctionInput=!0;export default NodeFunctionInput;
+//# sourceMappingURL=NodeFunctionInput.js.map

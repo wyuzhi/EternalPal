@@ -1,0 +1,2 @@
+import{Fn}from"../../tsl/TSLBase.js";const D_GGX=Fn((({alpha:t,dotNH:o})=>{const a=t.pow2(),e=o.pow2().mul(a.oneMinus()).oneMinus();return a.div(e.pow2()).mul(1/Math.PI)})).setLayout({name:"D_GGX",type:"float",inputs:[{name:"alpha",type:"float"},{name:"dotNH",type:"float"}]});export default D_GGX;
+//# sourceMappingURL=D_GGX.js.map

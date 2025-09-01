@@ -1,0 +1,1 @@
+{"version":3,"file":"node_modules/three/src/renderers/shaders/ShaderChunk/alphatest_pars_fragment.glsl.js","names":[],"sources":["node_modules/three/src/renderers/shaders/ShaderChunk/alphatest_pars_fragment.glsl.js"],"sourcesContent":["export default /* glsl */`\n#ifdef USE_ALPHATEST\n\tuniform float alphaTest;\n#endif\n`;\n"],"mappings":"cAAyB","ignoreList":[]}

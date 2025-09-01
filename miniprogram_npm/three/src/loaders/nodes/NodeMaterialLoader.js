@@ -1,0 +1,2 @@
+import{MaterialLoader}from"../../loaders/MaterialLoader.js";class NodeMaterialLoader extends MaterialLoader{constructor(e){super(e),this.nodes={},this.nodeMaterials={}}parse(e){const r=super.parse(e),t=this.nodes,a=e.inputNodes;for(const e in a){const s=a[e];r[e]=t[s]}return r}setNodes(e){return this.nodes=e,this}setNodeMaterials(e){return this.nodeMaterials=e,this}createMaterialFromType(e){const r=this.nodeMaterials[e];return void 0!==r?new r:super.createMaterialFromType(e)}}export default NodeMaterialLoader;
+//# sourceMappingURL=NodeMaterialLoader.js.map

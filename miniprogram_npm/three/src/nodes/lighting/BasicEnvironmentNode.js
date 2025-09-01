@@ -1,0 +1,2 @@
+import LightingNode from"./LightingNode.js";import{cubeMapNode}from"../utils/CubeMapNode.js";class BasicEnvironmentNode extends LightingNode{static get type(){return"BasicEnvironmentNode"}constructor(e=null){super(),this.envNode=e}setup(e){e.context.environment=cubeMapNode(this.envNode)}}export default BasicEnvironmentNode;
+//# sourceMappingURL=BasicEnvironmentNode.js.map

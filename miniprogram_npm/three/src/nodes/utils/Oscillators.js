@@ -1,0 +1,2 @@
+import{time}from"./Timer.js";export const oscSine=(t=time)=>t.add(.75).mul(2*Math.PI).sin().mul(.5).add(.5);export const oscSquare=(t=time)=>t.fract().round();export const oscTriangle=(t=time)=>t.add(.5).fract().mul(2).sub(1).abs();export const oscSawtooth=(t=time)=>t.fract();
+//# sourceMappingURL=Oscillators.js.map

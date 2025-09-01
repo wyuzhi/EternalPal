@@ -1,0 +1,2 @@
+import LightingNode from"./LightingNode.js";class AONode extends LightingNode{static get type(){return"AONode"}constructor(t=null){super(),this.aoNode=t}setup(t){t.context.ambientOcclusion.mulAssign(this.aoNode)}}export default AONode;
+//# sourceMappingURL=AONode.js.map

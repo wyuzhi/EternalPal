@@ -1,0 +1,2 @@
+import{WebGLRenderTarget}from"./WebGLRenderTarget.js";import{Data3DTexture}from"../textures/Data3DTexture.js";class WebGL3DRenderTarget extends WebGLRenderTarget{constructor(e=1,t=1,r=1,s={}){super(e,t,s),this.isWebGL3DRenderTarget=!0,this.depth=r,this.texture=new Data3DTexture(null,e,t,r),this._setTextureOptions(s),this.texture.isRenderTargetTexture=!0}}export{WebGL3DRenderTarget};
+//# sourceMappingURL=WebGL3DRenderTarget.js.map

@@ -1,0 +1,2 @@
+let _context;class AudioContext{static getContext(){return void 0===_context&&(_context=new(window.AudioContext||window.webkitAudioContext)),_context}static setContext(t){_context=t}}export{AudioContext};
+//# sourceMappingURL=AudioContext.js.map

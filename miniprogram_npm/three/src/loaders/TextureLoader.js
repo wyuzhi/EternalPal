@@ -1,0 +1,2 @@
+import{ImageLoader}from"./ImageLoader.js";import{Texture}from"../textures/Texture.js";import{Loader}from"./Loader.js";class TextureLoader extends Loader{constructor(e){super(e)}load(e,r,t,o){const a=new Texture,s=new ImageLoader(this.manager);return s.setCrossOrigin(this.crossOrigin),s.setPath(this.path),s.load(e,(function(e){a.image=e,a.needsUpdate=!0,void 0!==r&&r(a)}),t,o),a}}export{TextureLoader};
+//# sourceMappingURL=TextureLoader.js.map

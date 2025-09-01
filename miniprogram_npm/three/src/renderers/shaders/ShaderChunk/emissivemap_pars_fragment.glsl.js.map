@@ -1,0 +1,1 @@
+{"version":3,"file":"node_modules/three/src/renderers/shaders/ShaderChunk/emissivemap_pars_fragment.glsl.js","names":[],"sources":["node_modules/three/src/renderers/shaders/ShaderChunk/emissivemap_pars_fragment.glsl.js"],"sourcesContent":["export default /* glsl */`\n#ifdef USE_EMISSIVEMAP\n\n\tuniform sampler2D emissiveMap;\n\n#endif\n`;\n"],"mappings":"cAAyB","ignoreList":[]}

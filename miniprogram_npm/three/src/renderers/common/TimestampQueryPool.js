@@ -1,0 +1,2 @@
+class TimestampQueryPool{constructor(e=256){this.trackTimestamp=!0,this.maxQueries=e,this.currentQueryIndex=0,this.queryOffsets=new Map,this.isDisposed=!1,this.lastValue=0,this.pendingResolve=!1}allocateQueriesForContext(){}async resolveQueriesAsync(){}dispose(){}}export default TimestampQueryPool;
+//# sourceMappingURL=TimestampQueryPool.js.map

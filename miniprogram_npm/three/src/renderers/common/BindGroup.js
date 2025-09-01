@@ -1,0 +1,2 @@
+let _id=0;class BindGroup{constructor(i="",n=[],s=0,t=[]){this.name=i,this.bindings=n,this.index=s,this.bindingsReference=t,this.id=_id++}}export default BindGroup;
+//# sourceMappingURL=BindGroup.js.map

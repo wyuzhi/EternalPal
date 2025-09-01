@@ -1,0 +1,2 @@
+import UniformsGroup from"../UniformsGroup.js";let _id=0;class NodeUniformsGroup extends UniformsGroup{constructor(o,r){super(o),this.id=_id++,this.groupNode=r,this.isNodeUniformsGroup=!0}}export default NodeUniformsGroup;
+//# sourceMappingURL=NodeUniformsGroup.js.map

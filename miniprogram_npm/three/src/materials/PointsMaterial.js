@@ -1,0 +1,2 @@
+import{Material}from"./Material.js";import{Color}from"../math/Color.js";class PointsMaterial extends Material{constructor(t){super(),this.isPointsMaterial=!0,this.type="PointsMaterial",this.color=new Color(16777215),this.map=null,this.alphaMap=null,this.size=1,this.sizeAttenuation=!0,this.fog=!0,this.setValues(t)}copy(t){return super.copy(t),this.color.copy(t.color),this.map=t.map,this.alphaMap=t.alphaMap,this.size=t.size,this.sizeAttenuation=t.sizeAttenuation,this.fog=t.fog,this}}export{PointsMaterial};
+//# sourceMappingURL=PointsMaterial.js.map

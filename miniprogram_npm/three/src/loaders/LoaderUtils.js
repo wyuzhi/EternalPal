@@ -1,0 +1,2 @@
+class LoaderUtils{static extractUrlBase(t){const s=t.lastIndexOf("/");return-1===s?"./":t.slice(0,s+1)}static resolveURL(t,s){return"string"!=typeof t||""===t?"":(/^https?:\/\//i.test(s)&&/^\//.test(t)&&(s=s.replace(/(^https?:\/\/[^\/]+).*/i,"$1")),/^(https?:)?\/\//i.test(t)||/^data:.*,.*$/i.test(t)||/^blob:.*$/i.test(t)?t:s+t)}}export{LoaderUtils};
+//# sourceMappingURL=LoaderUtils.js.map

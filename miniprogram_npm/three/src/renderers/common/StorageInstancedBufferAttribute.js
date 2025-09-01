@@ -1,0 +1,2 @@
+import{InstancedBufferAttribute}from"../../core/InstancedBufferAttribute.js";class StorageInstancedBufferAttribute extends InstancedBufferAttribute{constructor(t,e,r=Float32Array){super(ArrayBuffer.isView(t)?t:new r(t*e),e),this.isStorageInstancedBufferAttribute=!0}}export default StorageInstancedBufferAttribute;
+//# sourceMappingURL=StorageInstancedBufferAttribute.js.map

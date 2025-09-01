@@ -1,0 +1,2 @@
+import Binding from"./Binding.js";import{getFloatLength}from"./BufferUtils.js";class Buffer extends Binding{constructor(t,e=null){super(t),this.isBuffer=!0,this.bytesPerElement=Float32Array.BYTES_PER_ELEMENT,this._buffer=e}get byteLength(){return getFloatLength(this._buffer.byteLength)}get buffer(){return this._buffer}update(){return!0}}export default Buffer;
+//# sourceMappingURL=Buffer.js.map

@@ -1,0 +1,104 @@
+<view class="container">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <image src="/images/c1.png" mode="aspectFit" class="menu-icon"></image>
+    <view class="pet-info">
+      <text class="pet-name">{{petName}}</text>
+      <text class="mood-indicator">心情指示</text>
+    </view>
+    <image src="/images/c2.png" mode="aspectFit" class="settings-icon" bindtap="onSettingsTap"></image>
+  </view>
+
+  <!-- 浮动功能菜单 -->
+  <view class="float-menu" wx:if="{{showFloatMenu}}">
+    <view class="menu-item" bindtap="onMenuItemTap" data-action="info">
+      <text>信息</text>
+    </view>
+    <view class="menu-item" bindtap="onMenuItemTap" data-action="settings">
+      <text>设置</text>
+    </view>
+    <view class="menu-item" bindtap="onMenuItemTap" data-action="share">
+      <text>分享</text>
+    </view>
+  </view>
+
+  <!-- 心情条 -->
+  <view class="mood-bar">
+    <view class="heart-icon">❤</view>
+    <view class="progress-bar">
+      <view class="progress" style="width: {{moodLevel * 25}}%;"></view>
+    </view>
+    <text class="mood-value">{{moodLevel}}</text>
+  </view>
+
+  <!-- 宠物展示区 -->
+  <view class="model-display">
+    <view id="modelContainer" class="model-container">
+        <!-- 3D模型显示区域 -->
+        <canvas 
+          type="webgl" 
+          id="modelCanvas" 
+          class="model-canvas" 
+          style="width: 100%; height: 100%;" 
+          bindtouchstart="handleCanvasTouchStart"
+          bindtouchmove="handleCanvasTouchMove"
+          bindtouchend="handleCanvasTouchEnd"
+          wx:if="{{!isImageMode}}">
+        </canvas>
+        <!-- 如果3D模型加载失败，则显示图片 -->
+        <view wx:if="{{isImageMode}}" class="is-image-mode-container">
+          <!-- 直接显示preview_url图片 -->
+          <image src="{{preview_url}}" mode="aspectFit" class="pet-image"></image>
+          <!-- 如果preview_url为空，则显示占位符 -->
+          <view wx:if="{{!preview_url}}" class="model-placeholder">
+            <text>{{modelPlaceholderText || '加载中...'}}</text>
+          </view>
+        </view>
+        <!-- 加载提示 -->
+        <view wx:if="{{!modelLoaded}}" class="loading-overlay">
+          <text>{{modelPlaceholderText || '正在加载3D模型...'}}</text>
+        </view>
+    </view>
+    <view class="first-success" wx:if="{{firstLoadSuccess}}">嗨，我是{{petName}}！很高兴见到你~</view>
+  </view>
+
+  <!-- 聊天消息区域 -->
+  <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollToMessageId}}" scroll-with-animation>
+    <block wx:for="{{messages}}" wx:key="id">
+      <view id="message-{{item.validId}}" class="message-container {{item.isUser ? 'user-message' : 'ai-message'}}">
+        <view class="message-bubble">
+          <text>{{item.text}}</text>
+        </view>
+      </view>
+    </block>
+  </scroll-view>
+
+  <!-- 快捷功能区 -->
+  <view class="quick-actions" hidden="{{true}}">
+    <view class="action-button" bindtap="takePhoto">
+      <image src="/images/camera.png" mode="aspectFit" class="action-icon"></image>
+    </view>
+    <view class="action-button" bindtap="{{isRecording ? 'stopRecording' : 'startRecording'}}">
+      <image src="/images/microphone.png" mode="aspectFit" class="action-icon {{isRecording ? 'recording' : ''}}"></image>
+    </view>
+    <view class="action-button">
+      <image src="/images/voice.png" mode="aspectFit" class="action-icon"></image>
+    </view>
+    <view class="action-button">
+      <image src="/images/magic.png" mode="aspectFit" class="action-icon"></image>
+    </view>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-area">
+    <input type="text" placeholder="跟ta说些什么呢......" value="{{inputValue}}" bindinput="onInput" class="chat-input"/>
+    <button class="send-button" bindtap="sendMessage">发送</button>
+  </view>
+
+  <!-- 快捷话术 -->
+  <view class="quick-replies">
+    <button class="quick-reply" bindtap="useQuickReply" data-text="你好">你好</button>
+    <button class="quick-reply" bindtap="useQuickReply" data-text="今天过得怎么样">今天如何</button>
+    <button class="quick-reply" bindtap="useQuickReply" data-text="讲个笑话">讲个笑话</button>
+  </view>
+</view>

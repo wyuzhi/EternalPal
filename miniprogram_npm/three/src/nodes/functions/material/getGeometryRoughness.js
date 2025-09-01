@@ -1,0 +1,2 @@
+import{normalViewGeometry}from"../../accessors/Normal.js";import{float,Fn}from"../../tsl/TSLBase.js";const getGeometryRoughness=Fn((e=>{if(!1===e.geometry.hasAttribute("normal"))return float(0);const o=normalViewGeometry.dFdx().abs().max(normalViewGeometry.dFdy().abs());return o.x.max(o.y).max(o.z)}));export default getGeometryRoughness;
+//# sourceMappingURL=getGeometryRoughness.js.map

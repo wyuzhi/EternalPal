@@ -1,0 +1,2 @@
+import{KeyframeTrack}from"../KeyframeTrack.js";import{QuaternionLinearInterpolant}from"../../math/interpolants/QuaternionLinearInterpolant.js";class QuaternionKeyframeTrack extends KeyframeTrack{constructor(e,r,t,a){super(e,r,t,a)}InterpolantFactoryMethodLinear(e){return new QuaternionLinearInterpolant(this.times,this.values,this.getValueSize(),e)}}QuaternionKeyframeTrack.prototype.ValueTypeName="quaternion",QuaternionKeyframeTrack.prototype.InterpolantFactoryMethodSmooth=void 0;export{QuaternionKeyframeTrack};
+//# sourceMappingURL=QuaternionKeyframeTrack.js.map

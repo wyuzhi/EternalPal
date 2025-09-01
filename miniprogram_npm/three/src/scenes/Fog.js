@@ -1,0 +1,2 @@
+import{Color}from"../math/Color.js";class Fog{constructor(o,r=1,t=1e3){this.isFog=!0,this.name="",this.color=new Color(o),this.near=r,this.far=t}clone(){return new Fog(this.color,this.near,this.far)}toJSON(){return{type:"Fog",name:this.name,color:this.color.getHex(),near:this.near,far:this.far}}}export{Fog};
+//# sourceMappingURL=Fog.js.map

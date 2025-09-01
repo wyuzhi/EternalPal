@@ -1,0 +1,2 @@
+let _id=0;class NodeCache{constructor(t=null){this.id=_id++,this.nodesData=new WeakMap,this.parent=t}getData(t){let e=this.nodesData.get(t);return void 0===e&&null!==this.parent&&(e=this.parent.getData(t)),e}setData(t,e){this.nodesData.set(t,e)}}export default NodeCache;
+//# sourceMappingURL=NodeCache.js.map

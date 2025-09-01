@@ -1,0 +1,2 @@
+import{InterleavedBuffer}from"./InterleavedBuffer.js";class InstancedInterleavedBuffer extends InterleavedBuffer{constructor(e,t,r=1){super(e,t),this.isInstancedInterleavedBuffer=!0,this.meshPerAttribute=r}copy(e){return super.copy(e),this.meshPerAttribute=e.meshPerAttribute,this}clone(e){const t=super.clone(e);return t.meshPerAttribute=this.meshPerAttribute,t}toJSON(e){const t=super.toJSON(e);return t.isInstancedInterleavedBuffer=!0,t.meshPerAttribute=this.meshPerAttribute,t}}export{InstancedInterleavedBuffer};
+//# sourceMappingURL=InstancedInterleavedBuffer.js.map

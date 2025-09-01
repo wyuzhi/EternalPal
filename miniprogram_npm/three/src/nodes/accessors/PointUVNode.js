@@ -1,0 +1,2 @@
+import Node from"../core/Node.js";import{nodeImmutable}from"../tsl/TSLBase.js";class PointUVNode extends Node{static get type(){return"PointUVNode"}constructor(){super("vec2"),this.isPointUVNode=!0}generate(){return"vec2( gl_PointCoord.x, 1.0 - gl_PointCoord.y )"}}export default PointUVNode;export const pointUV=nodeImmutable(PointUVNode);
+//# sourceMappingURL=PointUVNode.js.map

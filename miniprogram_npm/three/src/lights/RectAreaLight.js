@@ -1,0 +1,2 @@
+import{Light}from"./Light.js";class RectAreaLight extends Light{constructor(t,h,i=10,e=10){super(t,h),this.isRectAreaLight=!0,this.type="RectAreaLight",this.width=i,this.height=e}get power(){return this.intensity*this.width*this.height*Math.PI}set power(t){this.intensity=t/(this.width*this.height*Math.PI)}copy(t){return super.copy(t),this.width=t.width,this.height=t.height,this}toJSON(t){const h=super.toJSON(t);return h.object.width=this.width,h.object.height=this.height,h}}export{RectAreaLight};
+//# sourceMappingURL=RectAreaLight.js.map

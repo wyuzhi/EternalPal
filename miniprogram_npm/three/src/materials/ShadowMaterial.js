@@ -1,0 +1,2 @@
+import{Material}from"./Material.js";import{Color}from"../math/Color.js";class ShadowMaterial extends Material{constructor(o){super(),this.isShadowMaterial=!0,this.type="ShadowMaterial",this.color=new Color(0),this.transparent=!0,this.fog=!0,this.setValues(o)}copy(o){return super.copy(o),this.color.copy(o.color),this.fog=o.fog,this}}export{ShadowMaterial};
+//# sourceMappingURL=ShadowMaterial.js.map

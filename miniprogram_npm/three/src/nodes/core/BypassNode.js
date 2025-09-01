@@ -1,0 +1,2 @@
+import Node from"./Node.js";import{addMethodChaining,nodeProxy}from"../tsl/TSLCore.js";class BypassNode extends Node{static get type(){return"BypassNode"}constructor(e,t){super(),this.isBypassNode=!0,this.outputNode=e,this.callNode=t}getNodeType(e){return this.outputNode.getNodeType(e)}generate(e){const t=this.callNode.build(e,"void");return""!==t&&e.addLineFlowCode(t,this),this.outputNode.build(e)}}export default BypassNode;export const bypass=nodeProxy(BypassNode).setParameterLength(2);addMethodChaining("bypass",bypass);
+//# sourceMappingURL=BypassNode.js.map

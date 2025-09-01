@@ -1,0 +1,2 @@
+import{Light}from"./Light.js";class AmbientLight extends Light{constructor(t,i){super(t,i),this.isAmbientLight=!0,this.type="AmbientLight"}}export{AmbientLight};
+//# sourceMappingURL=AmbientLight.js.map

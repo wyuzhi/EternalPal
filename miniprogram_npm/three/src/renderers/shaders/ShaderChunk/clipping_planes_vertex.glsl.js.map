@@ -1,0 +1,1 @@
+{"version":3,"file":"node_modules/three/src/renderers/shaders/ShaderChunk/clipping_planes_vertex.glsl.js","names":[],"sources":["node_modules/three/src/renderers/shaders/ShaderChunk/clipping_planes_vertex.glsl.js"],"sourcesContent":["export default /* glsl */`\n#if NUM_CLIPPING_PLANES > 0\n\n\tvClipPosition = - mvPosition.xyz;\n\n#endif\n`;\n"],"mappings":"cAAyB","ignoreList":[]}

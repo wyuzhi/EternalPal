@@ -1,0 +1,2 @@
+import{Fn}from"../tsl/TSLBase.js";export const getDistanceAttenuation=Fn((({lightDistance:t,cutoffDistance:e,decayExponent:n})=>{const o=t.pow(n).max(.01).reciprocal();return e.greaterThan(0).select(o.mul(t.div(e).pow4().oneMinus().clamp().pow2()),o)}));
+//# sourceMappingURL=LightUtils.js.map

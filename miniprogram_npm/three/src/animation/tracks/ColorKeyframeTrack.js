@@ -1,0 +1,2 @@
+import{KeyframeTrack}from"../KeyframeTrack.js";class ColorKeyframeTrack extends KeyframeTrack{constructor(r,e,a,o){super(r,e,a,o)}}ColorKeyframeTrack.prototype.ValueTypeName="color";export{ColorKeyframeTrack};
+//# sourceMappingURL=ColorKeyframeTrack.js.map

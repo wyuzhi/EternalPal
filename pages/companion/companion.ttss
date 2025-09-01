@@ -1,0 +1,352 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #fff9f0;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+/* 顶部导航 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  margin-bottom: 10rpx;
+}
+
+.menu-icon {
+  width: 40rpx;
+  height: 40rpx;
+  background-color: #ddd;
+  border-radius: 8rpx;
+}
+
+.settings-icon {
+  width: 40rpx;
+  height: 40rpx;
+  background-color: #ddd;
+  border-radius: 8rpx;
+}
+
+.pet-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pet-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.mood-indicator {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 心情条 */
+.mood-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding: 0 20rpx;
+}
+
+.heart-icon {
+  font-size: 32rpx;
+  color: #ff4d4f;
+  margin-right: 10rpx;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 12rpx;
+  background-color: #eee;
+  border-radius: 6rpx;
+  overflow: hidden;
+  margin: 0 10rpx;
+}
+
+.progress {
+  height: 100%;
+  background-color: #ff7e00;
+  border-radius: 6rpx;
+}
+
+.mood-value {
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 3D模型展示区 */
+.model-display {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+/* 加载覆盖层 */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 249, 240, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.scene-indicator,
+.first-success {
+  font-size: 24rpx;
+  color: #999;
+  margin: 10rpx 0;
+}
+
+.model-container {
+  width: 400rpx;
+  height: 400rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: -30rpx 0 20rpx 0;
+  position: relative;
+  overflow: hidden;
+  background-color: transparent;
+}
+
+.pet-image {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 5;
+  display: block;
+  min-width: 100%;
+  min-height: 100%;
+  background-color: transparent;
+}
+
+/* 图片模式下的容器样式增强 */
+.model-container .is-image-mode-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.model-controls {
+  display: flex;
+  justify-content: center;
+  margin: 10rpx 0;
+}
+
+.control-button {
+  margin: 0 10rpx;
+  font-size: 24rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.control-button:active {
+  background-color: #e6e6e6;
+}
+
+.model-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.pet-image {
+  width: 100%;
+  height: 100%;
+}
+
+.model-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* 聊天消息区域 */
+.chat-messages {
+  flex: 2;
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  background-color: #fff9f0;
+  border-radius: 20rpx;
+  height: 33%;
+  width: 100%;
+}
+
+.message-container {
+  margin-bottom: 16rpx;
+  display: flex;
+}
+
+.ai-message {
+  justify-content: flex-start;
+}
+
+.user-message {
+  justify-content: flex-end;
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 16rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
+.ai-message .message-bubble {
+  background-color: #fff;
+  border: 2rpx solid #eee;
+}
+
+.user-message .message-bubble {
+  background-color: #07c160;
+  color: #fff;
+}
+
+/* 快捷功能区 */
+.quick-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20rpx;
+  padding: 0 20rpx;
+}
+
+.action-button {
+  width: 80rpx;
+  height: 80rpx;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.action-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.action-icon.recording {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* 输入区域 */
+.input-area {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding: 0 20rpx;
+}
+
+.chat-input {
+  flex: 1;
+  height: 80rpx;
+  background-color: #fff;
+  border: 2rpx solid #eee;
+  border-radius: 40rpx;
+  padding: 0 30rpx;
+  font-size: 28rpx;
+  margin-right: 20rpx;
+}
+
+.send-button {
+  width: 140rpx;
+  height: 80rpx;
+  background-color: #07c160;
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  line-height: 80rpx;
+  text-align: center;
+}
+.send-button::after {
+  border: none; /* 移除默认的边框效果 */
+}
+/* 快捷话术 */
+.quick-replies {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.quick-reply {
+  flex: 1;
+  height: 70rpx;
+  background-color: #fff;
+  border: 2rpx solid #eee;
+  border-radius: 35rpx;
+  font-size: 26rpx;
+  line-height: 70rpx;
+  text-align: center;
+  margin: 0 10rpx;
+}
+
+.quick-reply::after {
+  border: none; /* 移除默认的边框效果 */
+}
+
+/* 浮动菜单样式 */
+.float-menu {
+  position: fixed;
+  top: 200rpx;
+  right: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  z-index: 999;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.2);
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30rpx;
+  color: #fff;
+}
+
+.menu-item:last-child {
+  margin-bottom: 0;
+}
+
+.icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-bottom: 10rpx;
+}
+
+.menu-item text {
+  font-size: 28rpx;
+  color: #ffffff;
+}

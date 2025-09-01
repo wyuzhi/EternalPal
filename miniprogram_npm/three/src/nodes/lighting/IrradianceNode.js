@@ -1,0 +1,2 @@
+import LightingNode from"./LightingNode.js";class IrradianceNode extends LightingNode{static get type(){return"IrradianceNode"}constructor(e){super(),this.node=e}setup(e){e.context.irradiance.addAssign(this.node)}}export default IrradianceNode;
+//# sourceMappingURL=IrradianceNode.js.map

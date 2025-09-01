@@ -1,0 +1,2 @@
+import ReferenceNode from"./ReferenceNode.js";import{nodeObject}from"../tsl/TSLBase.js";class MaterialReferenceNode extends ReferenceNode{static get type(){return"MaterialReferenceNode"}constructor(e,r,t=null){super(e,r,t),this.material=t,this.isMaterialReferenceNode=!0}updateReference(e){return this.reference=null!==this.material?this.material:e.material,this.reference}}export default MaterialReferenceNode;export const materialReference=(e,r,t=null)=>nodeObject(new MaterialReferenceNode(e,r,t));
+//# sourceMappingURL=MaterialReferenceNode.js.map

@@ -1,0 +1,2 @@
+class WebGLExtensions{constructor(s){this.backend=s,this.gl=this.backend.gl,this.availableExtensions=this.gl.getSupportedExtensions(),this.extensions={}}get(s){let t=this.extensions[s];return void 0===t&&(t=this.gl.getExtension(s),this.extensions[s]=t),t}has(s){return this.availableExtensions.includes(s)}}export default WebGLExtensions;
+//# sourceMappingURL=WebGLExtensions.js.map

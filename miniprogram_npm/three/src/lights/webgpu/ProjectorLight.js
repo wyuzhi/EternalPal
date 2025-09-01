@@ -1,0 +1,2 @@
+import{SpotLight}from"../SpotLight.js";class ProjectorLight extends SpotLight{constructor(t,o,r,s,e,p){super(t,o,r,s,e,p),this.aspect=null}copy(t,o){return super.copy(t,o),this.aspect=t.aspect,this}}export default ProjectorLight;
+//# sourceMappingURL=ProjectorLight.js.map

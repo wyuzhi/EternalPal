@@ -1,0 +1,2 @@
+import{KeyframeTrack}from"../KeyframeTrack.js";class NumberKeyframeTrack extends KeyframeTrack{constructor(e,r,a,m){super(e,r,a,m)}}NumberKeyframeTrack.prototype.ValueTypeName="number";export{NumberKeyframeTrack};
+//# sourceMappingURL=NumberKeyframeTrack.js.map

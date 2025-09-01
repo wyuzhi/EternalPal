@@ -1,0 +1,2 @@
+export default"\n#if defined( USE_COLOR_ALPHA )\n\n\tdiffuseColor *= vColor;\n\n#elif defined( USE_COLOR )\n\n\tdiffuseColor.rgb *= vColor;\n\n#endif\n";
+//# sourceMappingURL=color_fragment.glsl.js.map

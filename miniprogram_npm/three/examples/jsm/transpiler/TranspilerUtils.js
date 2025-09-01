@@ -1,0 +1,2 @@
+export function isExpression(t){return!0!==t.isFunctionDeclaration&&!0!==t.isFor&&!0!==t.isWhile&&!0!==t.isConditional&&!0!==t.isSwitch}export function isPrimitive(t){return/^(true|false|-?(\d|\.\d))/.test(t)}export function isType(t){return/void|bool|float|u?int|mat[234]|mat[234]x[234]|(u|i|b)?vec[234]/.test(t)}export function toFloatType(t){if(/^(i?int)$/.test(t))return"float";const i=/^(i|u)?vec([234])$/.exec(t);return i?"vec"+i[2]:t}
+//# sourceMappingURL=TranspilerUtils.js.map

@@ -1,0 +1,2 @@
+import init from"./scene.js";self.onmessage=function(i){const t=i.data;init(t.drawingSurface,t.width,t.height,t.pixelRatio,t.path)};
+//# sourceMappingURL=offscreen.js.map

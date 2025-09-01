@@ -1,0 +1,2 @@
+import{Texture}from"./Texture.js";import{NearestFilter}from"../constants.js";class DataTexture extends Texture{constructor(t=null,e=1,r=1,s,a,i,u,l,n=NearestFilter,h=NearestFilter,o,p){super(null,i,u,l,n,h,s,a,o,p),this.isDataTexture=!0,this.image={data:t,width:e,height:r},this.generateMipmaps=!1,this.flipY=!1,this.unpackAlignment=1}}export{DataTexture};
+//# sourceMappingURL=DataTexture.js.map

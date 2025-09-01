@@ -1,0 +1,2 @@
+function WebGLInfo(e){const n={frame:0,calls:0,triangles:0,points:0,lines:0};return{memory:{geometries:0,textures:0},render:n,programs:null,autoReset:!0,reset:function(){n.calls=0,n.triangles=0,n.points=0,n.lines=0},update:function(s,r,a){switch(n.calls++,r){case e.TRIANGLES:n.triangles+=a*(s/3);break;case e.LINES:n.lines+=a*(s/2);break;case e.LINE_STRIP:n.lines+=a*(s-1);break;case e.LINE_LOOP:n.lines+=a*s;break;case e.POINTS:n.points+=a*s;break;default:console.error("THREE.WebGLInfo: Unknown draw mode:",r)}}}}export{WebGLInfo};
+//# sourceMappingURL=WebGLInfo.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"node_modules/three/src/renderers/shaders/ShaderChunk/fog_pars_vertex.glsl.js","names":[],"sources":["node_modules/three/src/renderers/shaders/ShaderChunk/fog_pars_vertex.glsl.js"],"sourcesContent":["export default /* glsl */`\n#ifdef USE_FOG\n\n\tvarying float vFogDepth;\n\n#endif\n`;\n"],"mappings":"cAAyB","ignoreList":[]}

@@ -1,0 +1,46 @@
+# 环境变量文件
+.env
+
+# 数据库文件
+*.db
+
+# Python编译缓存
+__pycache__/
+*.pyc
+
+# 虚拟环境
+venv/
+virtualenv/
+env/
+
+# 临时文件目录
+temp_images/
+uploads/
+model_files/
+chat_history/
+storage/
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器目录和文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 日志文件
+*.log
+
+# 测试覆盖率
+.coverage
+coverage/
+
+# 构建输出
+build/
+dist/
+*.egg-info/
+
+# 本地设置
+local_settings.py

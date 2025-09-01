@@ -1,0 +1,2 @@
+import{Color}from"../../math/Color.js";class Color4 extends Color{constructor(r,t,o,s=1){super(r,t,o),this.a=s}set(r,t,o,s=1){return this.a=s,super.set(r,t,o)}copy(r){return void 0!==r.a&&(this.a=r.a),super.copy(r)}clone(){return new this.constructor(this.r,this.g,this.b,this.a)}}export default Color4;
+//# sourceMappingURL=Color4.js.map

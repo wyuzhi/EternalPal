@@ -1,0 +1,2 @@
+import NodeMaterial from"./NodeMaterial.js";import ToonLightingModel from"../../nodes/functions/ToonLightingModel.js";import{MeshToonMaterial}from"../MeshToonMaterial.js";const _defaultValues=new MeshToonMaterial;class MeshToonNodeMaterial extends NodeMaterial{static get type(){return"MeshToonNodeMaterial"}constructor(e){super(),this.isMeshToonNodeMaterial=!0,this.lights=!0,this.setDefaultValues(_defaultValues),this.setValues(e)}setupLightingModel(){return new ToonLightingModel}}export default MeshToonNodeMaterial;
+//# sourceMappingURL=MeshToonNodeMaterial.js.map

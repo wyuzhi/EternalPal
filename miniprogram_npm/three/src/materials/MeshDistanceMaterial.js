@@ -1,0 +1,2 @@
+import{Material}from"./Material.js";class MeshDistanceMaterial extends Material{constructor(a){super(),this.isMeshDistanceMaterial=!0,this.type="MeshDistanceMaterial",this.map=null,this.alphaMap=null,this.displacementMap=null,this.displacementScale=1,this.displacementBias=0,this.setValues(a)}copy(a){return super.copy(a),this.map=a.map,this.alphaMap=a.alphaMap,this.displacementMap=a.displacementMap,this.displacementScale=a.displacementScale,this.displacementBias=a.displacementBias,this}}export{MeshDistanceMaterial};
+//# sourceMappingURL=MeshDistanceMaterial.js.map

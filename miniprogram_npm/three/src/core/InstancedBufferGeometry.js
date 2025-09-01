@@ -1,0 +1,2 @@
+import{BufferGeometry}from"./BufferGeometry.js";class InstancedBufferGeometry extends BufferGeometry{constructor(){super(),this.isInstancedBufferGeometry=!0,this.type="InstancedBufferGeometry",this.instanceCount=1/0}copy(e){return super.copy(e),this.instanceCount=e.instanceCount,this}toJSON(){const e=super.toJSON();return e.instanceCount=this.instanceCount,e.isInstancedBufferGeometry=!0,e}}export{InstancedBufferGeometry};
+//# sourceMappingURL=InstancedBufferGeometry.js.map

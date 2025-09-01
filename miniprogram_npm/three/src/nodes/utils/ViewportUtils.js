@@ -1,0 +1,2 @@
+import{Fn}from"../tsl/TSLBase.js";import{screenUV}from"../display/ScreenNode.js";import{viewportDepthTexture}from"../display/ViewportDepthTextureNode.js";import{linearDepth}from"../display/ViewportDepthNode.js";export const viewportSafeUV=Fn((([e=null])=>{const r=linearDepth();return linearDepth(viewportDepthTexture(e)).sub(r).lessThan(0).select(screenUV,e)}));
+//# sourceMappingURL=ViewportUtils.js.map

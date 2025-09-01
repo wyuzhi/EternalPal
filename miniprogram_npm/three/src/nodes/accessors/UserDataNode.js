@@ -1,0 +1,2 @@
+import ReferenceNode from"./ReferenceNode.js";import{nodeObject}from"../tsl/TSLBase.js";class UserDataNode extends ReferenceNode{static get type(){return"UserDataNode"}constructor(e,t,r=null){super(e,t,r),this.userData=r}updateReference(e){return this.reference=null!==this.userData?this.userData:e.object.userData,this.reference}}export default UserDataNode;export const userData=(e,t,r)=>nodeObject(new UserDataNode(e,t,r));
+//# sourceMappingURL=UserDataNode.js.map

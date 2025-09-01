@@ -1,0 +1,2 @@
+import{positionWorldDirection}from"../accessors/Position.js";import{Fn,vec2}from"../tsl/TSLBase.js";export const equirectUV=Fn((([o=positionWorldDirection])=>{const t=o.z.atan(o.x).mul(1/(2*Math.PI)).add(.5),i=o.y.clamp(-1,1).asin().mul(1/Math.PI).add(.5);return vec2(t,i)}));
+//# sourceMappingURL=EquirectUV.js.map

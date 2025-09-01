@@ -1,0 +1,2 @@
+import Buffer from"./Buffer.js";class StorageBuffer extends Buffer{constructor(r,e){super(r,e?e.array:null),this.attribute=e,this.isStorageBuffer=!0}}export default StorageBuffer;
+//# sourceMappingURL=StorageBuffer.js.map

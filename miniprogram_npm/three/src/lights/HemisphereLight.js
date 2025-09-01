@@ -1,0 +1,2 @@
+import{Light}from"./Light.js";import{Color}from"../math/Color.js";import{Object3D}from"../core/Object3D.js";class HemisphereLight extends Light{constructor(o,t,r){super(o,r),this.isHemisphereLight=!0,this.type="HemisphereLight",this.position.copy(Object3D.DEFAULT_UP),this.updateMatrix(),this.groundColor=new Color(t)}copy(o,t){return super.copy(o,t),this.groundColor.copy(o.groundColor),this}}export{HemisphereLight};
+//# sourceMappingURL=HemisphereLight.js.map

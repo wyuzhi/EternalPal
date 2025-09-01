@@ -1,0 +1,2 @@
+import Node from"../core/Node.js";import{uv}from"../accessors/UV.js";import{nodeObject}from"../tsl/TSLCore.js";class SampleNode extends Node{static get type(){return"SampleNode"}constructor(e){super(),this.callback=e,this.isSampleNode=!0}setup(){return this.sample(uv())}sample(e){return this.callback(e)}}export default SampleNode;export const sample=e=>nodeObject(new SampleNode(e));
+//# sourceMappingURL=SampleNode.js.map

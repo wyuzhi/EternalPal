@@ -1,0 +1,2 @@
+class AudioAnalyser{constructor(t,e=2048){this.analyser=t.context.createAnalyser(),this.analyser.fftSize=e,this.data=new Uint8Array(this.analyser.frequencyBinCount),t.getOutput().connect(this.analyser)}getFrequencyData(){return this.analyser.getByteFrequencyData(this.data),this.data}getAverageFrequency(){let t=0;const e=this.getFrequencyData();for(let a=0;a<e.length;a++)t+=e[a];return t/e.length}}export{AudioAnalyser};
+//# sourceMappingURL=AudioAnalyser.js.map

@@ -1,0 +1,2 @@
+class NodeUniform{constructor(e,t,o){this.isNodeUniform=!0,this.name=e,this.type=t,this.node=o.getSelf()}get value(){return this.node.value}set value(e){this.node.value=e}get id(){return this.node.id}get groupNode(){return this.node.groupNode}}export default NodeUniform;
+//# sourceMappingURL=NodeUniform.js.map

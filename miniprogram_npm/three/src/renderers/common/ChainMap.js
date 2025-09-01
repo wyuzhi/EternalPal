@@ -1,0 +1,2 @@
+class ChainMap{constructor(){this.weakMap=new WeakMap}get(e){let t=this.weakMap;for(let a=0;a<e.length-1;a++)if(t=t.get(e[a]),void 0===t)return;return t.get(e[e.length-1])}set(e,t){let a=this.weakMap;for(let t=0;t<e.length-1;t++){const n=e[t];!1===a.has(n)&&a.set(n,new WeakMap),a=a.get(n)}return a.set(e[e.length-1],t),this}delete(e){let t=this.weakMap;for(let a=0;a<e.length-1;a++)if(t=t.get(e[a]),void 0===t)return!1;return t.delete(e[e.length-1])}}export default ChainMap;
+//# sourceMappingURL=ChainMap.js.map

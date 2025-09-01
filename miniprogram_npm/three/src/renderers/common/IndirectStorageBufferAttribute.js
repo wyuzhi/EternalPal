@@ -1,0 +1,2 @@
+import StorageBufferAttribute from"./StorageBufferAttribute.js";class IndirectStorageBufferAttribute extends StorageBufferAttribute{constructor(t,r){super(t,r,Uint32Array),this.isIndirectStorageBufferAttribute=!0}}export default IndirectStorageBufferAttribute;
+//# sourceMappingURL=IndirectStorageBufferAttribute.js.map

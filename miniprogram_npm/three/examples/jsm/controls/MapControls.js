@@ -1,0 +1,2 @@
+import{MOUSE,TOUCH}from"three";import{OrbitControls}from"./OrbitControls.js";class MapControls extends OrbitControls{constructor(t,o){super(t,o),this.screenSpacePanning=!1,this.mouseButtons={LEFT:MOUSE.PAN,MIDDLE:MOUSE.DOLLY,RIGHT:MOUSE.ROTATE},this.touches={ONE:TOUCH.PAN,TWO:TOUCH.DOLLY_ROTATE}}}export{MapControls};
+//# sourceMappingURL=MapControls.js.map

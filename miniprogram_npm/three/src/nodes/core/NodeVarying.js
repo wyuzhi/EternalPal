@@ -1,0 +1,2 @@
+import NodeVar from"./NodeVar.js";class NodeVarying extends NodeVar{constructor(e,o,t=null,i=null){super(e,o),this.needsInterpolation=!1,this.isNodeVarying=!0,this.interpolationType=t,this.interpolationSampling=i}}export default NodeVarying;
+//# sourceMappingURL=NodeVarying.js.map

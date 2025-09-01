@@ -1,0 +1,2 @@
+import{normalView}from"../accessors/Normal.js";import{positionViewDirection}from"../accessors/Position.js";import{Fn,vec2,vec3}from"../tsl/TSLBase.js";export const matcapUV=Fn((()=>{const o=vec3(positionViewDirection.z,0,positionViewDirection.x.negate()).normalize(),i=positionViewDirection.cross(o);return vec2(o.dot(normalView),i.dot(normalView)).mul(.495).add(.5)})).once(["NORMAL","VERTEX"])().toVar("matcapUV");
+//# sourceMappingURL=MatcapUV.js.map

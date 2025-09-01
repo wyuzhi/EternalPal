@@ -1,0 +1,2 @@
+import{RenderTarget}from"../../core/RenderTarget.js";class XRRenderTarget extends RenderTarget{constructor(e=1,r=1,t={}){super(e,r,t),this.isXRRenderTarget=!0,this._hasExternalTextures=!1,this._autoAllocateDepthBuffer=!0,this._isOpaqueFramebuffer=!1}copy(e){return super.copy(e),this._hasExternalTextures=e._hasExternalTextures,this._autoAllocateDepthBuffer=e._autoAllocateDepthBuffer,this._isOpaqueFramebuffer=e._isOpaqueFramebuffer,this}}export{XRRenderTarget};
+//# sourceMappingURL=XRRenderTarget.js.map

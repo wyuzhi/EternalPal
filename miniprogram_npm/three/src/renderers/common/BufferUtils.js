@@ -1,0 +1,2 @@
+import{GPU_CHUNK_BYTES}from"./Constants.js";function getFloatLength(t){return t+(GPU_CHUNK_BYTES-t%GPU_CHUNK_BYTES)%GPU_CHUNK_BYTES}function getVectorLength(t,e=4){return getFloatLength(getStrideLength(e)*t)}function getStrideLength(t){return t+(4-t%4)%4}export{getFloatLength,getVectorLength,getStrideLength};
+//# sourceMappingURL=BufferUtils.js.map

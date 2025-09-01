@@ -1,0 +1,2 @@
+import{uv}from"../accessors/UV.js";import{Fn}from"../tsl/TSLBase.js";export const checker=Fn((([o=r()])=>{const r=o.mul(2),s=r.x.floor(),t=r.y.floor();return s.add(t).mod(2).sign()}));
+//# sourceMappingURL=Checker.js.map

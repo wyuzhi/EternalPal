@@ -1,0 +1,2 @@
+import{BufferAttribute}from"../../core/BufferAttribute.js";class StorageBufferAttribute extends BufferAttribute{constructor(t,r,e=Float32Array){super(ArrayBuffer.isView(t)?t:new e(t*r),r),this.isStorageBufferAttribute=!0}}export default StorageBufferAttribute;
+//# sourceMappingURL=StorageBufferAttribute.js.map

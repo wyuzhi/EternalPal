@@ -1,0 +1,2 @@
+import{Fn}from"../tsl/TSLBase.js";export const hash=Fn((([t])=>{const i=t.toUint().mul(747796405).add(2891336453),o=i.shiftRight(i.shiftRight(28).add(4)).bitXor(i).mul(277803737);return o.shiftRight(22).bitXor(o).toFloat().mul(1/2**32)}));
+//# sourceMappingURL=Hash.js.map

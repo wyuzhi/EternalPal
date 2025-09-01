@@ -1,0 +1,2 @@
+import{EventDispatcher}from"../core/EventDispatcher.js";class Controls extends EventDispatcher{constructor(t,e=null){super(),this.object=t,this.domElement=e,this.enabled=!0,this.state=-1,this.keys={},this.mouseButtons={LEFT:null,MIDDLE:null,RIGHT:null},this.touches={ONE:null,TWO:null}}connect(t){void 0!==t?(null!==this.domElement&&this.disconnect(),this.domElement=t):console.warn("THREE.Controls: connect() now requires an element.")}disconnect(){}dispose(){}update(){}}export{Controls};
+//# sourceMappingURL=Controls.js.map

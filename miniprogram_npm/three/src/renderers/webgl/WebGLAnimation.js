@@ -1,0 +1,2 @@
+function WebGLAnimation(){let n=null,t=!1,i=null,o=null;function e(t,u){i(t,u),o=n.requestAnimationFrame(e)}return{start:function(){!0!==t&&null!==i&&(o=n.requestAnimationFrame(e),t=!0)},stop:function(){n.cancelAnimationFrame(o),t=!1},setAnimationLoop:function(n){i=n},setContext:function(t){n=t}}}export{WebGLAnimation};
+//# sourceMappingURL=WebGLAnimation.js.map

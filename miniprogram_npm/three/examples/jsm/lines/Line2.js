@@ -1,0 +1,2 @@
+import{LineSegments2}from"../lines/LineSegments2.js";import{LineGeometry}from"../lines/LineGeometry.js";import{LineMaterial}from"../lines/LineMaterial.js";class Line2 extends LineSegments2{constructor(e=new LineGeometry,i=new LineMaterial({color:16777215*Math.random()})){super(e,i),this.isLine2=!0,this.type="Line2"}}export{Line2};
+//# sourceMappingURL=Line2.js.map

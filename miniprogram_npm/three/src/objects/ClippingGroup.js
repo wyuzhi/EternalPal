@@ -1,0 +1,2 @@
+import{Group}from"./Group.js";class ClippingGroup extends Group{constructor(){super(),this.isClippingGroup=!0,this.clippingPlanes=[],this.enabled=!0,this.clipIntersection=!1,this.clipShadows=!1}}export{ClippingGroup};
+//# sourceMappingURL=ClippingGroup.js.map

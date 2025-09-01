@@ -1,0 +1,2 @@
+import{Texture}from"./Texture.js";import{ClampToEdgeWrapping,NearestFilter}from"../constants.js";class Data3DTexture extends Texture{constructor(t=null,e=1,r=1,i=1){super(null),this.isData3DTexture=!0,this.image={data:t,width:e,height:r,depth:i},this.magFilter=NearestFilter,this.minFilter=NearestFilter,this.wrapR=ClampToEdgeWrapping,this.generateMipmaps=!1,this.flipY=!1,this.unpackAlignment=1}}export{Data3DTexture};
+//# sourceMappingURL=Data3DTexture.js.map

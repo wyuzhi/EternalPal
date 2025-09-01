@@ -1,0 +1,2 @@
+import{Interpolant}from"../Interpolant.js";import{Quaternion}from"../Quaternion.js";class QuaternionLinearInterpolant extends Interpolant{constructor(t,e,n,r){super(t,e,n,r)}interpolate_(t,e,n,r){const o=this.resultBuffer,a=this.sampleValues,l=this.valueSize,s=(n-e)/(r-e);let i=t*l;for(let t=i+l;i!==t;i+=4)Quaternion.slerpFlat(o,0,a,i-l,a,i,s);return o}}export{QuaternionLinearInterpolant};
+//# sourceMappingURL=QuaternionLinearInterpolant.js.map

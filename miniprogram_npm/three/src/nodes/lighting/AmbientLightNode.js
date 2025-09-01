@@ -1,0 +1,2 @@
+import AnalyticLightNode from"./AnalyticLightNode.js";class AmbientLightNode extends AnalyticLightNode{static get type(){return"AmbientLightNode"}constructor(t=null){super(t)}setup({context:t}){t.irradiance.addAssign(this.colorNode)}}export default AmbientLightNode;
+//# sourceMappingURL=AmbientLightNode.js.map

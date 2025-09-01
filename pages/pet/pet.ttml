@@ -1,0 +1,227 @@
+<view class="container">
+
+  <view class="bg-pattern"></view>
+
+
+  <!-- 内容区域 -->
+  <view class="content">
+    <!-- 步骤1: 宠物基本信息 -->
+    <view wx:if="{{currentStep === 1}}" class="step1-container">
+      <!-- 宠物图标展示区 -->
+      <view class="pet-icon-display">
+        <image 
+          class="large-pet-icon" 
+          src="/images/{{petType === '狗狗' ? 'dog.png' : petType === '猫咪' ? 'cat.png' : petType === '小鸟' ? 'dunk.png' : petType === '兔兔' ? 'rabbit.png' : (petType === '仓鼠' ? 'hamster.svg' : petType === '羊驼' ? 'alpaca.svg' : petType === '熊猫' ? 'panda.svg' : 'dunk.png')}}" 
+          mode="aspectFit"
+          binderror="onPetIconError"
+        ></image>
+      </view>
+
+      <!-- 宠物类型选择 -->
+      <view class="pet-type-tabs">
+        <view class="tab-item {{petType === '狗狗' ? 'active' : ''}}" bindtap="selectPetType" data-type="狗狗">狗狗</view>
+        <view class="tab-item {{petType === '猫咪' ? 'active' : ''}}" bindtap="selectPetType" data-type="猫咪">猫咪</view>
+        <view class="tab-item {{petType === '小鸟' ? 'active' : ''}}" bindtap="selectPetType" data-type="小鸟">小鸟</view>
+        <view class="tab-item {{petType === '兔兔' ? 'active' : ''}}" bindtap="selectPetType" data-type="兔兔">兔兔</view>
+        <input 
+          class="custom-pet-type-tab" 
+          value="{{petType === '狗狗' || petType === '猫咪' || petType === '小鸟' || petType === '兔兔' ? '自定义' : petType}}" 
+          bindinput="inputCustomPetType" 
+          bindblur="onCustomPetTypeBlur"
+          confirm-type="done"
+        />
+      </view>
+
+      <!-- 表单区域 -->
+      <view class="form-area">
+        <view class="form-group">
+          <view class="form-label">我的大名</view>
+          <input class="form-input" placeholder="请输入" value="{{petName}}" bindinput="inputPetName"/>
+        </view>
+
+        <view class="form-group">
+          <view class="form-label">性别</view>
+          <view class="gender-buttons">
+            <view class="gender-button {{petGender === 'male' ? 'active' : ''}}" bindtap="selectPetGender" data-gender="male">
+              <text>雄性</text>
+            </view>
+            <view class="gender-button {{petGender === 'female' ? 'active' : ''}}" bindtap="selectPetGender" data-gender="female">
+              <text>雌性</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="form-group">
+          <view class="form-label">我的性格</view>
+          <view class="grid-selection">
+          <view wx:for="{{petPersonalities}}" wx:key="id" class="grid-item {{item.selected ? 'active' : ''}}" bindtap="{{item.icon === 'random' ? 'randomPersonality' : 'selectPersonality'}}" data-id="{{item.id}}">
+            <image class="grid-item-icon" src="/images/personality/{{item.icon}}.svg" mode="aspectFit"></image>
+            <text>{{item.name}}</text>
+          </view>
+        </view>
+          <view class="form-note">我想补充一下（可选）</view>
+          <input class="form-input-supplement" placeholder="补充描述你宠物的性格特点" value="{{supplementPersonality}}" bindinput="inputSupplementPersonality"/>
+        </view>
+
+        <view class="form-group">
+          <view class="form-label">我的爱好</view>
+          <view class="grid-selection">
+          <view wx:for="{{petHobbies}}" wx:key="id" class="grid-item {{item.selected ? 'active' : ''}}" bindtap="selectHobby" data-id="{{item.id}}">
+            <image class="grid-item-icon" src="/images/hobby/{{item.icon}}.svg" mode="aspectFit"></image>
+            <text>{{item.name}}</text>
+          </view>
+        </view>
+          <view class="form-note">我想补充一下（可选）</view>
+          <input class="form-input-supplement" placeholder="补充描述你宠物的其他爱好" value="{{supplementHobby}}" bindinput="inputSupplementHobby"/>
+        </view>
+      </view>
+    </view>
+
+    <!-- 步骤2: 我们是怎么认识的 -->
+    <view wx:if="{{currentStep === 2}}" class="step2-container">
+      <!-- 宠物图标展示区 -->
+      <view class="pet-icon-display">
+        <image 
+          class="large-pet-icon" 
+          src="/images/{{petType === '狗狗' ? 'dog.png' : petType === '猫咪' ? 'cat.png' : petType === '小鸟' ? 'dunk.png' : petType === '兔兔' ? 'rabbit.png' : (petType === '仓鼠' ? 'hamster.svg' : petType === '羊驼' ? 'alpaca.svg' : petType === '熊猫' ? 'panda.svg' : 'dunk.png')}}" 
+          mode="aspectFit"
+          binderror="onPetIconError"
+        ></image>
+      </view>
+
+      <!-- 宠物类型显示 -->
+      <view class="pet-type-display">
+        <text class="selected-pet-type">{{petType}}</text>
+      </view>
+
+      <!-- 表单区域 -->
+      <view class="form-area">
+        <view class="form-group">
+          <view class="form-label" style="text-align: left;">我们是怎么认识的</view>
+          <textarea class="form-textarea step2-textarea" style="width: calc(100% - 40rpx);" placeholder="讲讲我们之间的故事，暂时想不起来也没关系，我们慢慢再回忆~" value="{{petStory}}" bindinput="inputPetStory"></textarea>
+        </view>
+      </view>
+    </view>
+
+    <!-- 步骤3: 上传照片 -->
+    <view wx:if="{{currentStep === 3}}" class="step3-container">
+      <!-- 宠物图标展示区 -->
+      <view class="pet-icon-display">
+        <image 
+          class="large-pet-icon" 
+          src="/images/{{petType === '狗狗' ? 'dog.png' : petType === '猫咪' ? 'cat.png' : petType === '小鸟' ? 'dunk.png' : petType === '兔兔' ? 'rabbit.png' : (petType === '仓鼠' ? 'hamster.svg' : petType === '羊驼' ? 'alpaca.svg' : petType === '熊猫' ? 'panda.svg' : 'dunk.png')}}" 
+          mode="aspectFit"
+          binderror="onPetIconError"
+        ></image>
+      </view>
+
+      <!-- 宠物类型显示 -->
+      <view class="pet-type-display">
+        <text class="selected-pet-type">{{petType}}</text>
+      </view>
+
+      <!-- 照片上传区域 -->
+      <view class="form-group">
+        <view class="form-label">我的照片</view>
+        <view class="upload-container">
+          <!-- 已上传的照片 -->
+          <view wx:for="{{petPhotos}}" wx:key="index" class="photo-item">
+            <image src="{{item}}" mode="aspectFill" class="uploaded-photo"></image>
+            <view class="delete-photo-btn" bindtap="deletePetPhoto" data-index="{{index}}">×</view>
+          </view>
+          <!-- 上传按钮 -->
+          <view class="upload-box" bindtap="uploadPetPhotos" wx:if="{{petPhotos.length < maxPhotos}}">
+            <view class="upload-icon">
+              <image src="/images/upload.png" mode="aspectFit" style="width: 60rpx; height: 60rpx;"></image>
+            </view>
+            <view class="photo-count">{{petPhotos.length}}/{{maxPhotos}}</view>
+          </view>
+        </view>
+        <view class="photo-note">注意：请上传尽量清晰、多角度、全貌的宠物照片，正、后、左、右视图搭配效果最佳哦~</view>
+      </view>
+
+      <!-- 没有照片的描述输入区域 -->
+      <view class="form-area">
+        <view class="form-group">
+          <view class="form-label-left" style="text-align: left;">没有照片？</view>
+          <textarea 
+            class="form-input-adjusted" 
+            style="width: calc(100% - 40rpx)"
+            placeholder="没关系，请帮我回忆一下长什么样？有什么特征？" 
+            value="{{petDescription}}" 
+            bindinput="inputPetDescription"
+          ></textarea>
+        </view>
+      </view>
+    </view>
+
+    <!-- 步骤4: 生成中 -->
+    <view wx:if="{{currentStep === 4}}" class="step4-container">
+      <view class="scene-text">// 预设场景，ai画一个</view>
+      
+      <view class="particle-container">
+        <view class="particle-area">
+          <view class="grid-lines"></view>
+          <view class="particle-effect">
+            <view wx:for="{{particles}}" wx:key="id" class="particle" style="left:{{item.x}}rpx; top:{{item.y}}rpx; width:{{item.size}}rpx; height:{{item.size}}rpx; background-color:{{item.color}};"></view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="progress-container">
+        <view class="progress-bar" style="width: {{generationProgress}}%;"></view>
+        <view class="progress-text">{{generationProgress}}%</view>
+      </view>
+      
+      <view class="generation-text">您的灵伴正在生成中，请稍后再回来看吧~</view>
+      
+      <button class="generating-btn">生成中...⟳</button>
+    </view>
+
+    <!-- 步骤5：生成完成展示 -->
+      <view class="step5-container" wx:if="{{currentStep === 5}}">
+        <view class="pet-display-3d">
+          <!-- 顶部信息区 -->
+          <view style="display: flex; align-items: center; margin-bottom: 20rpx;">
+            <view style="width: 60rpx; height: 60rpx; border-radius: 50%; background-color: #eee; margin-right: 16rpx;"></view>
+            <text class="pet-name">{{petName}}</text>
+          </view>
+          
+          <!-- 中央宠物展示区 - 显示3D模型 -->
+          <view class="model-container">
+            <!-- 3D模型展示区域 -->
+            <view class="model-3d-wrapper" wx:if="{{modelUrl}}">
+              <!-- 这里假设使用小程序的3D渲染能力，具体实现需要根据实际框架调整 -->
+              <!-- 显示3D模型图片预览 -->
+              <image src="{{modelUrl}}" mode="aspectFit" style="width: 280rpx; height: 280rpx;"></image>
+              <text class="model-3d-label">3D模型</text>
+            </view>
+            <!-- 当3D模型不可用时显示普通图片 -->
+            <image src="{{generatedPetImage}}" mode="aspectFit" style="width: 260rpx; height: 260rpx;" wx:else></image>
+          </view>
+          
+          <!-- 宠物类型 -->
+          <text class="pet-type">{{petType}}</text>
+          
+          <!-- 操作按钮区 -->
+          <view class="action-buttons">
+            <view class="like-btn" bindtap="likePet">👍</view>
+            <view class="dislike-btn" bindtap="dislikePet">👎</view>
+          </view>
+          
+          <text class="unsatisfied-text">对结果不满意？</text>
+          
+          <!-- 保存按钮 -->
+          <button class="save-btn" bindtap="savePet">保存</button>
+        </view>
+      </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="footer" wx:if="{{currentStep < totalSteps && !isGenerating}}">
+    <button class="next-btn" bindtap="nextStep" wx:if="{{currentStep !== 1 && currentStep !== 2 && currentStep !== 3 && currentStep !== 4}}">继续 →</button>
+    <button class="next-btn-yellow" bindtap="nextStep" wx:if="{{currentStep === 1}}">继续 →</button>
+    <button class="next-btn-orange" bindtap="nextStep" wx:if="{{currentStep === 2}}">继续</button>
+    <button class="create-btn-yellow" bindtap="createPet" wx:if="{{currentStep === 3}}">创建灵伴</button>
+  </view>
+</view>

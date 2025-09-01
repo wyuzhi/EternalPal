@@ -1,0 +1,2 @@
+import{VideoTexture}from"./VideoTexture.js";class VideoFrameTexture extends VideoTexture{constructor(e,t,r,o,s,i,u,d){super({},e,t,r,o,s,i,u,d),this.isVideoFrameTexture=!0}update(){}clone(){return(new this.constructor).copy(this)}setFrame(e){this.image=e,this.needsUpdate=!0}}export{VideoFrameTexture};
+//# sourceMappingURL=VideoFrameTexture.js.map

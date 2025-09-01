@@ -1,0 +1,2 @@
+import{Fn}from"../tsl/TSLCore.js";export const modelViewProjection=Fn((o=>o.context.setupModelViewProjection()),"vec4").once()().toVarying("v_modelViewProjection");
+//# sourceMappingURL=ModelViewProjectionNode.js.map

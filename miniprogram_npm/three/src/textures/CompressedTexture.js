@@ -1,0 +1,2 @@
+import{Texture}from"./Texture.js";class CompressedTexture extends Texture{constructor(e,s,t,r,i,p,m,u,h,o,x,T){super(null,p,m,u,h,o,r,i,x,T),this.isCompressedTexture=!0,this.image={width:s,height:t},this.mipmaps=e,this.flipY=!1,this.generateMipmaps=!1}}export{CompressedTexture};
+//# sourceMappingURL=CompressedTexture.js.map

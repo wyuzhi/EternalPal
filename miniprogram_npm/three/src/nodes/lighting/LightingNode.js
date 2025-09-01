@@ -1,0 +1,2 @@
+import Node from"../core/Node.js";class LightingNode extends Node{static get type(){return"LightingNode"}constructor(){super("vec3"),this.isLightingNode=!0}}export default LightingNode;
+//# sourceMappingURL=LightingNode.js.map

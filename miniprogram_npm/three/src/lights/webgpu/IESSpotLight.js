@@ -1,0 +1,2 @@
+import{SpotLight}from"../SpotLight.js";class IESSpotLight extends SpotLight{constructor(t,p,s,i,o,e){super(t,p,s,i,o,e),this.iesMap=null}copy(t,p){return super.copy(t,p),this.iesMap=t.iesMap,this}}export default IESSpotLight;
+//# sourceMappingURL=IESSpotLight.js.map

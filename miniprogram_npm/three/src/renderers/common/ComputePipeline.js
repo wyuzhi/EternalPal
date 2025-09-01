@@ -1,0 +1,2 @@
+import Pipeline from"./Pipeline.js";class ComputePipeline extends Pipeline{constructor(e,i){super(e),this.computeProgram=i,this.isComputePipeline=!0}}export default ComputePipeline;
+//# sourceMappingURL=ComputePipeline.js.map

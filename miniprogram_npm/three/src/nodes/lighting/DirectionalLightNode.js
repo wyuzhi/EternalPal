@@ -1,0 +1,2 @@
+import AnalyticLightNode from"./AnalyticLightNode.js";import{lightTargetDirection}from"../accessors/Lights.js";class DirectionalLightNode extends AnalyticLightNode{static get type(){return"DirectionalLightNode"}constructor(t=null){super(t)}setupDirect(){const t=this.colorNode;return{lightDirection:lightTargetDirection(this.light),lightColor:t}}}export default DirectionalLightNode;
+//# sourceMappingURL=DirectionalLightNode.js.map

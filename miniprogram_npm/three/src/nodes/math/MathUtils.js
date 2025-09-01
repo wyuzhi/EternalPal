@@ -1,0 +1,2 @@
+import{sub,mul,div,add}from"./OperatorNode.js";import{PI,pow,sin}from"./MathNode.js";export const parabola=(o,s)=>pow(mul(4,o.mul(sub(1,o))),s);export const gain=(o,s)=>o.lessThan(.5)?parabola(o.mul(2),s).div(2):sub(1,parabola(mul(sub(1,o),2),s).div(2));export const pcurve=(o,s,p)=>pow(div(pow(o,s),add(pow(o,s),pow(sub(1,o),p))),1/s);export const sinc=(o,s)=>sin(PI.mul(s.mul(o).sub(1))).div(PI.mul(s.mul(o).sub(1)));
+//# sourceMappingURL=MathUtils.js.map

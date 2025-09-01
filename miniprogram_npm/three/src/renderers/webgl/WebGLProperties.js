@@ -1,0 +1,2 @@
+function WebGLProperties(){let e=new WeakMap;return{has:function(t){return e.has(t)},get:function(t){let n=e.get(t);return void 0===n&&(n={},e.set(t,n)),n},remove:function(t){e.delete(t)},update:function(t,n,o){e.get(t)[n]=o},dispose:function(){e=new WeakMap}}}export{WebGLProperties};
+//# sourceMappingURL=WebGLProperties.js.map

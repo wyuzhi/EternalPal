@@ -1,0 +1,89 @@
+/* 全局颜色变量定义 */
+
+/* 主色调 */
+page {
+  --primary-color: #FFBF6B;
+  --primary-light: #FFFBEB;
+  --primary-dark: #f0a23d;
+  /* 中性色 */
+  --text-primary: #1c1c1e;        /* 主要文字颜色 */
+  --text-secondary: #666666;      /* 次要文字颜色 */
+  --text-tertiary: #999999;       /* 第三级文字颜色 */
+  --text-disabled: #CCCCCC;       /* 禁用文字颜色 */
+  
+  /* 背景色 */
+  --bg-primary: #FFFFFF;          /* 主背景色 */
+  --bg-secondary: #F8F8F8;        /* 次要背景色 */
+  --bg-tertiary: #F0F0F0;         /* 第三级背景色 */
+  --bg-overlay: rgba(0, 0, 0, 0.3); /* 遮罩背景 */
+  --bg-overlay-dark: rgba(0, 0, 0, 0.6); /* 遮罩背景 */
+  --bg-frosted: rgba(255, 255, 255, 0.5); /* 磨砂背景 */
+  --bg-frosted-dark: rgba(255, 255, 255, 0.8); /* 磨砂背景 */
+  
+  /* 边框色 */
+  --border-frosted: rgba(0, 0, 0, 0.1); /* 磨砂边框 */
+  --border-light: #E5E5E5;        /* 浅边框 */
+  --border-medium: #CCCCCC;       /* 中等边框 */
+  --border-dark: #999999;         /* 深边框 */
+  
+  /* 状态色 */
+  --success-color: #34C759;       /* 成功状态 */
+  --error-color: #FF3B30;         /* 错误状态 */
+  --info-color: #007AFF;          /* 信息状态 */
+  --warning-color: #FF9500;       /* 警告状态 */
+  
+  /* 阴影色 */
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+  --shadow-dark: rgba(0, 0, 0, 0.25);
+  
+  /* Padding */
+  --p-s: 8rpx;           /* 小间距 */
+  --p-m: 16rpx;         /* 中等间距 */
+  --p-l: 24rpx;          /* 大间距 */
+  --p-xl: 32rpx;             /* 超大间距 */
+  --p-xxl: 48rpx;            /* 特大间距 */
+  
+  /* Margin */
+  --m-s: 8rpx;           /* 小外边距 */
+  --m-m: 16rpx;         /* 中等外边距 */
+  --m-l: 24rpx;          /* 大外边距 */
+  --m-xl: 32rpx;             /* 超大外边距 */
+  --m-xxl: 48rpx;            /* 特大外边距 */
+  
+  /* 特殊间距 */
+  --p-container: 32rpx;      /* 容器内边距 */
+  --p-card: 24rpx;           /* 卡片内边距 */
+  --p-button: 16rpx 32rpx;   /* 按钮内边距 */
+  --p-section: 40rpx;      /* 区块间距 */
+  
+  /* 圆角变量 - Border Radius */
+  --r-s: 12rpx;      /* 小圆角 */
+  --r-m: 16rpx;     /* 中等圆角 */
+  --r-l: 30rpx;     /* 大圆角 */
+  --r-pill: 999rpx;     /* 胶囊形 */
+  
+  /* 特殊圆角 */
+  --r-card: 20rpx;      /* 卡片圆角 */
+  --r-button: 8rpx;     /* 按钮圆角 */
+  --r-input: 6rpx;      /* 输入框圆角 */
+  
+  /* 字体大小变量 - Font Size */
+  --f-xs: 20rpx;          /* 超小字体 */
+  --f-sm: 24rpx;          /* 小字体 */
+  --f-base: 28rpx;        /* 基础字体 */
+  --f-md: 32rpx;          /* 中等字体 */
+  --f-lg: 36rpx;          /* 大字体 */
+  --f-xl: 40rpx;          /* 超大字体 */
+  --f-2xl: 48rpx;         /* 特大字体 */
+}
+
+/* 全局样式重置 */
+* {
+  box-sizing: border-box;
+}
+
+page {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}

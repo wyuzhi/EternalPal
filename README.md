@@ -27,7 +27,7 @@ EternalPal/
 │   └── three/        # Three.js库
 ├── pages/            # 小程序页面
 │   ├── companion/    # 宠物陪伴页面（核心功能）
-│   ├── index/        # 首页
+│   ├── guide/        # 引导页面
 │   └── pet/          # 宠物管理页面
 ├── project.config.json # 小程序项目配置
 └── project.private.config.json # 小程序私有配置

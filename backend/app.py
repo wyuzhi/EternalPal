@@ -81,6 +81,8 @@ class Pet(db.Model):
     generated_image = db.Column(db.String(255))
     model_url = db.Column(db.String(255))
     preview_url = db.Column(db.String(255))
+    material_url = db.Column(db.String(255))
+    texture_url = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(20), default='pending')  # 添加状态字段
@@ -264,7 +266,9 @@ def get_user_latest_pet(user_id):
         'generated_image': latest_pet.generated_image,
         'model_url': latest_pet.model_url,
         'preview_url': latest_pet.preview_url,
-        'created_at': latest_pet.created_at.isoformat()
+        'created_at': latest_pet.created_at.isoformat(),
+        'material_url': latest_pet.material_url,
+        'texture_url': latest_pet.texture_url
     }
     
     return jsonify({'status': 'success', 'data': pet_data})
@@ -392,7 +396,9 @@ def get_pet(pet_id):
         'preview_url': pet.preview_url,
         'created_at': pet.created_at.isoformat(),
         'status': pet.status,  # 包含宠物状态信息
-        'task_id': pet.task_id  # 包含任务ID
+        'task_id': pet.task_id,  # 包含任务ID
+        'material_url': pet.material_url,
+        'texture_url': pet.texture_url
     }
     # 直接在根级别返回状态信息，方便前端直接获取
     return jsonify({'status': pet.status, **pet_data})

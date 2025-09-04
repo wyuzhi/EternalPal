@@ -1,3 +1,13 @@
+/* 全局防止横向滚动 */
+page {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -5,6 +15,8 @@
   background-color: #fff9f0;
   padding: 20rpx;
   box-sizing: border-box;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* 顶部导航 */
@@ -100,10 +112,19 @@
   bottom: 0;
   background-color: rgba(255, 249, 240, 0.9);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 10;
 }
+
+.loading-progress {
+  width: 80%;
+  margin-top: 10px;
+}
+
+/* 调试信息样式 */
+/* 已移除 debug 信息样式 */
 
 .scene-indicator,
 .first-success {
@@ -120,8 +141,10 @@
   align-items: center;
   margin: -30rpx 0 20rpx 0;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   background-color: transparent;
+  border: none;
+  border-radius: 10rpx;
 }
 
 .pet-image {
@@ -166,6 +189,9 @@
 .model-canvas {
   width: 100%;
   height: 100%;
+  position: relative;
+  z-index: 5;
+  background-color: transparent;
 }
 
 .pet-image {
@@ -190,6 +216,8 @@
   border-radius: 20rpx;
   height: 33%;
   width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .message-container {
@@ -211,6 +239,9 @@
   border-radius: 20rpx;
   font-size: 28rpx;
   line-height: 1.5;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 .ai-message .message-bubble {
@@ -229,6 +260,8 @@
   justify-content: space-around;
   margin-bottom: 20rpx;
   padding: 0 20rpx;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .action-button {
@@ -263,6 +296,8 @@
   align-items: center;
   margin-bottom: 20rpx;
   padding: 0 20rpx;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .chat-input {
@@ -274,6 +309,8 @@
   padding: 0 30rpx;
   font-size: 28rpx;
   margin-right: 20rpx;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .send-button {
@@ -295,6 +332,8 @@
   justify-content: space-between;
   padding: 0 20rpx;
   margin-bottom: 20rpx;
+  overflow-x: hidden;
+  flex-wrap: nowrap;
 }
 
 .quick-reply {
@@ -307,10 +346,20 @@
   line-height: 70rpx;
   text-align: center;
   margin: 0 10rpx;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .quick-reply::after {
   border: none; /* 移除默认的边框效果 */
+}
+
+.test-button {
+  background-color: #07c160 !important;
+  color: #fff !important;
+  border-color: #07c160 !important;
 }
 
 /* 浮动菜单样式 */

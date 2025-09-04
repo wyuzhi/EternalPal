@@ -1,5 +1,5 @@
+import ModelRenderer from './ModelRenderer';
 const app = getApp();
-const ModelRenderer = require('./ModelRenderer');
 
 Page({
   // 获取聊天记录
@@ -76,7 +76,9 @@ Page({
     petType: '',
     generatedPetImage: '',
     preview_url: '',
-    model_url: '',
+    model_url: '',// 模型obj
+    material_url: '',// 模型材质
+    texture_url: '',// 模型纹理
     petId: '',
     modelLoaded: false, // 默认设置为未加载状态
     moodLevel: 3,
@@ -89,13 +91,19 @@ Page({
     firstLoadSuccess: false,
     scrollToMessageId: '',
     showFloatMenu: false, // 控制浮动菜单显示
+    modelStatus: '未知', // 模型状态
+    modelMessage: '无', // 模型消息
+    rendererInitialized: false, // 渲染器初始化状态
+
   },
   
   // 3D模型渲染器实例
   modelRenderer: null,
+  isInitializing3D: false, // 防止重复初始化的标记
 
   onLoad: function(options) {
-    console.log("Welcome to Mini Code");
+    console.log("[Companion] Welcome to Mini Code");
+    console.log('[Companion] 页面加载完成，开始初始化');
     
     // 从本地存储获取用户信息
     const userInfo = tt.getStorageSync('userInfo') || {};
@@ -159,7 +167,9 @@ Page({
             generatedPetImage: petInfo.generated_image || '',
             // 设置默认占位图片URL，确保即使preview_url为空也能显示图片
             preview_url: petInfo.preview_url || '/images/dog.png',
-            model_url: petInfo.model_url || '',
+            model_url: petInfo.model_url || '',// 模型obj
+            material_url: petInfo.material_url || '',// 模型材质
+            texture_url: petInfo.texture_url || '',// 模型纹理
             petId: petInfo.id,
             isImageMode: false,
             modelPlaceholderText: '正在加载3D模型...',
@@ -169,10 +179,9 @@ Page({
           // 保存宠物信息到本地存储
           tt.setStorageSync('currentPet', petInfo);
           
-          // 延迟初始化3D渲染器，确保canvas元素已经创建
-    setTimeout(() => {
-      that.init3DRenderer();
-    }, 100);
+          // 标记需要初始化3D渲染器，但不在这里直接调用
+          // 让onReady统一处理初始化
+          console.log('[Companion] 宠物信息获取完成，等待onReady初始化3D渲染器');
           
           // 获取聊天记录
           that.fetchChatHistory();
@@ -198,154 +207,154 @@ Page({
   
   // 初始化3D渲染器
   init3DRenderer: function() {
+    console.log('[Companion] 开始初始化3D渲染器');
     const that = this;
+    
     try {
-      // 创建渲染器实例
+      // 防止重复初始化
+      if (this.modelRenderer) {
+        console.log('[Companion] ModelRenderer已存在，先销毁');
+        this.modelRenderer.dispose();
+        this.modelRenderer = null;
+      }
+      
+      // 添加初始化标记，防止并发初始化
+      if (this.isInitializing3D) {
+        console.log('[Companion] 3D渲染器正在初始化中，跳过重复调用');
+        return;
+      }
+      this.isInitializing3D = true;
+      
+      // 创建ModelRenderer实例
+      console.log('[Companion] 开始创建ModelRenderer实例');
       this.modelRenderer = new ModelRenderer();
       
-      // 初始化渲染器
-      this.modelRenderer.init('modelCanvas').then((success) => {
-        if (success) {
-          console.log('3D渲染器初始化成功');
-          if (that.data.model_url) {
-            // 加载3D模型
-            that.load3DModel(that.data.model_url);
-          } else {
-            console.warn('3D渲染器初始化成功但没有模型URL');
-            console.log('切换到图片模式前的状态：', {
-              preview_url: that.data.preview_url,
-              generatedPetImage: that.data.generatedPetImage,
-              isImageMode: that.data.isImageMode
-            });
+      // 延迟初始化，避免canvas未准备好
+      console.log('[Companion] 设置延迟初始化，等待canvas准备');
+      setTimeout(() => {
+        console.log('[Companion] 开始初始化ModelRenderer，canvas ID: modelCanvas');
+        this.modelRenderer.init('modelCanvas').then((success) => {
+          console.log('[Companion] ModelRenderer初始化结果:', success);
+          if (success) {
+            console.log('[Companion] 3D渲染器初始化成功');
+            
+            // 更新渲染器状态
             that.setData({
-              modelLoaded: true,
-              modelPlaceholderText: '没有可加载的3D模型',
-              isImageMode: true
+              rendererInitialized: true,
+              modelStatus: '渲染器已初始化',
+              modelMessage: '等待加载模型'
             });
-            console.log('切换到图片模式后的状态：', {
-              preview_url: that.data.preview_url,
-              generatedPetImage: that.data.generatedPetImage,
-              isImageMode: that.data.isImageMode
+            
+            // 先加载模型，然后在模型加载成功后启动动画
+            // 如果有模型URL，立即加载模型
+            if (that.data.model_url) {
+              console.log('[Companion] 使用指定模型URL:', that.data.model_url);
+              const defaultModelUrl = "https://lf3-developer.bytemastatic.com/obj/developer/misc/AI_AR_demo/logo.obj";
+
+              that.load3DModel(that.data.model_url);
+            } else {
+              // 加载默认测试模型
+              const defaultModelUrl = "https://lf3-developer.bytemastatic.com/obj/developer/misc/AI_AR_demo/logo.obj";
+              console.log('[Companion] 使用默认测试模型:', defaultModelUrl);
+              that.load3DModel(defaultModelUrl);
+            }
+            
+            // 清除初始化标记
+            that.isInitializing3D = false;
+          } else {
+            console.error('[Companion] 3D渲染器初始化失败');
+            that.setData({
+              modelLoaded: false,
+              modelPlaceholderText: '3D渲染器初始化失败，请重试',
+              rendererInitialized: false,
+              modelStatus: '初始化失败',
+              modelMessage: '渲染器创建失败'
             });
+            
+            // 清除初始化标记
+            that.isInitializing3D = false;
           }
-        } else {
-          console.warn('3D渲染器初始化失败，切换到图片模式');
-          console.log('切换到图片模式前的状态：', {
-            preview_url: that.data.preview_url,
-            generatedPetImage: that.data.generatedPetImage,
-            isImageMode: that.data.isImageMode
-          });
+        }).catch((error) => {
+          console.error('[Companion] 3D渲染器初始化异常:', error);
           that.setData({
-            modelLoaded: true,
-            modelPlaceholderText: '无法初始化3D渲染器，将显示图片',
-            isImageMode: true
+            modelLoaded: false,
+            modelPlaceholderText: '3D渲染器初始化异常: ' + error.message
           });
-          console.log('切换到图片模式后的状态：', {
-            preview_url: that.data.preview_url,
-            generatedPetImage: that.data.generatedPetImage,
-            isImageMode: that.data.isImageMode
-          });
-        }
-      }).catch((error) => {
-        console.error('初始化3D渲染器过程中发生错误:', error);
-          console.log('切换到图片模式前的状态：', {
-            preview_url: that.data.preview_url,
-            generatedPetImage: that.data.generatedPetImage,
-            isImageMode: that.data.isImageMode
-          });
-          that.setData({
-            modelLoaded: true,
-            modelPlaceholderText: '加载3D渲染器出错',
-            isImageMode: true
-          });
-          console.log('切换到图片模式后的状态：', {
-            preview_url: that.data.preview_url,
-            generatedPetImage: that.data.generatedPetImage,
-            isImageMode: that.data.isImageMode
-          });
-      });
+          
+          // 清除初始化标记
+          that.isInitializing3D = false;
+        });
+      }, 500);
     } catch (error) {
-      console.error('初始化3D渲染器异常:', error);
-        console.log('切换到图片模式前的状态：', {
-          preview_url: that.data.preview_url,
-          generatedPetImage: that.data.generatedPetImage,
-          isImageMode: that.data.isImageMode
-        });
-        that.setData({
-          modelLoaded: true,
-          modelPlaceholderText: '加载3D模型失败',
-          isImageMode: true
-        });
-        console.log('切换到图片模式后的状态：', {
-          preview_url: that.data.preview_url,
-          generatedPetImage: that.data.generatedPetImage,
-          isImageMode: that.data.isImageMode
-        });
+      console.error('[Companion] 创建ModelRenderer实例失败:', error);
+      this.setData({
+        modelLoaded: false,
+        modelPlaceholderText: '无法创建3D渲染器: ' + error.message
+      });
+      
+      // 清除初始化标记
+      this.isInitializing3D = false;
     }
   },
   
   // 加载3D模型
   load3DModel: function(modelUrl) {
+    console.log('[Companion] 开始加载3D模型，URL:', modelUrl);
     const that = this;
     
-    if (this.modelRenderer) {
-      tt.showLoading({
-        title: '正在加载3D模型...',
-      });
-      
-      this.modelRenderer.loadModel(modelUrl).then((success) => {
-        tt.hideLoading();
-        
-        if (success) {
-          console.log('3D模型加载成功');
-          that.setData({
-            modelLoaded: true,
-            modelPlaceholderText: '',
-            isImageMode: false,
-            firstLoadSuccess: true
-          });
-        } else {
-          console.warn('3D模型加载失败');
-          console.log('切换到图片模式前的状态：', {
-            preview_url: that.data.preview_url,
-            generatedPetImage: that.data.generated_image,
-            isImageMode: that.data.isImageMode
-          });
-          that.setData({
-            modelLoaded: true,
-            modelPlaceholderText: '3D模型加载失败，将显示图片',
-            isImageMode: true
-          });
-          console.log('切换到图片模式后的状态：', {
-            preview_url: that.data.preview_url,
-            generatedPetImage: that.data.generated_image,
-            isImageMode: that.data.isImageMode
-          });
-        }
-      }).catch((error) => {
-        tt.hideLoading();
-        console.error('加载3D模型异常:', error);
-          console.log('切换到图片模式前的状态：', {
-            preview_url: that.data.preview_url,
-            generatedPetImage: that.data.generated_image,
-            isImageMode: that.data.isImageMode
-          });
-          that.setData({
-            modelLoaded: true,
-            modelPlaceholderText: '加载3D模型异常',
-            isImageMode: true
-          });
-          console.log('切换到图片模式后的状态：', {
-            preview_url: that.data.preview_url,
-            generatedPetImage: that.data.generated_image,
-            isImageMode: that.data.isImageMode
-          });
-      });
+    if (!this.modelRenderer) {
+      console.error('[Companion] ModelRenderer未初始化，无法加载模型');
+      return;
     }
+    
+    tt.showLoading({
+      title: '正在加载3D模型...',
+    });
+    
+    // 初始化加载状态
+    console.log('[Companion] 设置加载状态');
+    that.setData({
+      modelPlaceholderText: '模型加载中...',
+      loadingProgress: 0,
+      modelStatus: '加载中',
+      modelMessage: '正在下载模型文件'
+    });
+    
+    console.log('[Companion] 调用ModelRenderer.loadOBJModel');
+    this.modelRenderer.loadOBJModel(modelUrl, this.data.material_url, this.data.texture_url).then((model) => {
+      tt.hideLoading();
+      console.log('[Companion] 3D模型加载成功');
+      
+      // 模型加载成功后启动动画循环
+      console.log('[Companion] 启动动画循环');
+      that.modelRenderer.startAnimation();
+      
+      that.setData({
+        modelLoaded: true,
+        modelPlaceholderText: '',
+        isImageMode: false,
+        firstLoadSuccess: true,
+        loadingProgress: 100,
+        modelStatus: '加载成功',
+        modelMessage: '模型已就绪，动画运行中'
+      });
+    }).catch((error) => {
+      tt.hideLoading();
+      console.error('[Companion] 加载3D模型异常:', error);
+      
+      that.setData({
+        modelLoaded: false,
+        modelPlaceholderText: '加载3D模型失败: ' + error.message,
+        isImageMode: false,
+        loadingProgress: 0,
+        modelStatus: '加载失败',
+        modelMessage: error.message || '模型文件加载错误'
+      });
+    });
   },
   
   onReady: function() {
-    console.log('页面渲染完成，onReady被调用');
+    console.log('[Companion] 页面渲染完成，onReady被调用');
     // 页面渲染完成后滚动到底部
     setTimeout(() => {
       this.scrollToBottom();
@@ -353,14 +362,17 @@ Page({
     
     // 如果有宠物ID且未初始化3D渲染器，则尝试初始化
     if (this.data.petId && !this.modelRenderer) {
+      console.log('[Companion] onReady中检测到需要初始化3D渲染器');
       setTimeout(() => {
         this.init3DRenderer();
       }, 200);
+    } else {
+      console.log('[Companion] onReady中跳过3D渲染器初始化，petId:', this.data.petId, 'modelRenderer存在:', !!this.modelRenderer);
     }
   },
   
   onShow: function() {
-    console.log('页面显示，onShow被调用');
+    console.log('[Companion] 页面显示，onShow被调用');
     
     // 检查是否有宠物信息更新
     const updatedPet = tt.getStorageSync('currentPet') || {};
@@ -384,23 +396,92 @@ Page({
   
   // 页面卸载时销毁3D渲染器
   onUnload: function() {
+    console.log('[Companion] 页面卸载，清理资源');
     if (this.modelRenderer) {
-      this.modelRenderer.destroy();
+      console.log('[Companion] 销毁ModelRenderer实例');
+      this.modelRenderer.dispose();
       this.modelRenderer = null;
     }
   },
   
-  // 页面隐藏时停止旋转
+  // 测试3D模型渲染功能
+  testModelRendering: function() {
+    console.log('[Companion] 测试3D模型渲染功能');
+    
+    // 检查canvas元素
+    const query = tt.createSelectorQuery();
+    query.select('#modelCanvas').boundingClientRect((rect) => {
+      if (rect) {
+        console.log('[Companion] Canvas元素信息:', rect);
+      } else {
+        console.error('[Companion] 无法找到Canvas元素');
+      }
+    }).exec();
+    
+    if (!this.modelRenderer) {
+      console.log('[Companion] 渲染器未初始化，开始初始化');
+      this.init3DRenderer();
+      return;
+    }
+    
+    if (!this.modelRenderer.isInitialized) {
+      console.log('[Companion] 渲染器未完成初始化');
+      return;
+    }
+    
+    // 强制渲染当前场景
+    if (this.modelRenderer.renderer && this.modelRenderer.scene && this.modelRenderer.camera) {
+      console.log('[Companion] 强制渲染当前场景');
+      this.modelRenderer.renderer.render(this.modelRenderer.scene, this.modelRenderer.camera);
+    }
+    
+    try {
+      console.log('[Companion] 开始测试3D模型渲染功能');
+      
+      // 测试加载默认模型
+      const testModelUrl = "https://lf3-developer.bytemastatic.com/obj/developer/misc/AI_AR_demo/logo.obj";
+      console.log('[Companion] 使用测试模型URL:', testModelUrl);
+      
+      this.setData({
+        modelLoaded: false,
+        modelPlaceholderText: '正在测试加载模型...',
+        isImageMode: false
+      });
+      
+      this.load3DModel(testModelUrl);
+      
+      console.log('[Companion] 3D模型渲染功能测试启动');
+      
+      tt.showToast({
+        title: '正在测试3D功能',
+        icon: 'loading',
+        duration: 2000
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('[Companion] 3D模型渲染测试失败:', error);
+      tt.showToast({
+        title: '测试失败: ' + error.message,
+        icon: 'none'
+      });
+      return false;
+    }
+   },
+   
+   // 页面隐藏时停止旋转
   onHide: function() {
+    console.log('[Companion] 页面隐藏，停止动画');
     if (this.modelRenderer) {
-      this.modelRenderer.stopRotation();
+      this.modelRenderer.stopAnimation();
     }
   },
   
   // 页面重新显示时继续旋转
   onBackShow: function() {
+    console.log('[Companion] 页面重新显示，继续动画');
     if (this.modelRenderer) {
-      this.modelRenderer.startRotation();
+      this.modelRenderer.startAnimation();
     }
   },
     
@@ -619,10 +700,16 @@ Page({
   
   // 重置模型显示
   resetModel: function() {
+    console.log('[Companion] 开始重置模型');
+    
     if (this.modelRenderer) {
-      this.modelRenderer.destroy();
+      console.log('[Companion] 销毁现有ModelRenderer');
+      this.modelRenderer.dispose(); // 使用dispose而不是destroy
       this.modelRenderer = null;
     }
+    
+    // 重置初始化标记
+    this.isInitializing3D = false;
     
     this.setData({
       isImageMode: false,
@@ -632,6 +719,7 @@ Page({
     
     // 重新初始化3D渲染器
     if (this.data.petId) {
+      console.log('[Companion] 准备重新初始化3D渲染器');
       setTimeout(() => {
         this.init3DRenderer();
       }, 100);
@@ -672,16 +760,58 @@ Page({
 
   handleCanvasTouchStart(e) {
     if (this.modelRenderer && this.modelRenderer.model) {
-      this.modelRenderer.stopRotation();
+      this.modelRenderer.stopAnimation();
+      
+      // 记录触摸起始点
       this.touchStartX = e.touches[0].clientX;
+      
+      // 检测是否为多点触摸（缩放操作）
+      if (e.touches.length === 2) {
+        // 计算两个触摸点之间的初始距离
+        const touch1 = e.touches[0];
+        const touch2 = e.touches[1];
+        this.initialPinchDistance = Math.sqrt(
+          Math.pow(touch2.clientX - touch1.clientX, 2) +
+          Math.pow(touch2.clientY - touch1.clientY, 2)
+        );
+        this.isPinching = true;
+      } else {
+        this.isPinching = false;
+      }
     }
   },
 
   handleCanvasTouchMove(e) {
-    if (this.modelRenderer && this.modelRenderer.model) {
+    if (!this.modelRenderer || !this.modelRenderer.model) return;
+    
+    // 处理缩放操作（双指触摸）
+    if (this.isPinching && e.touches.length === 2) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const currentPinchDistance = Math.sqrt(
+        Math.pow(touch2.clientX - touch1.clientX, 2) +
+        Math.pow(touch2.clientY - touch1.clientY, 2)
+      );
+      
+      // 计算缩放比例
+      if (this.initialPinchDistance > 0) {
+        const scaleFactor = currentPinchDistance / this.initialPinchDistance;
+        
+        // 调用ModelRenderer的缩放方法
+        if (Math.abs(scaleFactor - 1) > 0.01) { // 添加阈值，避免微小变化
+          this.modelRenderer.scaleModel(scaleFactor);
+          this.initialPinchDistance = currentPinchDistance; // 更新初始距离
+        }
+      }
+    } 
+    // 处理旋转操作（单指触摸）
+    else if (e.touches.length === 1) {
       const touchX = e.touches[0].clientX;
       const deltaX = touchX - this.touchStartX;
-      this.modelRenderer.model.rotation.y += deltaX * 0.01;
+      
+      // 调整旋转速度，使其更平滑
+      const rotationSpeed = 0.01;
+      this.modelRenderer.model.rotation.y += deltaX * rotationSpeed;
       this.modelRenderer.render();
       this.touchStartX = touchX;
     }
@@ -689,7 +819,19 @@ Page({
 
   handleCanvasTouchEnd() {
     if (this.modelRenderer) {
-      this.modelRenderer.startRotation();
+      // 重置触摸状态
+      this.isPinching = false;
+      this.initialPinchDistance = 0;
+      
+      // 恢复自动旋转
+      this.modelRenderer.startAnimation();
+    }
+  },
+  
+  // 双击重置模型缩放
+  handleCanvasDoubleTap() {
+    if (this.modelRenderer) {
+      this.modelRenderer.resetModelScale();
     }
   }
 });

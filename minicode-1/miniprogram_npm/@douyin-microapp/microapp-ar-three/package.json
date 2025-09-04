@@ -1,0 +1,31 @@
+{
+  "name": "@douyin-microapp/microapp-ar-three",
+  "version": "0.0.4",
+  "license": "MIT",
+  "type": "module",
+  "source": "src/index.ts",
+  "exports": "./dist/index.modern.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.module.js",
+  "unpkg": "./dist/index.umd.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "bundle": "microbundle --tsconfig tsconfig.build.json",
+    "build": "yarn bundle",
+    "dev": "yarn bundle -- watch --no-compress --no-sourcema --format modern"
+  },
+  "files": [
+    "README.md",
+    "dist",
+    "libs"
+  ],
+  "dependencies": {
+    "tslib": "2.3.0"
+  },
+  "peerDependencies": {
+    "three": "*"
+  },
+  "devDependencies": {
+    "@types/three": "^0.129.1"
+  }
+}

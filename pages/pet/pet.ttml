@@ -5,223 +5,326 @@
 
   <!-- 内容区域 -->
   <view class="content">
+    <!-- 宠物类型轮播选择 -->
+    <view class="pet-type-carousel" wx:if="{{currentStep !== 4 && currentStep !== 5}}">      
+      <view class="carousel-scroll">
+        <view class="carousel-container">
+          <view 
+            wx:for="{{allPetTypes}}" 
+            wx:key="type" 
+            class="pet-type-item {{currentIndex === index ? 'active' : ''}} {{item.isCustom ? 'custom-type' : ''}}"
+            style="transform: {{currentIndex === index ? 'scale(1.2) translateX(0)' : index < currentIndex ? 'scale(0.8) translateX(-' + (300 * (currentIndex - index)) + 'rpx)' : index > currentIndex ? 'scale(0.8) translateX(' + (300 * (index - currentIndex)) + 'rpx)' : 'scale(0.8) translateX(0)'}}"
+            bindtap="selectPetType" 
+            data-type="{{item.type}}"
+            data-index="{{index}}"
+          >
+            <image wx:if="{{!item.isCustom}}" class="pet-type-icon" src="{{item.icon}}" mode="aspectFit"></image>
+            <view wx:if="{{item.isCustom}}" class="pet-type-icon custom-icon">+</view>
+          </view>
+        </view>
+      </view>
+      <!-- 宠物类型标签 -->
+      <view class="pet-type-labels">
+        <view 
+          wx:for="{{allPetTypes}}" 
+          wx:key="type" 
+          class="pet-type-label {{currentIndex === index ? 'active' : ''}}"
+          bindtap="selectPetType"
+          data-type="{{item.type}}"
+          data-index="{{index}}"
+        >
+          {{item.name}}
+        </view>
+      </view>
+    </view>
+
     <!-- 步骤1: 宠物基本信息 -->
     <view wx:if="{{currentStep === 1}}" class="step1-container">
-      <!-- 宠物图标展示区 -->
-      <view class="pet-icon-display">
-        <image 
-          class="large-pet-icon" 
-          src="/images/{{petType === '狗狗' ? 'dog.png' : petType === '猫咪' ? 'cat.png' : petType === '小鸟' ? 'dunk.png' : petType === '兔兔' ? 'rabbit.png' : (petType === '仓鼠' ? 'hamster.svg' : petType === '羊驼' ? 'alpaca.svg' : petType === '熊猫' ? 'panda.svg' : 'dunk.png')}}" 
-          mode="aspectFit"
-          binderror="onPetIconError"
-        ></image>
-      </view>
+        
 
-      <!-- 宠物类型选择 -->
-      <view class="pet-type-tabs">
-        <view class="tab-item {{petType === '狗狗' ? 'active' : ''}}" bindtap="selectPetType" data-type="狗狗">狗狗</view>
-        <view class="tab-item {{petType === '猫咪' ? 'active' : ''}}" bindtap="selectPetType" data-type="猫咪">猫咪</view>
-        <view class="tab-item {{petType === '小鸟' ? 'active' : ''}}" bindtap="selectPetType" data-type="小鸟">小鸟</view>
-        <view class="tab-item {{petType === '兔兔' ? 'active' : ''}}" bindtap="selectPetType" data-type="兔兔">兔兔</view>
-        <input 
-          class="custom-pet-type-tab" 
-          value="{{petType === '狗狗' || petType === '猫咪' || petType === '小鸟' || petType === '兔兔' ? '自定义' : petType}}" 
-          bindinput="inputCustomPetType" 
-          bindblur="onCustomPetTypeBlur"
-          confirm-type="done"
-        />
-      </view>
-
-      <!-- 表单区域 -->
-      <view class="form-area">
+      <!-- 基本信息卡片 -->
+      <view class="info-card">
+        <view class="card-header">
+          <text class="card-title">基本信息</text>
+        </view>
+        
         <view class="form-group">
-          <view class="form-label">我的大名</view>
-          <input class="form-input" placeholder="请输入" value="{{petName}}" bindinput="inputPetName"/>
+          <view class="form-label">
+            <text>我的大名</text>
+          </view>
+          <input class="form-input" placeholder="请输入宠物名称" value="{{petName}}" bindinput="inputPetName" maxlength="20"/>
         </view>
 
-        <view class="form-group">
-          <view class="form-label">性别</view>
-          <view class="gender-buttons">
-            <view class="gender-button {{petGender === 'male' ? 'active' : ''}}" bindtap="selectPetGender" data-gender="male">
-              <text>雄性</text>
+        <!-- 性别和生日 -->
+        <view class="form-row">
+          <view class="form-group form-group-half">
+            <view class="form-label">
+              <text>性别</text>
             </view>
-            <view class="gender-button {{petGender === 'female' ? 'active' : ''}}" bindtap="selectPetGender" data-gender="female">
-              <text>雌性</text>
+            <radio-group bindchange="selectPetGender" class="gender-radio-group">
+              <label class="gender-radio {{petGender === 'male'}}" data-gender="male">
+                <radio value="male" checked="{{petGender === 'male'}}" class="radio-input" color="#FFBF6B"/>
+                <text>雄性</text>
+              </label>
+              <label class="gender-radio {{petGender === 'female'}}" data-gender="female">
+                <radio value="female" checked="{{petGender === 'female'}}" class="radio-input" color="#FFBF6B"/>
+                <text>雌性</text>
+              </label>
+            </radio-group>
+          </view>
+
+          <view class="form-group form-group-half">
+            <view class="form-label">
+              <text>生日</text>
             </view>
+            <picker mode="date" value="{{petBirthday}}" bindchange="selectPetBirthday" class="birthday-picker">
+              <view class="birthday-input">
+                <text class="{{petBirthday ? 'selected' : 'placeholder'}}">{{petBirthday || '请选择生日'}}</text>
+                <image class="date-arrow" src="/images/petProfile/date.svg" mode="aspectFit"></image>
+              </view>
+            </picker>
           </view>
         </view>
+      </view>
 
-        <view class="form-group">
-          <view class="form-label">我的性格</view>
-          <view class="grid-selection">
+      <!-- 性格卡片 -->
+      <view class="info-card">
+        <view class="card-header">
+          <text class="card-title">我的性格</text>
+        </view>
+        
+        <view class="grid-selection">
           <view wx:for="{{petPersonalities}}" wx:key="id" class="grid-item {{item.selected ? 'active' : ''}}" bindtap="{{item.icon === 'random' ? 'randomPersonality' : 'selectPersonality'}}" data-id="{{item.id}}">
-            <image class="grid-item-icon" src="/images/personality/{{item.icon}}.svg" mode="aspectFit"></image>
+            <image src="/images/personality/{{item.icon}}.svg" class="personality-icon" mode="aspectFit" data-icon="{{item.icon}}"/>
             <text>{{item.name}}</text>
           </view>
         </view>
-          <view class="form-note">我想补充一下（可选）</view>
-          <input class="form-input-supplement" placeholder="补充描述你宠物的性格特点" value="{{supplementPersonality}}" bindinput="inputSupplementPersonality"/>
+        <view class="form-note">我想补充一下（选填）</view>
+        <view class="input-container">
+          <textarea class="form-input-supplement" placeholder="补充描述其他性格特点" value="{{supplementPersonality}}" bindinput="inputSupplementPersonality" maxlength="100" auto-height="true"/>
+          <view class="char-count">{{supplementPersonality.length}}/100</view>
         </view>
+      </view>
 
-        <view class="form-group">
-          <view class="form-label">我的爱好</view>
-          <view class="grid-selection">
+      <!-- 爱好卡片 -->
+      <view class="info-card">
+        <view class="card-header">
+          <text class="card-title">我的爱好</text>
+        </view>
+        
+        <view class="grid-selection">
           <view wx:for="{{petHobbies}}" wx:key="id" class="grid-item {{item.selected ? 'active' : ''}}" bindtap="selectHobby" data-id="{{item.id}}">
-            <image class="grid-item-icon" src="/images/hobby/{{item.icon}}.svg" mode="aspectFit"></image>
+            <image src="/images/hobby/{{item.icon}}.svg" class="hobby-icon" mode="aspectFit"/>
             <text>{{item.name}}</text>
           </view>
         </view>
-          <view class="form-note">我想补充一下（可选）</view>
-          <input class="form-input-supplement" placeholder="补充描述你宠物的其他爱好" value="{{supplementHobby}}" bindinput="inputSupplementHobby"/>
+        <view class="form-note">我想补充一下（选填）</view>
+        <view class="input-container">
+          <textarea class="form-input-supplement" placeholder="补充描述其他爱好" value="{{supplementHobby}}" bindinput="inputSupplementHobby" maxlength="100" auto-height="true"/>
+          <view class="char-count">{{supplementHobby.length}}/100</view>
         </view>
       </view>
     </view>
 
     <!-- 步骤2: 我们是怎么认识的 -->
     <view wx:if="{{currentStep === 2}}" class="step2-container">
-      <!-- 宠物图标展示区 -->
-      <view class="pet-icon-display">
-        <image 
-          class="large-pet-icon" 
-          src="/images/{{petType === '狗狗' ? 'dog.png' : petType === '猫咪' ? 'cat.png' : petType === '小鸟' ? 'dunk.png' : petType === '兔兔' ? 'rabbit.png' : (petType === '仓鼠' ? 'hamster.svg' : petType === '羊驼' ? 'alpaca.svg' : petType === '熊猫' ? 'panda.svg' : 'dunk.png')}}" 
-          mode="aspectFit"
-          binderror="onPetIconError"
-        ></image>
-      </view>
 
-      <!-- 宠物类型显示 -->
-      <view class="pet-type-display">
-        <text class="selected-pet-type">{{petType}}</text>
-      </view>
-
-      <!-- 表单区域 -->
-      <view class="form-area">
+      <!-- 我们的故事卡片 -->
+      <view class="info-card">
+        <view class="card-header">
+          <text class="card-title">我们是怎么认识的</text>
+        </view>
+        
         <view class="form-group">
-          <view class="form-label" style="text-align: left;">我们是怎么认识的</view>
-          <textarea class="form-textarea step2-textarea" style="width: calc(100% - 40rpx);" placeholder="讲讲我们之间的故事，暂时想不起来也没关系，我们慢慢再回忆~" value="{{petStory}}" bindinput="inputPetStory"></textarea>
+          <view class="input-container">
+            <textarea 
+              class="form-input-supplement story-textarea" 
+              placeholder="选填：讲讲我们之间的故事，暂时想不起来也没关系，我们慢慢再回忆~" 
+              value="{{petStory}}" 
+              bindinput="inputPetStory"
+              maxlength="300"
+              auto-height="true"
+            />
+            <view class="char-count">{{petStory.length}}/300</view>
+          </view>
         </view>
       </view>
     </view>
 
     <!-- 步骤3: 上传照片 -->
     <view wx:if="{{currentStep === 3}}" class="step3-container">
-      <!-- 宠物图标展示区 -->
-      <view class="pet-icon-display">
-        <image 
-          class="large-pet-icon" 
-          src="/images/{{petType === '狗狗' ? 'dog.png' : petType === '猫咪' ? 'cat.png' : petType === '小鸟' ? 'dunk.png' : petType === '兔兔' ? 'rabbit.png' : (petType === '仓鼠' ? 'hamster.svg' : petType === '羊驼' ? 'alpaca.svg' : petType === '熊猫' ? 'panda.svg' : 'dunk.png')}}" 
-          mode="aspectFit"
-          binderror="onPetIconError"
-        ></image>
-      </view>
 
-      <!-- 宠物类型显示 -->
-      <view class="pet-type-display">
-        <text class="selected-pet-type">{{petType}}</text>
-      </view>
-
-      <!-- 照片上传区域 -->
-      <view class="form-group">
-        <view class="form-label">我的照片</view>
-        <view class="upload-container">
-          <!-- 已上传的照片 -->
-          <view wx:for="{{petPhotos}}" wx:key="index" class="photo-item">
-            <image src="{{item}}" mode="aspectFill" class="uploaded-photo"></image>
-            <view class="delete-photo-btn" bindtap="deletePetPhoto" data-index="{{index}}">×</view>
-          </view>
-          <!-- 上传按钮 -->
-          <view class="upload-box" bindtap="uploadPetPhotos" wx:if="{{petPhotos.length < maxPhotos}}">
-            <view class="upload-icon">
-              <image src="/images/upload.png" mode="aspectFit" style="width: 60rpx; height: 60rpx;"></image>
-            </view>
-            <view class="photo-count">{{petPhotos.length}}/{{maxPhotos}}</view>
-          </view>
+      <!-- 照片上传卡片 -->
+      <view class="info-card">
+        <view class="card-header">
+          <text class="card-title">我的照片</text>
         </view>
-        <view class="photo-note">注意：请上传尽量清晰、多角度、全貌的宠物照片，正、后、左、右视图搭配效果最佳哦~</view>
+        
+        <view class="form-group">
+          <view class="upload-container">
+            <!-- 已上传的照片 -->
+            <view wx:if="{{petPhotos.length > 0}}" class="single-photo-item">
+              <image src="{{petPhotos[0]}}" mode="aspectFill" class="uploaded-single-photo"></image>
+              <view class="delete-photo-btn" bindtap="deletePetPhoto" data-index="0">
+                <image src="/images/guide/close.svg" mode="aspectFit" class="delete-icon"></image>
+              </view>
+            </view>
+            <!-- 上传按钮 -->
+            <view wx:else class="single-upload-box" bindtap="uploadPetPhotos">
+              <view class="upload-icon">
+                <image src="/images/guide/image.svg" mode="aspectFit" style="width: 80rpx; height: 80rpx;"></image>
+              </view>
+              <text class="upload-text">点击上传照片</text>
+            </view>
+          </view>
+          <view class="form-note">上传一张清晰的宠物照片，有助于生成更准确的3D模型</view>
+        </view>
       </view>
 
-      <!-- 没有照片的描述输入区域 -->
-      <view class="form-area">
+      <!-- 没有照片的描述卡片 -->
+      <view class="info-card">
+        <view class="card-header">
+          <text class="card-title">没有照片？</text>
+        </view>
+        
         <view class="form-group">
-          <view class="form-label-left" style="text-align: left;">没有照片？</view>
-          <textarea 
-            class="form-input-adjusted" 
-            style="width: calc(100% - 40rpx)"
-            placeholder="没关系，请帮我回忆一下长什么样？有什么特征？" 
-            value="{{petDescription}}" 
-            bindinput="inputPetDescription"
-          ></textarea>
+          <view class="input-container">
+            <textarea 
+              class="form-input-supplement"
+              placeholder="没关系，请帮我回忆一下长什么样？有什么特征？" 
+              value="{{petDescription}}" 
+              bindinput="inputPetDescription"
+              maxlength="100"
+              auto-height="true"
+            />
+            <view class="char-count">{{petDescription.length}}/100</view>
+          </view>
         </view>
       </view>
     </view>
 
     <!-- 步骤4: 生成中 -->
     <view wx:if="{{currentStep === 4}}" class="step4-container">
-      <view class="scene-text">// 预设场景，ai画一个</view>
       
-      <view class="particle-container">
-        <view class="particle-area">
-          <view class="grid-lines"></view>
-          <view class="particle-effect">
-            <view wx:for="{{particles}}" wx:key="id" class="particle" style="left:{{item.x}}rpx; top:{{item.y}}rpx; width:{{item.size}}rpx; height:{{item.size}}rpx; background-color:{{item.color}};"></view>
-          </view>
-        </view>
+      <!-- 生成步骤提示 -->
+      <view class="generation-step-text">{{generationStepText}}</view>
+
+      <!-- 占位图 -->
+      <view class="placeholder-container">
+        <view class="placeholder-image"></view>
       </view>
       
+      <!-- 进度信息 -->
+      <view class="progress-info">
+        <text class="progress-percent">{{generationProgress}}%</text>
+        <text class="remaining-time">剩余时间：{{estimatedTimeRemaining}}</text>
+      </view>
+      
+      <!-- 进度条 -->
       <view class="progress-container">
         <view class="progress-bar" style="width: {{generationProgress}}%;"></view>
-        <view class="progress-text">{{generationProgress}}%</view>
       </view>
+    
       
-      <view class="generation-text">您的灵伴正在生成中，请稍后再回来看吧~</view>
-      
-      <button class="generating-btn">生成中...⟳</button>
+      <!-- 小贴士滚动区 -->
+      <view class="tips-scroll-container">
+        <view class="tips-scroll-content">
+          <text class="tips-item">{{currentTip}}</text>
+        </view>
+      </view>
     </view>
 
     <!-- 步骤5：生成完成展示 -->
-      <view class="step5-container" wx:if="{{currentStep === 5}}">
-        <view class="pet-display-3d">
-          <!-- 顶部信息区 -->
-          <view style="display: flex; align-items: center; margin-bottom: 20rpx;">
-            <view style="width: 60rpx; height: 60rpx; border-radius: 50%; background-color: #eee; margin-right: 16rpx;"></view>
-            <text class="pet-name">{{petName}}</text>
+    <view class="step5-container" wx:if="{{currentStep === 5}}">
+      <!-- 顶部信息区 -->
+      <view class="pet-info-header">
+        <image class="pet-avatar" src="/images/logo.svg" mode="aspectFit"></image>
+        <text class="pet-name">{{petName || '小可爱'}}</text>
+      </view>
+      
+      <!-- 占位图容器 -->
+      <view class="placeholder-container">
+        <view class="placeholder-image step5-model-display">
+          <!-- 3D模型展示区域 -->
+          <view class="model-3d-wrapper" wx:if="{{modelUrl}}">
+            <!-- 这里假设使用小程序的3D渲染能力，具体实现需要根据实际框架调整 -->
+            <!-- 显示3D模型图片预览 -->
+            <image src="{{modelUrl}}" mode="aspectFit" class="model-image"></image>
+            <text class="model-3d-label">3D模型</text>
           </view>
-          
-          <!-- 中央宠物展示区 - 显示3D模型 -->
-          <view class="model-container">
-            <!-- 3D模型展示区域 -->
-            <view class="model-3d-wrapper" wx:if="{{modelUrl}}">
-              <!-- 这里假设使用小程序的3D渲染能力，具体实现需要根据实际框架调整 -->
-              <!-- 显示3D模型图片预览 -->
-              <image src="{{modelUrl}}" mode="aspectFit" style="width: 280rpx; height: 280rpx;"></image>
-              <text class="model-3d-label">3D模型</text>
-            </view>
-            <!-- 当3D模型不可用时显示普通图片 -->
-            <image src="{{generatedPetImage}}" mode="aspectFit" style="width: 260rpx; height: 260rpx;" wx:else></image>
-          </view>
-          
-          <!-- 宠物类型 -->
-          <text class="pet-type">{{petType}}</text>
-          
-          <!-- 操作按钮区 -->
-          <view class="action-buttons">
-            <view class="like-btn" bindtap="likePet">👍</view>
-            <view class="dislike-btn" bindtap="dislikePet">👎</view>
-          </view>
-          
-          <text class="unsatisfied-text">对结果不满意？</text>
-          
-          <!-- 保存按钮 -->
-          <button class="save-btn" bindtap="savePet">保存</button>
+          <!-- 当3D模型不可用时显示普通图片 -->
+          <image src="{{generatedPetImage}}" mode="aspectFit" class="model-image" wx:else></image>
         </view>
       </view>
+      
+      <view class="feedback">
+        <!-- 操作按钮 -->
+        <view class="action-buttons">
+          <view class="like-btn" bindtap="likePet">
+            <image src="/images/guide/like.svg" mode="aspectFit" class="action-icon"></image>
+          </view>
+          <view class="dislike-btn" bindtap="dislikePet">
+            <image src="/images/guide/dislike.svg" mode="aspectFit" class="action-icon"></image>
+          </view>
+        </view>
+        
+        <!-- 反馈 -->
+        <text class="unsatisfied-text" bindtap="unsatisfied">对结果不满意</text>
+      </view>
+      
+    </view>
   </view>
 
   <!-- 底部按钮 -->
-  <view class="footer" wx:if="{{currentStep < totalSteps && !isGenerating}}">
-    <button class="next-btn" bindtap="nextStep" wx:if="{{currentStep !== 1 && currentStep !== 2 && currentStep !== 3 && currentStep !== 4}}">继续 →</button>
-    <button class="next-btn-yellow" bindtap="nextStep" wx:if="{{currentStep === 1}}">继续 →</button>
-    <button class="next-btn-orange" bindtap="nextStep" wx:if="{{currentStep === 2}}">继续</button>
-    <button class="create-btn-yellow" bindtap="createPet" wx:if="{{currentStep === 3}}">创建灵伴</button>
+  <view wx:if="{{currentStep < totalSteps && !isGenerating}}">
+    <view class="button-container">
+      <!-- 步骤1: 继续 -->
+      <button class="next-btn" bindtap="nextStep" wx:if="{{currentStep === 1}}">
+        <text class="btn-text">继续</text>
+        <image class="btn-icon" src="/images/guide/continue.svg" mode="aspectFit"></image>
+      </button>
+      
+      <!-- 步骤2: 返回 + 继续 -->
+      <view wx:if="{{currentStep === 2}}" class="button-group">
+        <button class="back-btn" bindtap="prevStep">
+          <image class="back-icon" src="/images/guide/continue.svg" mode="aspectFit"></image>
+        </button>
+        <button class="next-btn" bindtap="nextStep">
+          <text class="btn-text">继续</text>
+          <image class="btn-icon" src="/images/guide/continue.svg" mode="aspectFit"></image>
+        </button>
+      </view>
+      
+      <!-- 步骤3: 返回 + 创建灵伴 -->
+      <view wx:if="{{currentStep === 3 && !isGenerating}}" class="button-group">
+        <button class="back-btn" bindtap="prevStep">
+          <image class="back-icon" src="/images/guide/continue.svg" mode="aspectFit"></image>
+        </button>
+        <button class="create-btn" bindtap="createPet">
+          <text class="btn-text">创建</text>
+          <image class="btn-icon" src="/images/guide/generate.svg" mode="aspectFit"></image>
+        </button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 生成中 -->
+  <view wx:if="{{isGenerating || currentStep === 4}}">
+    <view class="button-container">
+      <button class="generating-btn" disabled="true">
+        <text class="btn-text">生成中...</text>
+        <image class="btn-icon" src="/images/guide/loading.svg" mode="aspectFit"></image>
+      </button>
+    </view>
+  </view>
+  
+  <!-- 步骤5: 保存 -->
+  <view wx:if="{{currentStep === 5}}">
+    <view class="button-container">
+      <button class="save-btn" bindtap="savePet">
+        <text class="btn-text">保存</text>
+        <image class="btn-icon" src="/images/guide/save.svg" mode="aspectFit"></image>
+      </button>
+    </view>
   </view>
 </view>

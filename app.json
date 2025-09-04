@@ -1,13 +1,13 @@
 {
   "pages": [
-    "pages/index/index",
+    "pages/guide/guide",
     "pages/pet/pet",
     "pages/companion/companion"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "「灵伴」Eternal Pal ",
+    "navigationBarTitleText": "灵伴",
     "navigationBarTextStyle": "black"
   },
   "privacy": {

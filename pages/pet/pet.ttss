@@ -2,203 +2,169 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: #fff9f0;
-}
-
-/* 步骤1样式 */
-.step1-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30rpx;
-}
-
-/* 步骤3样式 */
-.step3-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30rpx;
-  background-color: rgba(255, 251, 240, 0.8);
-  border-radius: 30rpx;
-  margin-bottom: 30rpx;
-}
-
-/* 步骤3特有样式 */
-.upload-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16rpx;
-  margin-bottom: 20rpx;
-  width: 100%;
-  justify-content: flex-start;
-}
-
-.photo-item {
-  width: 160rpx;
-  height: 160rpx;
-  position: relative;
-  border-radius: 10rpx;
   overflow: hidden;
 }
 
-.uploaded-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.bg-pattern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
 }
 
-.delete-photo-btn {
+.bg-pattern::before {
+  content: '';
   position: absolute;
   top: 0;
-  right: 0;
-  width: 40rpx;
-  height: 40rpx;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 32rpx;
-  border-radius: 0 0 0 10rpx;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, 
+  #ebf5ff 6%, 
+  #e7f6c7 40%, 
+  #f7f9df 76%, 
+  #fffbeb 100%);
 }
 
-.upload-box {
-  width: 160rpx;
-  height: 160rpx;
-  border: 2rpx dashed #ddd;
-  border-radius: 10rpx;
+
+/* 宠物类型轮播选择 */
+.pet-type-carousel {
+  width: 100%;
+  position: relative;
+  padding: var(--p-l) 0;
+}
+
+.carousel-container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  background-color: #ffffff;
+  justify-content: center;
+  width: 100%;
+  height: 320rpx;
   position: relative;
 }
 
-.upload-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 50%;
-  background-color: #f5f5f5;
-}
-
-.photo-count {
+.pet-type-item {
   position: absolute;
-  bottom: 20rpx;
-  right: 20rpx;
-  font-size: 28rpx;
-  color: #999;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 4rpx 12rpx;
-  border-radius: 15rpx;
-}
-
-.photo-note {
-  font-size: 24rpx;
-  color: #999;
-  line-height: 1.5;
-  text-align: left;
-  margin-top: 10rpx;
-  padding: 0 10rpx;
-}
-
-.no-photo-description {
-  margin-top: 10rpx;
-  width: 100%;
-}
-
-.form-input {
-  width: 100%;
-  height: 120rpx;
-  border: none;
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  padding: 20rpx;
-  font-size: 28rpx;
-  color: #333;
-  box-sizing: border-box;
-}
-
-.form-label-left {
-  font-size: 30rpx;
-  color: #333;
-  margin-bottom: 10rpx;
-  text-align: left;
-  width: 100%;
-}
-
-.form-input-adjusted {
-  width: 100%;
-  height: 160rpx;
-  border: none;
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  padding: 20rpx;
-  font-size: 28rpx;
-  color: #333;
-  box-sizing: border-box;
-  margin-top: 10rpx;
-}
-
-
-.pet-form-container {
-  padding: 20px;
-  background-color: #f8f8f8;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-}
-
-.photo-note {
-  font-size: 12px;
-  color: #999;
-  margin-top: 8px;
-}
-
-/* 步骤1样式 */
-.step1-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 30rpx;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: 250rpx;
+  height: 250rpx;
+  opacity: 0.9;
+  left: 50%;
+  margin-left: -125rpx; /* 负的宽度一半 */
+  z-index: 5;
 }
 
-.pet-icon-display {
-  width: 240rpx;
-  height: 240rpx;
-  margin: 30rpx auto;
+.pet-type-icon {
+  width: 220rpx;
+  height: 220rpx;
+  object-fit: contain;
+}
+
+/* 选中状态 */
+.pet-type-item.active {
+  opacity: 1;
+  z-index: 10;
+}
+
+/* 自定义 */
+.pet-type-item.custom-type .custom-icon {
+  width: 180rpx; /* 与普通图标保持一致的尺寸 */
+  height: 220rpx;
+  background-color: var(--bg-frosted);
+  border: 2rpx dashed var(--text-disabled);
+  border-radius: var(--r-l);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--f-2xl);
+  color: var(--text-disabled);
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+/* 自定义选中 */
+.pet-type-item.custom-type.active .custom-icon {
+  background-color: var(--bg-frosted);
+}
+
+/* 宠物类型标签 */
+.pet-type-labels {
   display: flex;
   justify-content: center;
-  align-items: center;
+  gap: 16rpx;
+  flex-wrap: wrap;
+  padding: 0 var(--p-m);
 }
 
-.large-pet-icon {
-  width: 200rpx;
-  height: 200rpx;
+.pet-type-label {
+  padding: var(--p-s) var(--p-m);
+  border-radius: var(--r-s);
+  background-color: var(--bg-frosted);
+  color: var(--text-secondary);
+  font-size: var(--f-sm);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1rpx solid var(--border-light);
 }
 
-.pet-type-tabs {
+.pet-type-label.active {
+  background-color: var(--primary-color);
+  color: var(--text-primary);
+  border-color: var(--primary-color);
+  transform: scale(1.05);
+}
+
+/* 步骤容器样式 - 统一所有步骤容器 */
+.step1-container,
+.step2-container,
+.step3-container,
+.step4-container,
+.step5-container {
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  margin-bottom: 40rpx;
+  padding: var(--p-l);
+  padding-bottom: 200rpx; /* 为fixed按钮留出空间 */
 }
 
-.tab-item {
-  padding: 15rpx 30rpx;
-  font-size: 28rpx;
-  color: #666;
-  border-bottom: 3rpx solid transparent;
+/* 步骤容器特殊样式 */
+.step3-container {
+  border-radius: var(--r-l);
+  margin-bottom: var(--m-l);
 }
 
-.tab-item.active {
-  color: #07c160;
-  border-bottom: 3rpx solid #07c160;
+/* 信息卡片 */
+.info-card {
+  width: 100%;
+  background-color: var(--bg-frosted);
+  border-radius: var(--r-card);
+  padding: var(--p-l);
+  margin-bottom: var(--m-l);
+  box-shadow: 0 2rpx 20rpx var(--shadow-light);
+  border: 0.5rpx solid var(--border-light);
+  backdrop-filter: blur(20rpx);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--m-l);
+}
+
+.card-title {
+  font-size: var(--f-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.4rpx;
 }
 
 .form-area {
@@ -206,685 +172,794 @@
 }
 
 .form-group {
-  margin-bottom: 40rpx;
+  margin-bottom: var(--m-xl);
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
 }
 
 .form-label {
-  font-size: 32rpx;
-  color: #333;
-  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  font-size: var(--f-base);
+  color: var(--text-primary);
+  margin-bottom: var(--m-s);
+  font-weight: 600;
+  letter-spacing: -0.2rpx;
 }
 
 .form-input {
-  width: calc(100% - 40rpx);
+  width: 100%;
   height: 88rpx;
-  border: 2rpx solid #eee;
-  border-radius: 10rpx;
-  padding: 0 20rpx;
-  font-size: 30rpx;
-  background-color: #fff;
+  border: 1rpx solid var(--border-frosted);
+  border-radius: var(--r-m);
+  padding: 0 var(--p-m);
+  font-size: var(--f-base);
+  background-color: var(--bg-frosted-dark);
+  color: var(--text-primary);
   box-sizing: border-box;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10rpx);
 }
 
-.gender-buttons {
+.form-input:focus {
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+/* 同行布局样式 */
+.form-row {
   display: flex;
-  justify-content: space-between;
+  gap: var(--m-l);
+  width: 100%;
+  margin-bottom: -40rpx;
+}
+
+.form-group-half {
+  flex: 1;
+}
+
+.form-group-half .form-group {
+  margin-bottom: 0;
+}
+
+/* 性别单选器 */
+.gender-radio-group {
+  display: flex;
   width: 100%;
 }
 
-.gender-button {
-  flex: 1;
+.gender-radio {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   height: 88rpx;
+  flex: 1;
+  border-radius: 12rpx;
+  transition: all 0.2s ease;
+  font-size: var(--f-base);
+}
+
+.radio-input {
+  margin-right: var(--m-s);
+  transform: scale(0.9);
+}
+
+/* 生日选择 */
+.birthday-picker {
+  width: 100%;
+}
+
+.birthday-input {
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 30rpx;
-  border: 2rpx solid #eee;
-  border-radius: 10rpx;
-  background-color: #fff;
+  justify-content: space-between;
+  height: 88rpx;
+  transition: all 0.2s ease;
 }
 
-.gender-button:first-child {
-  margin-right: 20rpx;
+.birthday-input .placeholder {
+  color: var(--text-tertiary);
+  font-size: var(--f-base);
+  font-weight: 400;
 }
 
-.gender-button.active {
-  border-color: #07c160;
-  color: #07c160;
-  background-color: rgba(7, 193, 96, 0.1);
-}
-
-.grid-selection {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20rpx;
-}
-
-.grid-item {
-  height: 80rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 28rpx;
-  border: 2rpx solid #eee;
-  border-radius: 10rpx;
-  background-color: #fff;
-  color: #666;
-}
-
-.grid-item.active {
-  border-color: #07c160;
-  color: #07c160;
-  background-color: rgba(7, 193, 96, 0.1);
-}
-
-.form-note {
-  font-size: 26rpx;
-  color: #999;
-  margin-top: 10rpx;
-  text-align: right;
-}
-
-/* 黄色按钮 */
-.next-btn-yellow {
-  width: 90%;
-  height: 90rpx;
-  line-height: 90rpx;
-  background-color: #ffcb33;
-  color: #fff;
-  font-size: 32rpx;
-  border-radius: 45rpx;
-  border: none;
-  margin-top: 20rpx;
-}
-
-/* 橙色按钮 */
-.next-btn-orange {
-  width: 90%;
-  height: 90rpx;
-  line-height: 90rpx;
-  background-color: #ff7700;
-  color: #fff;
-  font-size: 32rpx;
-  border-radius: 45rpx;
-  border: none;
-  margin-top: 20rpx;
-}
-
-/* 黄色创建按钮 */
-.create-btn-yellow {
-  width: 90%;
-  height: 100rpx;
-  line-height: 100rpx;
-  background-color: #ffcb33;
-  color: #fff;
-  font-size: 36rpx;
-  font-weight: bold;
-  border-radius: 50rpx;
-  border: none;
-  margin-top: 40rpx;
-  margin-bottom: 40rpx;
-  box-shadow: 0 6rpx 12rpx rgba(255, 203, 51, 0.4);
-}
-
-/* 步骤2样式 */
-.step2-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30rpx;
-  background-color: rgba(255, 251, 240, 0.8);
-  border-radius: 30rpx;
-  margin-bottom: 30rpx;
-  height: 100%;
-}
-
-.pet-type-display {
-  margin: 20rpx 0;
-  padding: 15rpx 30rpx;
-  background-color: rgba(255, 255, 255, 0.7);
-  border-radius: 20rpx;
-  border: 1rpx solid #e0e0e0;
-}
-
-.selected-pet-type {
-  font-size: 28rpx;
-  color: #333;
+.birthday-input .selected {
+  color: var(--text-primary);
+  font-size: var(--f-base);
   font-weight: 500;
 }
 
-.step2-textarea {
-  width: 100%;
-  height: 300rpx;
-  border: 2rpx solid #eee;
-  border-radius: 20rpx;
-  padding: 20rpx;
-  font-size: 30rpx;
-  background-color: #fff;
-  margin-bottom: 40rpx;
+.date-arrow {
+  width: 40rpx;
+  height: 40rpx;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
 }
 
-/* 步骤5生成完成样式 */
-.step5-container {
+.birthday-input:active .date-arrow {
+  opacity: 0.8;
+}
+
+/* 性格和爱好网格 */
+.grid-selection {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--m-m);
+  margin-top: var(--m-m);
+  width: 100%;
+}
+
+.grid-item {
+  aspect-ratio: 1; /* 设置为正方形 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: var(--f-sm);
+  border: 1rpx solid var(--border-light);
+  border-radius: var(--r-l);
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10rpx);
+  letter-spacing: -0.2rpx;
+  cursor: pointer;
+  text-align: center;
+  word-break: keep-all;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.grid-item.active {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+  font-weight: bold;
+  transform: scale(1.05);
+}
+
+.grid-item:active {
+  transform: scale(0.98);
+  transition: all 0.2s ease;
+}
+
+.grid-item text {
+  font-size: inherit;
+  color: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-align: center;
+  width: 100%;
+  z-index: 2;
+  margin-top: var(--m-m);
+  text-shadow: 0 1rpx 2rpx var(--shadow-light);
+}
+
+/* 性格和爱好图标 */
+.personality-icon, .hobby-icon {
+  width: 100rpx;
+  height: 100rpx;
+  z-index: 1;
+}
+
+/* 网格项背景遮罩 */
+.grid-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: all 0.2s ease;
+}
+
+
+/* 表单注释 */
+.form-note {
+  font-size: var(--f-sm);
+  color: var(--text-tertiary);
+  margin-top: var(--m-m);
+  margin-bottom: var(--m-s);
+  text-align: left;
+  font-weight: 400;
+  letter-spacing: -0.1rpx;
+}
+
+/* 输入框容器 */
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+/* 补充输入框 */
+.form-input-supplement {
+  width: 100%;
+  min-height: 88rpx;
+  border: 1rpx solid var(--border-frosted);
+  border-radius: var(--r-m);
+  padding: var(--p-m);
+  padding-bottom: 60rpx; /* 为字数统计留出空间 */
+  font-size: var(--f-base);
+  background-color: var(--bg-frosted-dark);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  line-height: 1.4;
+  resize: none;
+}
+
+/* 故事输入框 */
+.story-textarea {
+  min-height: 500rpx;
+}
+
+.form-input-supplement:focus {
+  outline: none;
+}
+
+.form-input-supplement::placeholder {
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+/* 字数统计样式 */
+.char-count {
+  position: absolute;
+  bottom: 12rpx;
+  right: 16rpx;
+  font-size: 24rpx;
+  color: var(--text-tertiary);
+  pointer-events: none; /* 防止干扰输入 */
+  background-color: var(--bg-frosted-dark);
+  padding: 4rpx 8rpx;
+  border-radius: 8rpx;
+}
+
+/* 按钮容器 - 同步guide页面 */
+.button-container {
+  position: fixed;
+  bottom: 80rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 15;
+}
+
+/* 按钮组 - 返回和主按钮 */
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: var(--m-l);
+}
+
+/* 所有按钮基础样式 */
+.btn,
+.next-btn,
+.create-btn,
+.generating-btn,
+.save-btn,
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+/* 按钮去除默认边框 */
+.btn::after,
+.next-btn::after,
+.create-btn::after,
+.generating-btn::after,
+.save-btn::after,
+.back-btn::after {
+  border: none;
+}
+
+/* 主要按钮样式 */
+.next-btn,
+.create-btn,
+.generating-btn,
+.save-btn {
+  height: 90rpx;
+  font-size: var(--f-md);
+  border-radius: var(--r-pill);
+  gap: 16rpx;
+  box-shadow: 0 4rpx 10rpx var(--shadow-light);
+  padding: 0 var(--p-xl);
+  transition: all 0.3s ease, width 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* 添加宽度变化的缓动过渡 */
+  white-space: nowrap; /* 防止文字换行 */
+  min-width: fit-content; /* 确保按钮能适应内容宽度 */
+}
+
+/* 主要按钮颜色 */
+.next-btn,
+.create-btn,
+.save-btn {
+  background-color: var(--primary-color);
+  color: var(--text-primary);
+}
+
+/* 生成中状态 */
+.generating-btn {
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+.generating-btn .btn-icon {
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 返回按钮样式 */
+.back-btn {
+  height: 90rpx;
+  width: 90rpx;
+  border-radius: 50%;
+  background-color: var(--bg-frosted);
+  border: 1rpx solid var(--border-light);
+  box-shadow: 0 4rpx 10rpx var(--shadow-light);
+}
+
+/* 主要按钮交互效果 */
+.next-btn:active,
+.create-btn:active,
+.save-btn:active,
+.back-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 6rpx var(--shadow-light);
+}
+
+/* 生成中按钮禁用交互 */
+.generating-btn:active {
+  transform: none;
+}
+
+/* 按钮内文本样式 */
+.btn-text {
+  font-size: var(--f-md);
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+/* 生成中按钮文本样式 */
+.generating-btn .btn-text {
+  color: var(--text-secondary);
+}
+
+
+/* 所有按钮图标统一尺寸 */
+.btn-icon,
+.back-icon {
+  width: 60rpx;
+  height: 60rpx;
+  flex-shrink: 0; /* 防止图标被压缩 */
+  display: block; /* 确保图标正确显示 */
+}
+
+.back-icon {
+  transform: rotate(180deg);
+  /* filter: brightness(0) saturate(100%) invert(40%); 转换为灰色 */
+}
+
+/* 确保不同来源的图标视觉大小一致 */
+.btn-icon,
+.back-icon {
+  object-fit: contain;
+  object-position: center;
+}
+
+/* 步骤2特殊样式 */
+.step2-container {
+  border-radius: var(--r-l);
+  margin-bottom: var(--m-l);
+}
+
+.pet-type-display {
+  margin: var(--m-m) 0;
+  padding: var(--p-s) var(--p-l);
+  background-color: var(--bg-frosted);
+  border-radius: var(--r-m);
+  border: 1rpx solid var(--border-light);
+}
+
+.selected-pet-type {
+  font-size: var(--f-base);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+
+/* 步骤 3 */
+/* 单张照片上传 */
+.single-photo-item {
+  width: 200rpx;
+  height: 200rpx;
+  position: relative;
+  border-radius: var(--r-m);
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx var(--shadow-light);
+}
+
+.uploaded-single-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 删除照片 */
+.delete-photo-btn {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  width: 40rpx;
+  height: 40rpx;
+  background-color: var(--bg-overlay-dark);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.delete-photo-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
+}
+
+.delete-photo-btn:active {
+  transform: scale(0.95);
+}
+
+.delete-icon {
+  width: 24rpx;
+  height: 24rpx;
+  filter: brightness(0) saturate(100%) invert(100%);
+}
+
+.single-upload-box {
+  width: 200rpx;
+  height: 200rpx;
+  border: 2rpx dashed var(--text-disabled);
+  border-radius: var(--r-m);
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  height: 100%;
-  padding: 40rpx 30rpx;
-  background-color: #f5f5f5;
+  background-color: var(--bg-frosted);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
+.single-upload-box:hover {
+  border-color: var(--text-primary);
+  border: 2rpx solid var(--text-primary);
+  background-color: var(--bg-overlay);
+}
+
+.upload-text {
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+  margin-top: var(--m-s);
+  text-align: center;
+}
+
+.no-photo-description {
+  margin-top: 10rpx;
+  width: 100%;
+}
+
+.form-label-left {
+  font-size: 30rpx;
+  color: var(--text-primary);
+  margin-bottom: 10rpx;
+  text-align: left;
+  width: 100%;
+}
+
+/* 模型展示区域样式 */
 .pet-display-3d {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  padding: var(--p-m) 0;
 }
 
 .model-container {
-  width: 300rpx;
-  height: 300rpx;
-  margin: 40rpx 0;
+  width: 320rpx;
+  height: 320rpx;
+  margin: var(--m-xl) 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
-  border-radius: 20rpx;
-  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+  background-color: var(--bg-primary);
+  border-radius: var(--r-card);
+  box-shadow: 0 4rpx 10rpx var(--shadow-light);
+}
+
+/* 3D模型标签样式 */
+.model-3d-label {
+  position: absolute;
+  bottom: 20rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8rpx 16rpx;
+  border-radius: var(--r-s);
+  font-size: var(--f-sm);
+  font-weight: 500;
+}
+
+/* 步骤5的占位图容器样式调整 */
+.step5-container .placeholder-container {
+  position: relative;
+  margin-bottom: var(--m-l);
+}
+
+.step5-container .placeholder-image {
+  position: relative;
+  overflow: hidden;
 }
 
 .pet-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20rpx;
+  margin-bottom: var(--m-m);
 }
 
 .pet-name {
-  font-size: 36rpx;
+  font-size: var(--f-lg);
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
+  margin-bottom: var(--m-s);
 }
 
-.pet-type {
-  font-size: 28rpx;
-  color: #666;
-  margin-top: 8rpx;
-}
 
-.action-buttons {
-  display: flex;
-  justify-content: center;
-  margin: 30rpx 0;
-}
-
-.like-btn, .dislike-btn {
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 30rpx;
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
-}
-
-.like-btn {
-  background-color: #07c160;
-  color: #fff;
-}
-
-.dislike-btn {
-  background-color: #ff4d4f;
-  color: #fff;
-}
-
-.unsatisfied-text {
-  font-size: 26rpx;
-  color: #999;
-  margin-bottom: 40rpx;
-}
-
-.save-btn {
-  background-color: #ffd700;
-  color: #333;
-  width: 80%;
-  border-radius: 44rpx;
-  font-size: 32rpx;
-  padding: 20rpx 0;
-  margin: 0 auto;
-  display: block;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.save-btn::after {
-  content: '✓';
-  margin-left: 10rpx;
-  font-size: 28rpx;
-}
-
-/* 步骤4生成状态样式 */
-.step4-container {
+/* 步骤4/5 */
+.step4-container, .step5-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 40rpx;
-  position: relative;
-}
-
-.scene-text {
-  font-size: 28rpx;
-  color: #666;
-  margin-bottom: 40rpx;
-  text-align: center;
-}
-
-.particle-container {
+  justify-content: flex-start;
   width: 100%;
-  height: 400rpx;
-  margin-bottom: 40rpx;
+  min-height: 100vh;
+}
+.step4-container {
+  padding-top: 15vh;
+}
+
+/* 占位图 */
+.placeholder-container {
+  width: 100%;
+  height: 100%;
+  margin-bottom: var(--m-l);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.particle-area {
-  width: 300rpx;
-  height: 300rpx;
-  position: relative;
-  border: 1rpx solid #ddd;
+.placeholder-image {
+  width: 600rpx;
+  height: 600rpx;
+  background-color: var(--bg-frosted);
+  border-radius: var(--r-card);
+  box-shadow: 0 6rpx 16rpx var(--shadow-light);
 }
 
-.grid-lines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: linear-gradient(to right, #eee 1px, transparent 1px),
-                    linear-gradient(to bottom, #eee 1px, transparent 1px);
-  background-size: 60rpx 60rpx;
-  z-index: 1;
+/* 步骤5 */
+.step5-container {
+  padding-top: calc(15vh);
 }
 
-.particle-effect {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-  /* 粒子效果将通过JS动态生成 */
+/* 顶部信息区样式 */
+.pet-info-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: var(--m-l);
+  width: 600rpx;
 }
 
-.particle {
-  position: absolute;
+.pet-avatar {
+  width: 100rpx;
+  height: 100rpx;
   border-radius: 50%;
-  pointer-events: none;
+  margin-right: var(--m-l);
+  object-fit: cover;
 }
 
+.pet-info-header .pet-name {
+  font-size: var(--f-lg);
+  color: var(--text-primary);
+}
+
+/* 步骤5的模型展示区样式 */
+.step5-model-display {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.model-image {
+  width: 400rpx;
+  height: 400rpx;
+  border-radius: var(--r-m);
+}
+
+.model-3d-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.model-3d-label {
+  position: absolute;
+  bottom: 20rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8rpx 16rpx;
+  border-radius: var(--r-s);
+  font-size: var(--f-sm);
+  font-weight: 500;
+}
+
+/* 操作区域 */
+.feedback {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 600rpx;
+  margin-top: var(--m-s);
+}
+
+/* 操作按钮 - 底部左侧 */
+.action-buttons {
+  display: flex;
+  gap: 16rpx;
+  align-items: center;
+}
+
+.action-buttons .like-btn,
+.action-buttons .dislike-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.action-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+/* 不满意文字 - 底部右侧 */
+.unsatisfied-text {
+  font-size: var(--f-sm);
+  color: var(--text-tertiary);
+  border-bottom: 1rpx solid var(--border-medium);
+}
+
+/* 生成步骤 */
+.generation-step-text {
+  font-size: var(--f-md);
+  color: var(--text-primary);
+  height: 100rpx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: var(--m-l);
+}
+
+/* 进度信息区 */
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--m-s);
+  width: 600rpx;
+}
+
+.progress-percent {
+  font-size: var(--f-xl);
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.remaining-time {
+  font-size: var(--f-sm);
+  color: var(--text-tertiary);
+}
+
+/* 进度条 */
 .progress-container {
-  width: 100%;
-  height: 16rpx;
-  background-color: #f0f0f0;
-  border-radius: 8rpx;
-  margin-bottom: 20rpx;
+  width: 600rpx;
+  height: 20rpx;
+  background-color: var(--bg-secondary);
+  border-radius: var(--r-pill);
+  margin-bottom: var(--m-l);
+  box-shadow: 0 1rpx 1rpx var(--shadow-light);
   position: relative;
   overflow: hidden;
 }
 
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #ffd700, #ff7e00);
+  background: linear-gradient(90deg, #7968E5, #E076D6, #FF7787);
   border-radius: 8rpx;
   transition: width 0.5s ease;
 }
 
-.progress-text {
-  font-size: 28rpx;
-  color: #666;
-  align-self: flex-end;
-  margin-left: 10rpx;
-}
 
-.generation-text {
-  font-size: 28rpx;
-  color: #666;
-  margin-bottom: 60rpx;
-  text-align: center;
-}
-
-.generating-btn {
-  background-color: #ffd700;
-  color: #333;
-  width: 60%;
-  border-radius: 44rpx;
-  font-size: 32rpx;
-  padding: 20rpx 0;
-  position: relative;
+/* 小贴士滚动区 */
+.tips-scroll-container {
+  width: 600rpx;
+  height: 60rpx;
+  padding: var(--p-m);
   overflow: hidden;
+  position: relative;
+  background-color: var(--bg-secondary);
+  border-radius: var(--r-s);
+  box-shadow: 0 2rpx 8rpx var(--shadow-light);
+  box-sizing: border-box;
 }
 
-.generating-btn::after {
-  content: '⟳';
-  position: absolute;
-  right: 30rpx;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 28rpx;
-  animation: rotate 2s linear infinite;
+.tips-scroll-content {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  animation-fill-mode: forwards;
 }
+
+.tips-item {
+  padding: 0;
+  font-size: var(--f-sm);
+  color: var(--text-tertiary);
+  text-align: left;
+  width: 100%;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
 
 @keyframes rotate {
   from { transform: translateY(-50%) rotate(0deg); }
   to { transform: translateY(-50%) rotate(360deg); }
 }
 
-/* 3D模型展示页面样式 */
-.pet-display-3d {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40rpx;
-  height: 100%;
-}
-
-.model-container {
-  width: 100%;
-  height: 500rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 20rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
-}
 
 .model-placeholder {
-  width: 400rpx;
-  height: 400rpx;
+  width: 280rpx;
+  height: 280rpx;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.pet-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.pet-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 30rpx;
-}
-
-.pet-name-display {
-  font-size: 48rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10rpx;
-}
-
-.pet-type-display {
-  font-size: 32rpx;
-  color: #666;
-  background-color: #f0f0f0;
-  padding: 5rpx 20rpx;
-  border-radius: 20rpx;
-}
-
-.action-buttons {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  margin-bottom: 40rpx;
-}
-
-.like-btn, .dislike-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20rpx;
-}
-
-.like-btn .icon {
-  font-size: 60rpx;
-  color: #999;
-  margin-bottom: 10rpx;
-}
-
-.like-btn.active .icon {
-  color: #ff4d4f;
-}
-
-.dislike-btn .icon {
-  font-size: 60rpx;
-  color: #999;
-  margin-bottom: 10rpx;
-}
-
-.like-btn .text, .dislike-btn .text {
-  font-size: 28rpx;
-  color: #666;
-}
-
-.save-btn {
-  background-color: #07c160;
-  color: #fff;
-  width: 80%;
-  border-radius: 40rpx;
-  font-size: 32rpx;
-  padding: 20rpx 0;
-}
-
-.pet-display {
-  padding: 20rpx;
-  background-color: #fff;
-  border-bottom: 1rpx solid #eee;
-}
-
-.pet-image-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20rpx;
-}
-
-.pet-image {
-  width: 200rpx;
-  height: 200rpx;
-  border-radius: 50%;
-  margin-bottom: 10rpx;
-}
-
-.pet-name {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
-}
-
-.upload-btn {
-  background-color: #07c160;
-  color: #fff;
-  margin-top: 10rpx;
-}
-
-.chat-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 20rpx;
-}
-
-.chat-history {
-  flex: 1;
-  overflow-y: auto;
-  margin-bottom: 20rpx;
-}
-
-.message-wrapper {
-  display: flex;
-  margin-bottom: 20rpx;
-}
-
-.user-message {
-  flex-direction: row-reverse;
-}
-
-.avatar {
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 50%;
-  background-color: #eee;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 10rpx;
-  font-size: 28rpx;
-}
-
-.message-content {
-  max-width: 600rpx;
-  padding: 15rpx;
-  border-radius: 10rpx;
-  word-break: break-all;
-}
-
-.user-message .message-content {
-  background-color: #07c160;
-  color: #fff;
-}
-
-.pet-message .message-content {
-  background-color: #fff;
-  color: #333;
-}
-
-.input-area {
-  display: flex;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 10rpx;
-  padding: 10rpx;
-}
-
-.chat-input {
-  flex: 1;
-  height: 80rpx;
-  padding: 0 10rpx;
-}
-
-.voice-btn,
-.send-btn {
-  margin: 0 10rpx;
-}
-.custom-pet-type-display {
-  text-align: center;
-  margin: 20rpx 0;
-  padding: 20rpx;
-  background-color: #f8f8f8;
-  border-radius: 10rpx;
-  font-size: 28rpx;
-  color: #666;
-}
-
-/* 调整性格和爱好的网格选择项为上图下文字，1:1比例 */
-.grid-selection {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 20rpx;
-}
-
-.grid-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 120rpx;
-  height: 160rpx;
-  margin: 16rpx;
-  padding: 16rpx;
-  border-radius: 12rpx;
-  background-color: #ffffff;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.grid-item.active {
-  background-color: #fff0f0;
-  box-shadow: 0 4rpx 16rpx rgba(255, 0, 0, 0.2);
-  border: 2rpx solid #ff0000;
-}
-
-/* 1:1比例的图标 */
-.grid-item-icon {
-  width: 60rpx;
-  height: 60rpx;
-  margin-bottom: 12rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f5f5f5;
-  border-radius: 8rpx;
-  overflow: hidden;
-}
-
-/* 文字样式 */
-.grid-item text {
-  font-size: 24rpx;
-  color: #333;
-  text-align: center;
-  word-break: keep-all;
-}
-
-/* 自定义宠物类型按钮样式 */
-.tab-item:last-child {
-  background-color: #e6f7ff;
-  color: #1890ff;
-}
-
-.tab-item:last-child.active {
-  background-color: #1890ff;
-  color: #ffffff;
-}
-
-/* 自定义宠物类型标签输入框样式 */
-.custom-pet-type-tab {
-  min-width: 80rpx;
-  height: 80rpx;
-  margin: 0 10rpx;
-  padding: 0 20rpx;
-  background-color: #e6f7ff;
-  border: 1rpx solid #d9d9d9;
-  border-radius: 10rpx;
-  font-size: 28rpx;
-  color: #1890ff;
-  text-align: center;
-  line-height: 80rpx;
-}
-
-.custom-pet-type-tab:focus {
-  background-color: #ffffff;
-  border-color: #1890ff;
-}
-
-.next-btn {
-  margin-top: 20rpx;
-  background: linear-gradient(90deg, #FF9A8B, #FF6B95);
-  color: white;
-  border-radius: 50rpx;
-  font-size: 32rpx;
-  padding: 20rpx 40rpx;
-  box-shadow: 0 4rpx 12rpx rgba(255, 107, 149, 0.3);
 }

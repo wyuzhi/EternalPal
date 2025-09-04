@@ -4,44 +4,73 @@ Page({
   data: {
     currentStep: 1, // 初始步骤
     totalSteps: 5,
-    petType: '狗狗',
+    petType: '猫咪',
     petName: '',
     petGender: 'male',
+    petBirthday: '',
+    tipsAnimationCount: 0, // 小贴士动画计数器,
+    petTypeOptions: [
+      { type: '狗狗', name: '狗狗', icon: '/images/petTypes/dog.svg' },
+      { type: '猫咪', name: '猫咪', icon: '/images/petTypes/cat.svg' },
+      { type: '鸭鸭', name: '鸭鸭', icon: '/images/petTypes/duck.svg' },
+      { type: 'custom', name: '自定义', icon: '', isCustom: true }
+    ],
+    allPetTypes: [], // 包含自定义选项的完整列表
+    currentIndex: 0, // 当前选中的索引
     petPersonalities: [
-      { id: 1, name: '活泼', icon: 'active', selected: false },
-      { id: 2, name: '温柔', icon: 'gentle', selected: false },
-      { id: 3, name: '独立', icon: 'independent', selected: false },
-      { id: 4, name: '粘人', icon: 'sticky', selected: false },
-      { id: 5, name: '聪明', icon: 'smart', selected: false },
-      { id: 6, name: '调皮', icon: 'mischievous', selected: false },
-      { id: 7, name: '凶猛', icon: 'fierce', selected: false },
-      { id: 8, name: '安静', icon: 'quiet', selected: false },
-      { id: 9, name: '随机', icon: 'random', selected: false }
+      { id: 1, name: '活力满满', icon: 'cheerful', selected: false },   // 开朗
+      { id: 2, name: '黏人撒娇', icon: 'passionate', selected: false }, // 热情
+      { id: 3, name: '好动调皮', icon: 'lively', selected: false },     // 活泼
+      { id: 4, name: '安静观察', icon: 'rational', selected: false },   // 理性
+      { id: 5, name: '温顺乖巧', icon: 'kind', selected: false },       // 善良
+      { id: 6, name: '耐心守候', icon: 'patient', selected: false },    // 耐心
+      { id: 7, name: '细致敏锐', icon: 'careful', selected: false },    // 细心
+      { id: 8, name: '勇敢探险', icon: 'brave', selected: false },      // 勇敢
+      { id: 9, name: '神秘随机', icon: 'random', selected: false }      // 随机
     ],
     petHobbies: [
-        { id: 1, name: '玩耍', icon: 'play', selected: false },
-        { id: 2, name: '进食', icon: 'eat', selected: false },
-        { id: 3, name: '睡觉', icon: 'sleep', selected: false },
-        { id: 4, name: '拥抱', icon: 'cuddle', selected: false },
-        { id: 5, name: '听音乐', icon: 'music', selected: false },
-        { id: 6, name: '安静', icon: 'clean', selected: false }
-      ],
+      { id: 1, name: '安静发呆', icon: 'reading', selected: false },   // 阅读 → 换成宠物常见活动
+      { id: 2, name: '到处探险', icon: 'travel', selected: false },    // 旅行
+      { id: 3, name: '喜欢音乐', icon: 'music', selected: false },     // 音乐
+      { id: 4, name: '看窗外风景', icon: 'movie', selected: false },   // 电影 → 看风景
+      { id: 5, name: '跑跳玩耍', icon: 'sports', selected: false },    // 运动
+      { id: 6, name: '馋嘴吃货', icon: 'food', selected: false }       // 美食
+    ],
     selectedPersonalities: [], // 只存储用户选择的性格名称
     selectedHobbies: [], // 只存储用户选择的爱好名称
     petStory: '',
     petPhotos: [],
-    maxPhotos: 9,
+    maxPhotos: 1,
     petDescription: '', // 宠物描述（没有照片时填写）
     generationProgress: 0,
     isGenerating: false,
     generatedPetImage: '', // 生成的宠物图片
     particles: [], // 粒子效果数据
+    generationStepText: '正在分析宠物特征...', // 生成步骤提示文字
+    estimatedTimeRemaining: '约3分钟', // 预计剩余时间
+    currentTip: '每个灵伴都有独特的性格和爱好，就像真实的宠物一样', // 当前显示的小贴士
+    petTips: [
+      '您的灵伴正在生成中，请稍后再回来看吧~',
+      '每个灵伴都有独特的性格和爱好，就像真实的宠物一样',
+      '和灵伴进行日常对话，它会根据您设定的性格特点回应',
+      '灵伴的3D模型是根据您提供的照片或描述生成的',
+      '生成过程需要一些时间，请耐心等待',
+      '您可以与灵伴一起聊天或者分享日常生活',
+      '灵伴会记录与您的互动，并随着时间变得更加了解您',
+      '我们会不断更新灵伴的功能，让它变得更加智能'
+    ],
+    generationSteps: [
+      '正在分析宠物特征...',
+      '构建基础模型中...',
+      '添加个性细节...',
+      '优化3D模型...',
+      '还有一点点细节...'
+    ],
     isLiked: false, // 是否喜欢
     modelLoaded: false, // 3D模型是否已加载
     modelUrl: '', // 3D模型URL
     supplementPersonality: '', // 补充性格描述
     supplementHobby: '', // 补充爱好描述
-    checkInterval: null // 轮询定时器ID
   },
   
   // 从数据库查询指定用户的最新宠物信息
@@ -115,6 +144,98 @@ Page({
   
   onLoad: function() {
     console.log('宠物信息收集页面加载成功')
+    this.initCarousel()
+  },
+
+  // 初始化轮播数据
+  initCarousel: function() {
+    // 直接使用 petTypeOptions，自定义选项已经包含在内
+    const allPetTypes = this.data.petTypeOptions
+    
+    // 找到当前选中项的索引
+    const currentIndex = allPetTypes.findIndex(item => item.type === this.data.petType)
+    
+    this.setData({
+      allPetTypes: allPetTypes,
+      currentIndex: currentIndex >= 0 ? currentIndex : 0
+    })
+    
+    // 设置初始位置
+    this.updateCarouselPosition(currentIndex >= 0 ? currentIndex : 0)
+  },
+
+  // 更新轮播位置
+  updateCarouselPosition: function(index) {
+    // 直接设置当前索引，触发视图更新
+    this.setData({
+      currentIndex: index,
+      petType: this.data.allPetTypes[index].type
+    })
+    
+    console.log('更新轮播位置:', index, '类型:', this.data.allPetTypes[index].type)
+  },
+  
+  // 更新生成步骤文字 toDo: 接上真实的生成进度
+  updateGenerationSteps: function() {
+    const that = this
+    let stepIndex = 0
+    
+    // 清除可能存在的旧定时器
+    if (this.stepsInterval) {
+      clearInterval(this.stepsInterval)
+    }
+    
+    // 每15秒更新一次生成步骤文字
+    this.stepsInterval = setInterval(() => {
+      stepIndex = (stepIndex + 1) % that.data.generationSteps.length
+      that.setData({
+        generationStepText: that.data.generationSteps[stepIndex]
+      })
+    }, 15000)
+  },
+  
+  // 启动小贴士轮播
+  startTipsRotation: function() {
+    console.log('startTipsRotation 函数被调用')
+    const that = this
+    let tipIndex = 0
+    let animationCount = 0
+    
+    // 清除可能存在的旧定时器
+    if (this.tipsInterval) {
+      clearInterval(this.tipsInterval)
+    }
+    
+    // 立即显示第一条小贴士
+    console.log('初始化小贴士，内容:', that.data.petTips[0])
+    that.setData({
+      currentTip: that.data.petTips[0],
+      tipsAnimationCount: animationCount
+    })
+    
+    // 每5秒切换一条小贴士
+    this.tipsInterval = setInterval(() => {
+      tipIndex = (tipIndex + 1) % that.data.petTips.length
+      animationCount++
+      
+      console.log('切换小贴士，索引:', tipIndex, '内容:', that.data.petTips[tipIndex])
+      
+      that.setData({
+        currentTip: that.data.petTips[tipIndex],
+        tipsAnimationCount: animationCount
+      })
+    }, 5000)
+    
+    // 立即启动第一次切换（3秒后）
+    setTimeout(() => {
+      tipIndex = 1
+      animationCount++
+      console.log('第一次切换小贴士，索引:', tipIndex, '内容:', that.data.petTips[tipIndex])
+      that.setData({
+        currentTip: that.data.petTips[tipIndex],
+        tipsAnimationCount: animationCount
+      })
+    }, 3000)
   },
 
   onReady: function() {
@@ -165,23 +286,71 @@ Page({
 
   // 选择宠物类型
   selectPetType: function(e) {
+    const selectedType = e.currentTarget.dataset.type;
+    const selectedIndex = parseInt(e.currentTarget.dataset.index);
+    
+    // 更新选中状态和位置（包括自定义类型）
     this.setData({
-      petType: e.currentTarget.dataset.type,
-      showCustomInput: false
+      petType: selectedType,
+      currentIndex: selectedIndex
     })
+    
+    // 更新轮播位置
+    this.updateCarouselPosition(selectedIndex)
+    
+    // 如果是自定义类型，显示输入框让用户输入自定义类型名称
+    if (selectedType === 'custom') {
+      this.showCustomInput(selectedIndex);
+    }
+    
+    console.log('选择宠物类型:', selectedType, '索引:', selectedIndex);
   },
 
-  // 输入自定义宠物类型
-  inputCustomPetType: function(e) {
-    // 只有当输入不是默认的四个宠物类型时，才更新petType
-    const inputValue = e.detail.value;
-    const defaultTypes = ['狗狗', '猫咪', '小鸟', '兔兔'];
+  // 自定义输入框
+  showCustomInput: function(index) {
+    const that = this;
     
-    if (!defaultTypes.includes(inputValue) && inputValue !== '自定义') {
-      this.setData({
-        petType: inputValue
-      });
-    }
+    // 让用户输入自定义宠物类型
+    tt.showModal({
+      title: '自定义宠物类型',
+      editable: true,
+      placeholderText: '请输入宠物类型',
+      success: function(res) {
+        if (res.confirm && res.content && res.content.trim()) {
+          const inputValue = res.content.trim();
+          
+          // 只有当输入不是默认的宠物类型时，才更新petType
+          const defaultTypes = this.data.petTypeOptions.filter(option => !option.isCustom).map(option => option.type);
+          
+          if (!defaultTypes.includes(inputValue) && inputValue !== '自定义') {
+            // 更新自定义类型名称和类型
+            const allPetTypes = that.data.allPetTypes;
+            allPetTypes[index].name = inputValue;
+            allPetTypes[index].displayName = inputValue;
+            
+            that.setData({
+              petType: inputValue,
+              allPetTypes: allPetTypes
+            });
+            
+            console.log('设置自定义宠物类型:', inputValue);
+          } else {
+            // 如果输入的是默认类型或"自定义"，提示用户
+            tt.showToast({
+              title: '请输入其他宠物类型名称',
+              icon: 'none'
+            });
+          }
+        }
+      },
+      fail: function(error) {
+        console.error('显示输入框失败:', error);
+        tt.showToast({
+          title: '输入功能暂不可用',
+          icon: 'none'
+        });
+      }
+    });
   },
 
   // 宠物图标加载错误处理
@@ -236,7 +405,7 @@ Page({
     
     tt.showToast({
       title: '已随机选择：' + randomPersonality.name,
-      icon: 'none'
+      icon: 'none',
     });
   },
 
@@ -250,7 +419,14 @@ Page({
   // 选择宠物性别
   selectPetGender: function(e) {
     this.setData({
-      petGender: e.currentTarget.dataset.gender
+      petGender: e.detail.value
+    })
+  },
+
+  // 选择宠物生日
+  selectPetBirthday: function(e) {
+    this.setData({
+      petBirthday: e.detail.value
     })
   },
 
@@ -447,6 +623,11 @@ Page({
     this.setData({
       petPhotos: petPhotos
     })
+    
+    tt.showToast({
+      title: '照片已删除',
+      icon: 'success'
+    })
   },
 
   // 下一步
@@ -486,9 +667,9 @@ Page({
           })
           return false
         }
-        if (this.data.selectedPersonalities.length === 0) {
+        if (!this.data.petBirthday) {
           tt.showToast({
-            title: '请选择宠物性格',
+            title: '请选择宠物生日',
             icon: 'none'
           })
           return false
@@ -517,15 +698,17 @@ Page({
       this.setData({
         isLiked: true
       })
-      tt.showToast({
-        title: '已添加到喜欢',
-        icon: 'success'
-      })
     }
   },
-
-  // 不喜欢宠物，重新生成
+  // 不喜欢宠物
   dislikePet: function() {
+    this.setData({
+      isLiked: false
+    })
+  },
+
+  // 不满意，重新生成
+  unsatisfied: function() {
     this.setData({
       currentStep: 4,
       generationProgress: 0,
@@ -667,6 +850,7 @@ Page({
         name: taskInfo.petName || '我的萌宠',
         type: taskInfo.petType,
         gender: that.data.petGender,
+        birthday: that.data.petBirthday,
         personality: that.data.selectedPersonalities.join(','),
         hobby: that.data.selectedHobbies.join(','),
         story: that.data.petDescription,
@@ -712,12 +896,19 @@ Page({
   
   // 开始生成宠物
   startGenerating: function() {
+    console.log('startGenerating 函数被调用')
     const that = this
     this.setData({
       currentStep: 4,
       generationProgress: 0
     })
-
+    
+    // 启动生成步骤文字更新
+    this.updateGenerationSteps()
+    
+    // 启动小贴士轮播
+    console.log('准备调用 startTipsRotation')
+    this.startTipsRotation()
 
     // 从本地存储获取用户信息
     const userInfo = tt.getStorageSync('userInfo') || {}
@@ -732,16 +923,32 @@ Page({
       return
     }
 
-    // 模拟进度条更新
+    // 模拟进度条更新 toDo: 接上真实的生成进度
     const timer = setInterval(function() {
-      let progress = that.data.generationProgress + 5
+      let progress = that.data.generationProgress + 2
       if (progress >= 100) {
         progress = 100
       }
       that.setData({
         generationProgress: progress
       })
-    }, 200)
+      
+      // 更新预计剩余时间
+      let remainingTime
+      if (progress < 30) {
+        remainingTime = '约3分钟'
+      } else if (progress < 60) {
+        remainingTime = '约2分钟'
+      } else if (progress < 90) {
+        remainingTime = '约1分钟'
+      } else {
+        remainingTime = '即将完成'
+      }
+      
+      that.setData({
+        estimatedTimeRemaining: remainingTime
+      })
+    }, 500)
 
  
     
@@ -769,6 +976,7 @@ Page({
           name: that.data.petName || '我的萌宠',
           type: that.data.petType,
           gender: that.data.petGender,
+          birthday: that.data.petBirthday,
           personality: that.data.selectedPersonalities.join(','),
           hobby: that.data.selectedHobbies.join(','),
           story: that.data.petDescription,
@@ -959,5 +1167,23 @@ Page({
         console.error('获取隐私协议状态失败:', err);
       }
     });
+  },
+  
+  // 页面卸载时清理资源
+  onUnload: function() {
+    console.log('页面卸载，清理资源')
+    
+    // 清除所有定时器
+    if (this.checkInterval) {
+      clearInterval(this.checkInterval)
+    }
+    
+    if (this.stepsInterval) {
+      clearInterval(this.stepsInterval)
+    }
+    
+    if (this.tipsInterval) {
+      clearInterval(this.tipsInterval)
+    }
   }
 })

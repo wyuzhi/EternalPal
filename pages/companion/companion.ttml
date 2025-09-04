@@ -36,13 +36,14 @@
     <view id="modelContainer" class="model-container">
         <!-- 3D模型显示区域 -->
         <canvas 
-          type="webgl" 
+          type="2d" 
           id="modelCanvas" 
           class="model-canvas" 
           style="width: 100%; height: 100%;" 
           bindtouchstart="handleCanvasTouchStart"
           bindtouchmove="handleCanvasTouchMove"
           bindtouchend="handleCanvasTouchEnd"
+          bindtap="handleCanvasDoubleTap"
           wx:if="{{!isImageMode}}">
         </canvas>
         <!-- 如果3D模型加载失败，则显示图片 -->
@@ -57,6 +58,7 @@
         <!-- 加载提示 -->
         <view wx:if="{{!modelLoaded}}" class="loading-overlay">
           <text>{{modelPlaceholderText || '正在加载3D模型...'}}</text>
+          <progress wx:if="{{loadingProgress > 0 && loadingProgress < 100}}" percent="{{loadingProgress}}" stroke-width="4" activeColor="#07c160" backgroundColor="#EBEBEB" class="loading-progress"></progress>
         </view>
     </view>
     <view class="first-success" wx:if="{{firstLoadSuccess}}">嗨，我是{{petName}}！很高兴见到你~</view>
@@ -100,5 +102,6 @@
     <button class="quick-reply" bindtap="useQuickReply" data-text="你好">你好</button>
     <button class="quick-reply" bindtap="useQuickReply" data-text="今天过得怎么样">今天如何</button>
     <button class="quick-reply" bindtap="useQuickReply" data-text="讲个笑话">讲个笑话</button>
+    <button class="quick-reply test-button" bindtap="testModelRendering">测试3D功能</button>
   </view>
 </view>

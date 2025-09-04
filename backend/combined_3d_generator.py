@@ -354,7 +354,7 @@ def extract_obj_from_zip(zip_file_path, extract_dir):
         # 确保ZIP文件存在
         if not os.path.exists(zip_file_path):
             logger.error(f"ZIP文件不存在: {zip_file_path}")
-            return False, "ZIP文件不存在"
+            return False, {"error": "ZIP文件不存在"}
             
         with ZipFile(zip_file_path, 'r') as zip_ref:
             # 创建解压目录并确保权限
@@ -374,43 +374,59 @@ def extract_obj_from_zip(zip_file_path, extract_dir):
                 extracted_files = os.listdir(extract_dir)
                 logger.info(f"解压后目录内容: {extracted_files}")
             
-            # 查找OBJ文件
-            obj_files = []
+            # 查找各种文件类型
+            result_files = {
+                'obj': None,
+                'mtl': None,
+                'png': None
+            }
+            
             for root, dirs, files in os.walk(extract_dir):
                 logger.info(f"在目录 {root} 中查找文件")
                 logger.info(f"找到文件: {files}")
                 for file in files:
-                    if file.lower().endswith('.obj'):
-                        full_path = os.path.join(root, file)
-                        obj_files.append(full_path)
+                    file_lower = file.lower()
+                    full_path = os.path.join(root, file)
+                    
+                    if file_lower.endswith('.obj') and not result_files['obj']:
+                        result_files['obj'] = full_path
                         logger.info(f"找到OBJ文件: {full_path}")
+                    elif file_lower.endswith('.mtl') and not result_files['mtl']:
+                        result_files['mtl'] = full_path
+                        logger.info(f"找到MTL文件: {full_path}")
+                    elif file_lower.endswith('.png') and not result_files['png']:
+                        result_files['png'] = full_path
+                        logger.info(f"找到PNG文件: {full_path}")
             
-            if not obj_files:
+            # 如果没有找到OBJ文件，查找其他3D模型文件格式
+            if not result_files['obj']:
                 logger.warning("ZIP文件中未找到OBJ文件")
-                # 查找其他3D模型文件格式
                 for root, dirs, files in os.walk(extract_dir):
                     for file in files:
                         if file.lower().endswith(('.fbx', '.gltf', '.glb', '.stl')):
                             full_path = os.path.join(root, file)
-                            obj_files.append(full_path)
+                            result_files['obj'] = full_path
                             logger.info(f"找到其他3D模型文件: {full_path}")
+                            break
+                    if result_files['obj']:
+                        break
                 
-            if obj_files:
-                logger.info(f"成功提取模型文件: {obj_files[0]}")
-                return True, obj_files[0]
+            if result_files['obj']:
+                logger.info(f"成功提取文件: OBJ={result_files['obj']}, MTL={result_files['mtl']}, PNG={result_files['png']}")
+                return True, result_files
             else:
                 logger.warning(f"ZIP文件中未找到任何支持的3D模型文件")
-                return True, None
+                return True, result_files
     except PermissionError as e:
         logger.error(f"解压ZIP文件权限错误: {str(e)}")
-        return False, f"权限错误: {str(e)}"
+        return False, {"error": f"权限错误: {str(e)}"}
     except FileNotFoundError as e:
         logger.error(f"解压ZIP文件找不到文件错误: {str(e)}")
-        return False, f"找不到文件: {str(e)}"
+        return False, {"error": f"找不到文件: {str(e)}"}
     except Exception as e:
         logger.error(f"解压ZIP文件失败: {str(e)}")
         traceback.print_exc()
-        return False, str(e)
+        return False, {"error": str(e)}
 
 # 更新宠物状态
 def update_pet_status(pet_id, status):
@@ -530,6 +546,8 @@ def save_and_process_model_files(result, pet_id=None):
         
         # 初始化本地文件路径变量
         local_obj_path = None
+        local_mtl_path = None
+        local_png_path = None
         local_preview_path = None
         
         # 下载和解压文件
@@ -552,15 +570,32 @@ def save_and_process_model_files(result, pet_id=None):
                         extract_dir = os.path.join(file_dir, 'extracted')
                         success, extract_result = extract_obj_from_zip(zip_file_path, extract_dir)
                         if success and extract_result:
-                            logger.info(f"成功从ZIP中提取模型文件: {extract_result}")
-                            # 如果是OBJ文件，保存本地路径
-                            if extract_result.lower().endswith('.obj'):
-                                local_obj_path = extract_result
+                            if isinstance(extract_result, dict):
+                                # 新格式：包含obj、mtl、png文件路径的字典
+                                logger.info(f"成功从ZIP中提取模型文件: {extract_result}")
                                 
-                            model_info['file_urls'][file_type] = {
-                                'url': file_url,
-                                'local_path': extract_result
-                            }
+                                # 保存各种文件的本地路径
+                                if extract_result.get('obj'):
+                                    local_obj_path = extract_result['obj']
+                                if extract_result.get('mtl'):
+                                    local_mtl_path = extract_result['mtl']
+                                if extract_result.get('png'):
+                                    local_png_path = extract_result['png']
+                                
+                                model_info['file_urls'][file_type] = {
+                                    'url': file_url,
+                                    'local_paths': extract_result
+                                }
+                            else:
+                                # 兼容旧格式：单个文件路径
+                                logger.info(f"成功从ZIP中提取模型文件: {extract_result}")
+                                if extract_result and extract_result.lower().endswith('.obj'):
+                                    local_obj_path = extract_result
+                                    
+                                model_info['file_urls'][file_type] = {
+                                    'url': file_url,
+                                    'local_path': extract_result
+                                }
                         else:
                             # 解压失败时，仍然保存下载的ZIP文件路径
                             logger.warning(f"解压ZIP文件失败或未找到模型文件，将使用原始ZIP文件路径")
@@ -665,6 +700,42 @@ def save_and_process_model_files(result, pet_id=None):
                             logger.info(f"已更新宠物 {pet_id} 的预览图URL: {pet.preview_url}")
                         except Exception as e:
                             logger.error(f"构建预览图URL时出错: {str(e)}")
+                    
+                    # 设置material_url为HTTP可访问的URL路径
+                    if local_mtl_path:
+                        # 获取相对路径（相对于models目录）
+                        rel_mtl_path = os.path.relpath(local_mtl_path, MODEL_STORAGE_PATH)
+                        # 构建HTTP URL
+                        try:
+                            if APP_URL:
+                                material_url = f"{APP_URL}/models/{rel_mtl_path}"
+                            elif request and hasattr(request, 'host'):
+                                scheme = request.headers.get('X-Forwarded-Proto', 'http')
+                                material_url = f"{scheme}://{request.host}/models/{rel_mtl_path}"
+                            else:
+                                material_url = f"http://{HOST}:{PORT}/models/{rel_mtl_path}"
+                            pet.material_url = material_url
+                            logger.info(f"已更新宠物 {pet_id} 的材质URL: {pet.material_url}")
+                        except Exception as e:
+                            logger.error(f"构建材质URL时出错: {str(e)}")
+                    
+                    # 设置texture_url为HTTP可访问的URL路径
+                    if local_png_path:
+                        # 获取相对路径（相对于models目录）
+                        rel_png_path = os.path.relpath(local_png_path, MODEL_STORAGE_PATH)
+                        # 构建HTTP URL
+                        try:
+                            if APP_URL:
+                                texture_url = f"{APP_URL}/models/{rel_png_path}"
+                            elif request and hasattr(request, 'host'):
+                                scheme = request.headers.get('X-Forwarded-Proto', 'http')
+                                texture_url = f"{scheme}://{request.host}/models/{rel_png_path}"
+                            else:
+                                texture_url = f"http://{HOST}:{PORT}/models/{rel_png_path}"
+                            pet.texture_url = texture_url
+                            logger.info(f"已更新宠物 {pet_id} 的纹理URL: {pet.texture_url}")
+                        except Exception as e:
+                            logger.error(f"构建纹理URL时出错: {str(e)}")
                     
                     # 更新状态为completed
                     pet.status = 'completed'

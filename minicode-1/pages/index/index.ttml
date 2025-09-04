@@ -1,0 +1,19 @@
+<view class="intro">
+</view>
+<view class="tracking_ar">
+  <t1 style="text-align: center;">Try Tracking AR</t1>
+  <camera
+    class="camera"
+    device-position="back"
+    flash="off"
+    binderror="onError"
+    style="width: 1px; height: 1px;"
+    />
+  <canvas
+    id="canvas_type_webgl"
+    type="webgl"
+    style="width: 480px; height: 640px"
+    />
+  <button bindtouchstart="initCanvasConfig">初始化 webgl canvas</button>
+  <button bindtouchstart="initModules">物体追踪</button>
+</view>

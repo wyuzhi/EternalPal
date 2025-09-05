@@ -81,7 +81,15 @@ Page({
     texture_url: '',// 模型纹理
     petId: '',
     modelLoaded: false, // 默认设置为未加载状态
-    moodLevel: 3,
+    // 亲密度系统（TODO: 后端返回对应值）
+    intimacyPoints: 0, // 总亲密值
+    intimacyLevel: 0, // 亲密等级（由亲密值计算得出）
+    intimacyProgress: 0, // 当前等级的进度百分比
+    showIntimacyModule: false, // 是否显示亲密度模块
+    intimacyModuleClass: '', // 亲密度模块的CSS类
+    intimacyIncrement: 0, // 本次增加的亲密值
+    showIntimacyIncrement: false, // 是否显示亲密值增加提示
+    intimacyIncrementClass: '', // 亲密值增加提示的CSS类
     messages: [],
     inputValue: '',
     isRecording: false,
@@ -99,6 +107,96 @@ Page({
     quickReplies: [], // 快捷话术数据
 
   },
+
+  // 计算亲密等级和进度
+  calculateIntimacyLevel: function(intimacyPoints) {
+    // 满级为99级
+    const maxLevel = 99;
+    // 每100点升一级
+    const pointsPerLevel = 100;
+    
+    // 计算等级（从0级开始）
+    const level = Math.min(Math.floor(intimacyPoints / pointsPerLevel), maxLevel);
+    
+    // 计算当前等级的进度百分比
+    let progress = 0;
+    if (level < maxLevel) {
+      const currentLevelPoints = intimacyPoints % pointsPerLevel;
+      progress = (currentLevelPoints / pointsPerLevel) * 100;
+    } else {
+      // 满级时进度条满格
+      progress = 100;
+    }
+    
+    return {
+      level: level,
+      progress: Math.round(progress)
+    };
+  },
+
+  // 更新亲密度信息
+  updateIntimacyInfo: function(newIntimacyPoints) {
+    const oldIntimacyPoints = this.data.intimacyPoints;
+    const increment = newIntimacyPoints - oldIntimacyPoints;
+    
+    // 只有在亲密值增加时才显示模块
+    if (increment > 0) {
+      const intimacyInfo = this.calculateIntimacyLevel(newIntimacyPoints);
+      
+      this.setData({
+        intimacyPoints: newIntimacyPoints,
+        intimacyLevel: intimacyInfo.level,
+        intimacyProgress: intimacyInfo.progress,
+        showIntimacyModule: true,
+        intimacyModuleClass: 'show',
+        intimacyIncrement: increment,
+        showIntimacyIncrement: true,
+        intimacyIncrementClass: 'show'
+      });
+      
+      // 2.5秒后开始消失动画
+      setTimeout(() => {
+        this.setData({
+          intimacyIncrementClass: 'hide'
+        });
+      }, 2500);
+      
+      // 3秒后完全隐藏（等待动画完成）
+      setTimeout(() => {
+        this.setData({
+          showIntimacyIncrement: false,
+          intimacyIncrementClass: ''
+        });
+      }, 3000);
+      
+      // 4.5秒后开始整个模块的消失动画
+      setTimeout(() => {
+        this.setData({
+          intimacyModuleClass: 'hide'
+        });
+      }, 4500);
+      
+      // 5秒后完全隐藏整个亲密度模块
+      setTimeout(() => {
+        this.setData({
+          showIntimacyModule: false,
+          intimacyModuleClass: ''
+        });
+      }, 5000);
+    }
+  },
+
+  // 测试亲密度系统（仅供测试使用）
+  testIntimacySystem: function() {
+    // 模拟亲密值增加
+    const currentPoints = this.data.intimacyPoints;
+    const increment = Math.floor(Math.random() * 15) + 5; // 假设随机增加5-20点
+    const newPoints = currentPoints + increment;
+    
+    console.log(`测试亲密度系统: ${currentPoints} -> ${newPoints} (+${increment})`);
+    
+    this.updateIntimacyInfo(newPoints);
+  },
   
   // 3D模型渲染器实例
   modelRenderer: null,
@@ -111,15 +209,16 @@ Page({
     // 先设置模拟数据
     const mockReplies = [
       { id: 1, text: '测试3D功能', isTest: true },
-      { id: 2, text: '哈喽，好久不见', isTest: false },
-      { id: 3, text: '今天过得怎么样', isTest: false },
-      { id: 4, text: '讲个笑话', isTest: false },
-      { id: 5, text: '陪我聊聊天', isTest: false },
-      { id: 6, text: '吃饭了没', isTest: false },
-      { id: 7, text: '我们去散步吧', isTest: false },
-      { id: 8, text: '给你买了逗猫棒', isTest: false },
-      { id: 9, text: '好想你啊', isTest: false },
-      { id: 10, text: '今天好冷', isTest: false }
+      { id: 2, text: '测试亲密度', isTest: true },
+      { id: 3, text: '哈喽，好久不见', isTest: false },
+      { id: 4, text: '今天过得怎么样', isTest: false },
+      { id: 5, text: '讲个笑话', isTest: false },
+      { id: 6, text: '陪我聊聊天', isTest: false },
+      { id: 7, text: '吃饭了没', isTest: false },
+      { id: 8, text: '我们去散步吧', isTest: false },
+      { id: 9, text: '给你买了逗猫棒', isTest: false },
+      { id: 10, text: '好想你啊', isTest: false },
+      { id: 11, text: '今天好冷', isTest: false }
     ];
     
     this.setData({
@@ -127,6 +226,24 @@ Page({
     });
     
     //TODO: 获取话术数据，AI生成，最多8条
+  },
+
+  // 初始化亲密度系统
+  initIntimacySystem: function() {
+    console.log('[Companion] 初始化亲密度系统');
+    
+    // TODO: 从后端获取用户的当前亲密值
+    // 这里设置一个演示用的初始值
+    const initialIntimacyPoints = 50; // 演示：设置为50点，0级50%进度
+    const intimacyInfo = this.calculateIntimacyLevel(initialIntimacyPoints);
+    
+    this.setData({
+      intimacyPoints: initialIntimacyPoints,
+      intimacyLevel: intimacyInfo.level,
+      intimacyProgress: intimacyInfo.progress
+    });
+    
+    console.log(`[Companion] 亲密度系统初始化完成: ${initialIntimacyPoints}点, ${intimacyInfo.level}级, ${intimacyInfo.progress}%进度`);
   },
 
 
@@ -171,6 +288,9 @@ Page({
     // 初始化快捷话术
     this.initQuickReplies();
     
+    // 初始化亲密度系统（设置一些初始值用于演示）
+    this.initIntimacySystem();
+    
     // 从本地存储获取用户信息
     const userInfo = tt.getStorageSync('userInfo') || {};
     const userId = userInfo.id;
@@ -182,7 +302,7 @@ Page({
         petType: options.petType || '',
         generatedPetImage: options.generatedPetImage || '',
         // 设置默认占位图片URL，确保即使preview_url为空也能显示图片
-        preview_url: options.preview_url || '/images/dog.png',
+        preview_url: options.preview_url || 'images/petTypes/dog.svg',
         model_url: options.model_url || '',
         petId: options.petId || ''
       });
@@ -663,9 +783,13 @@ Page({
           });
           
           that.setData({
-            messages: updatedMessages,
-            moodLevel: aiMessage.mood_level || that.data.moodLevel
+            messages: updatedMessages
           });
+          
+          // 处理亲密值更新（TODO: 从后端获取新的亲密值）
+          if (aiMessage.intimacy_points !== undefined) {
+            that.updateIntimacyInfo(aiMessage.intimacy_points);
+          }
           
           // 延迟执行滚动，确保DOM已经更新
           setTimeout(() => {
@@ -692,6 +816,19 @@ Page({
   // 使用快捷回复
   useQuickReply: function(e) {
     const text = e.currentTarget.dataset.text;
+    
+    // 根据按钮文本执行不同的测试功能
+    if (text === '测试亲密度') {
+      this.testIntimacySystem();
+      return;
+    }
+    
+    if (text === '测试3D功能') {
+      this.testModelRendering();
+      return;
+    }
+    
+    // 普通聊天消息
     this.setData({
       inputValue: text
     });

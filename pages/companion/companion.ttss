@@ -39,10 +39,12 @@ page {
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 0;
-  margin-bottom: 10rpx;
+  align-items: flex-start;
+  margin-bottom: var(--m-l);
+  position: relative;
+  z-index: 10;
 }
+
 .header-icon {
   display: flex;
   justify-content: center;
@@ -50,62 +52,238 @@ page {
   background-color: var(--bg-frosted);
   border-radius: 50%;
   padding: var(--p-m);
+  border: 1rpx solid var(--border-light);
+  box-shadow: 0 2rpx 8rpx var(--shadow-light);
+  backdrop-filter: blur(10rpx);
+  transition: all 0.2s ease;
+  width: 80rpx;
+  height: 80rpx;
 }
-.memory-icon, .list-icon {
+
+.header-icon:active {
+  transform: scale(0.95);
+  background-color: var(--bg-frosted-dark);
+}
+
+.memory-icon, .menu-icon {
   width: 50rpx;
   height: 50rpx;
 }
 
-/* TODO👇 */
-.pet-info {
+/* 宠物信息区域 */
+.pet-info-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: var(--m-m);
+  width: 100%;
+}
+.pet-info {
+  display: flex;
+  align-items: center;
+  gap: var(--m-m);
+  min-width: 200rpx;
+}
+
+/* 宠物头像容器 */
+.pet-avatar-container {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+.pet-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 2rpx 8rpx var(--shadow-light);
+  background-color: var(--bg-secondary);
+}
+
+/* 宠物详细信息 */
+.pet-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4rpx;
 }
 
 .pet-name {
-  font-size: 36rpx;
+  font-size: var(--f-md);
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
+  line-height: 1.4;
 }
 
-.mood-indicator {
-  font-size: 24rpx;
-  color: #999;
-}
-
-/* 心情条 */
-.mood-bar {
+/* 心情状态 */
+.mood-status {
   display: flex;
   align-items: center;
-  margin-bottom: 30rpx;
-  padding: 0 20rpx;
+  gap: var(--m-s);
+}
+
+.mood-emoji {
+  font-size: var(--f-sm);
+  line-height: 1;
+}
+
+.mood-text {
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+  line-height: 1;
+}
+
+/* 亲密度 */
+.intimacy {
+  display: flex;
+  align-items: center;
+  padding: var(--p-m) 0;
+  width: 50%;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+/* 亲密度模块出现动画 */
+.intimacy.show {
+  animation: intimacyModuleShow 0.6s ease-out;
+}
+
+/* 亲密度模块消失动画 */
+.intimacy.hide {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.heart-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--m-s);
 }
 
 .heart-icon {
-  font-size: 32rpx;
-  color: #ff4d4f;
-  margin-right: 10rpx;
+  width: 40rpx;
+  height: 40rpx;
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.intimacy-level {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20rpx;
+  color: var(--bg-tertiary);
+  z-index: 1;
+}
+
+.progress-container {
+  flex: 1;
+  position: relative;
+  margin-left: var(--m-s);
 }
 
 .progress-bar {
-  flex: 1;
-  height: 12rpx;
-  background-color: #eee;
-  border-radius: 6rpx;
+  width: 100%;
+  height: 16rpx;
+  background-color: var(--bg-frosted);
+  border-radius: var(--r-pill);
   overflow: hidden;
-  margin: 0 10rpx;
+  position: relative;
 }
 
 .progress {
   height: 100%;
-  background-color: #ff7e00;
-  border-radius: 6rpx;
+  background: linear-gradient(45deg, #7968E5, #E076D6, #FF7787);
+  border-radius: 8rpx;
+  transition: width 0.3s ease;
+  position: relative;
 }
 
-.mood-value {
-  font-size: 28rpx;
-  color: #666;
+.progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* 亲密值增加提示 */
+.intimacy-increment {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: var(--m-s);
+  font-size: var(--f-sm);
+  font-weight: bold;
+  color: #FF7787;
+  background: rgba(255, 119, 135, 0.1);
+  padding: 2rpx 4rpx;
+  border-radius: var(--r-s);
+  border: 1rpx solid rgba(255, 119, 135, 0.3);
+  z-index: 10;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+/* 出现动画 */
+.intimacy-increment.show {
+  animation: intimacyShow 0.6s ease-out;
+}
+
+/* 消失动画 */
+.intimacy-increment.hide {
+  opacity: 0;
+  transform: translateY(-50%) scale(0.8);
+}
+
+/* 亲密度模块的出现动画 */
+@keyframes intimacyModuleShow {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(-10rpx);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 亲密值增加提示的出现动画 */
+@keyframes intimacyShow {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
 }
 
 /* 3D模型展示区 */
@@ -320,28 +498,22 @@ page {
 }
 .input-container {
   position: relative;
-  display: flex;
-  align-items: center; /* 默认 */
-  padding: var(--p-s);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--p-s);
+  padding: var(--p-m) var(--p-s); /* 确保内容不贴边 */
   
   background-color: var(--bg-frosted);
   border-radius: 55rpx;
   border: 1rpx solid var(--border-light);
   box-shadow: 0 4rpx 20rpx var(--shadow-light);
-  backdrop-filter: blur(20rpx);
-}
-
-/* 当输入框有内容或聚焦时，发送按钮对齐底部 */
-.input-container:has(.chat-input:not(:placeholder-shown)),
-.input-container:has(.chat-input:focus) {
-  align-items: flex-end;
+  backdrop-filter: blur(10rpx);
 }
 
 /* 输入框 */
 .chat-input {
-  flex: 1;
-  min-height: 70rpx;
-  max-height: 300rpx;
+  width: 100%;
   background: transparent;
   border: none;
   font-size: var(--f-base);
@@ -349,11 +521,17 @@ page {
   box-sizing: border-box;
   outline: none;
   resize: none;
-  line-height: 70rpx; /* 单行时与容器高度匹配 */
-  text-align: center; /* 水平居中 */
+  line-height: 1.5;
+  text-align: center;
   word-wrap: break-word;
   word-break: break-all;
-  transition: all 0.2s ease;
+  transition: text-align 0.2s ease;
+  
+  /* 自动处理高度 */
+  min-height: auto;
+  max-height: 400rpx;
+  padding-left: var(--p-l);
+  padding-right: var(--p-s);
 }
 
 .chat-input::placeholder {
@@ -361,24 +539,15 @@ page {
   text-align: center;
 }
 
-/* 当输入框有内容时 */
-.chat-input:not(:placeholder-shown) {
-  text-align: left;
-  padding: calc((70rpx - 1.4em) / 2); /* 保持顶部对齐 */
-  line-height: 1.4; /* 多行时使用正常行高 */
-}
-
-/* 输入框聚焦 */
+.chat-input:not(:placeholder-shown),
 .chat-input:focus {
   text-align: left;
-  line-height: 1.4;
-  padding-top: calc((70rpx - 1.4em) / 2);
 }
 
 /* 发送按钮 */
 .send-button {
-  width: 70rpx;
-  height: 70rpx;
+  width: 76rpx;
+  height: 76rpx;
   background-color: var(--bg-frosted);
   border: 1rpx solid var(--border-light);
   border-radius: 50%;
@@ -387,6 +556,8 @@ page {
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-shrink: 0; /* 防止按钮被压缩 */
+  align-self: center; /* 在grid中始终居中对齐 */
 }
 
 .send-button:active {
@@ -395,8 +566,8 @@ page {
 }
 
 .send-icon {
-  width: 45rpx;
-  height: 45rpx;
+  width: 50rpx;
+  height: 50rpx;
   /* filter: brightness(0) saturate(100%) invert(90%); */
   flex-shrink: 0; /* 防止图标被压缩 */
   display: block; /* 确保图标正确显示 */

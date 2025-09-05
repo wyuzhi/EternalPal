@@ -239,7 +239,7 @@
       <!-- 顶部信息区 -->
       <view class="pet-info-header">
         <image class="pet-avatar" src="/images/logo.svg" mode="aspectFit"></image>
-        <text class="pet-name">{{petName || '小可爱'}}</text>
+        <text class="pet-name">{{petName || '我的宠物'}}</text>
       </view>
       
       <!-- 占位图容器 -->

@@ -260,16 +260,16 @@
       <view class="feedback">
         <!-- 操作按钮 -->
         <view class="action-buttons">
-          <view class="like-btn" bindtap="likePet">
-            <image src="/images/guide/like.svg" mode="aspectFit" class="action-icon"></image>
+          <view class="like-btn {{likeBtnAnimating ? 'animate' : ''}}" bindtap="likePet">
+            <image src="{{isLiked ? '/images/guide/likeFilled.svg' : '/images/guide/like.svg'}}" mode="aspectFit" class="action-icon"></image>
           </view>
-          <view class="dislike-btn" bindtap="dislikePet">
-            <image src="/images/guide/dislike.svg" mode="aspectFit" class="action-icon"></image>
+          <view class="dislike-btn {{dislikeBtnAnimating ? 'animate' : ''}}" bindtap="dislikePet">
+            <image src="{{isDisliked ? '/images/guide/dislikeFilled.svg' : '/images/guide/dislike.svg'}}" mode="aspectFit" class="action-icon"></image>
           </view>
         </view>
         
-        <!-- 反馈 -->
-        <text class="unsatisfied-text" bindtap="unsatisfied">对结果不满意</text>
+        <!-- 反馈 - 只在dislike时显示 -->
+        <text class="unsatisfied-text" bindtap="unsatisfied" wx:if="{{isDisliked}}">对结果不满意</text>
       </view>
       
     </view>

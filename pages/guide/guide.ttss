@@ -75,6 +75,15 @@
   transition: transform 0.3s ease;
 }
 
+.slide-item:first-child .card image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+}
+
 /* 第一张卡片 - 左方 */
 .slide-item:first-child .card:nth-child(1) {
   top: 100rpx;

@@ -620,10 +620,7 @@
   transition: all 0.3s ease;
 }
 
-.delete-photo-btn:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-  transform: scale(1.1);
-}
+
 
 .delete-photo-btn:active {
   transform: scale(0.95);
@@ -649,11 +646,7 @@
   cursor: pointer;
 }
 
-.single-upload-box:hover {
-  border-color: var(--text-primary);
-  border: 2rpx solid var(--text-primary);
-  background-color: var(--bg-overlay);
-}
+
 
 .upload-text {
   font-size: var(--f-sm);
@@ -853,11 +846,40 @@
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .action-icon {
   width: 40rpx;
   height: 40rpx;
+  transition: all 0.3s ease;
+}
+
+/* 点赞按钮旋转动画 */
+.like-btn.animate .action-icon {
+  animation: likeRotate 0.6s ease;
+}
+
+/* 点踩按钮旋转动画 */
+.dislike-btn.animate .action-icon {
+  animation: dislikeRotate 0.6s ease;
+}
+
+@keyframes likeRotate {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+  75% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes dislikeRotate {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(15deg); }
+  50% { transform: rotate(-15deg); }
+  75% { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
 }
 
 /* 不满意文字 - 底部右侧 */
@@ -865,6 +887,9 @@
   font-size: var(--f-sm);
   color: var(--text-tertiary);
   border-bottom: 1rpx solid var(--border-medium);
+  padding: 8rpx 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 /* 生成步骤 */

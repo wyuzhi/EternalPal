@@ -1,4 +1,7 @@
 <view class="container">
+  <!-- 背景图片层 -->
+  <image src="/images/scenario/spring_sunny.png" mode="aspectFill" class="background-image"></image>
+  
   <!-- 顶部导航 -->
   <view class="header">
     <image src="/images/c1.png" mode="aspectFit" class="menu-icon"></image>

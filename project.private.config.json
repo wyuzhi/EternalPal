@@ -4,7 +4,7 @@
     },
     "condition": {
         "miniprogram": {
-            "current": -1,
+            "current": 1756891224549,
             "list": [
                 {
                     "id": 1756891224549,
@@ -41,9 +41,9 @@
                     "name": "主页",
                     "pathName": "pages/companion/companion",
                     "query": "",
-                    "scene": "021001",
-                    "launchFrom": "benditui",
-                    "location": "personal_center",
+                    "scene": "990001",
+                    "launchFrom": "scan",
+                    "location": "qr_code",
                     "mockUpdateType": "Noupdate"
                 }
             ]

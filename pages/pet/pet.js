@@ -67,6 +67,9 @@ Page({
       '还有一点点细节...'
     ],
     isLiked: false, // 是否喜欢
+    isDisliked: false, // 是否不喜欢
+    likeBtnAnimating: false, // 点赞状态
+    dislikeBtnAnimating: false, // 点踩状态
     modelLoaded: false, // 3D模型是否已加载
     modelUrl: '', // 3D模型URL
     supplementPersonality: '', // 补充性格描述
@@ -694,27 +697,104 @@ Page({
 
   // 喜欢宠物
   likePet: function() {
-    if (!this.data.isLiked) {
+    const that = this;
+    
+    // 触发动画
+    this.setData({
+      likeBtnAnimating: true
+    });
+    
+    // 如果已经喜欢，再次点击则取消喜欢
+    if (this.data.isLiked) {
       this.setData({
-        isLiked: true
+        isLiked: false
       })
+      // TODO: 取消点赞时需要删除或更新用户反馈记录
+      // 建议在数据库中记录用户对每个宠物模型的反馈状态
+      // 数据结构: { user_id, pet_id, feedback_type: null/like/dislike, created_at, updated_at }
+    } else {
+      // 如果还没喜欢，则设置为喜欢并取消不喜欢
+      this.setData({
+        isLiked: true,
+        isDisliked: false
+      })
+      // TODO: 记录用户点赞行为
+      // 需要调用后端API保存用户对当前宠物模型的点赞记录
+      // 用于数据分析：统计模型受欢迎程度、用户偏好等
     }
+    
+    // 动画结束后移除
+    setTimeout(() => {
+      that.setData({
+        likeBtnAnimating: false
+      });
+    }, 600);
   },
   // 不喜欢宠物
   dislikePet: function() {
+    const that = this;
+    
+    // 触发动画
     this.setData({
-      isLiked: false
-    })
+      dislikeBtnAnimating: true
+    });
+    
+    // 如果已经不喜欢，再次点击则取消不喜欢
+    if (this.data.isDisliked) {
+      this.setData({
+        isDisliked: false
+      })
+      // TODO: 取消点踩时需要删除或更新用户反馈记录
+    } else {
+      // 如果还没不喜欢，则设置为不喜欢并取消喜欢
+      this.setData({
+        isLiked: false,
+        isDisliked: true
+      })
+      // TODO: 记录用户点踩行为
+      // 需要调用后端API保存用户对当前宠物模型的点踩记录
+      // 用于数据分析：了解哪些模型需要优化、用户不满意的原因等
+    }
+    
+    // 动画结束后移除
+    setTimeout(() => {
+      that.setData({
+        dislikeBtnAnimating: false
+      });
+    }, 600);
   },
 
   // 不满意，重新生成
   unsatisfied: function() {
-    this.setData({
-      currentStep: 4,
-      generationProgress: 0,
-      isLiked: false
-    })
-    this.startGenerating()
+    const that = this;
+    
+    // 先弹出确认弹窗
+    tt.showModal({
+      title: '重新生成',
+      content: '确定要重新生成灵伴吗？',
+      confirmText: '重新生成',
+      cancelText: '取消',
+      success: function(res) {
+        if (res.confirm) {
+          // 用户确认，开始重新生成
+          that.setData({
+            currentStep: 4,
+            generationProgress: 0,
+            isLiked: false,
+            isDisliked: false,
+            likeBtnAnimating: false,
+            dislikeBtnAnimating: false
+          });
+          that.startGenerating();
+          
+          tt.showToast({
+            title: '开始重新生成',
+            icon: 'success'
+          });
+        }
+        // 如果用户取消，不做任何操作
+      }
+    });
   },
 
   // 切换喜欢状态（保留以兼容旧代码）
@@ -728,7 +808,11 @@ Page({
   regeneratePet: function() {
     this.setData({
       currentStep: 4,
-      generationProgress: 0
+      generationProgress: 0,
+      isLiked: false,
+      isDisliked: false,
+      likeBtnAnimating: false,
+      dislikeBtnAnimating: false
     })
     this.startGenerating()
   },
@@ -843,6 +927,9 @@ Page({
       title: '正在创建灵伴...',
     })
     
+    // TODO: 需要在宠物记录中添加反馈统计字段
+    // 建议数据库加: total_likes, total_dislikes, feedback_score 等字段
+    // TODO：创建独立的用户反馈表记录用户对宠物的具体反馈
     tt.request({
       url: app.globalData.API_BASE_URL + '/pets',
       method: 'POST',
@@ -857,6 +944,10 @@ Page({
         generated_image: that.data.petPhotos && that.data.petPhotos.length > 0 ? that.data.petPhotos[0] : '',
         model_url: modelUrl,
         user_id: taskInfo.userId
+        // TODO: 初始化反馈相关字段
+        // total_likes: 0,
+        // total_dislikes: 0,
+        // feedback_score: 0.0
       },
       success: function(res) {
         tt.hideLoading()

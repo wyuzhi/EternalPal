@@ -419,8 +419,14 @@ page {
   display: flex;
   align-items: flex-start;
   gap: var(--m-s);
-  padding: 0 var(--p-l);
+  padding-left: var(--p-l);
   white-space: nowrap;
+}
+
+.quick-reply-spacer {
+  flex-shrink: 0;
+  width: var(--p-l);
+  height: 1rpx;
 }
 
 .quick-reply {

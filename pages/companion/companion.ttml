@@ -124,6 +124,8 @@
           >
             {{item.text}}
           </button>
+          <!-- 右边距占位元素 -->
+          <view class="quick-reply-spacer"></view>
         </view>
       </scroll-view>
     </view>

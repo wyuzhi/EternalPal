@@ -383,11 +383,11 @@
 /* 补充输入框 */
 .form-input-supplement {
   width: 100%;
-  min-height: 88rpx;
+  min-height: 100rpx;
   border: 1rpx solid var(--border-frosted);
   border-radius: var(--r-m);
   padding: var(--p-m);
-  padding-bottom: 60rpx; /* 为字数统计留出空间 */
+  padding-bottom: var(--p-xxl);
   font-size: var(--f-base);
   background-color: var(--bg-frosted-dark);
   color: var(--text-primary);
@@ -416,12 +416,10 @@
   position: absolute;
   bottom: 12rpx;
   right: 16rpx;
-  font-size: 24rpx;
+  font-size: var(--f-sm);
   color: var(--text-tertiary);
   pointer-events: none; /* 防止干扰输入 */
-  background-color: var(--bg-frosted-dark);
-  padding: 4rpx 8rpx;
-  border-radius: 8rpx;
+  padding: var(--p-s);
 }
 
 /* 按钮容器 - 同步guide页面 */

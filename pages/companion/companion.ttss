@@ -16,16 +16,23 @@ page {
   width: 100vw;
   height: 100vh;
   z-index: -1;
+  
+  background: linear-gradient(180deg, 
+    #ebf5ff 6%, 
+    #e7f6c7 40%, 
+    #f7f9df 76%, 
+    #fffbeb 100%);
 }
 
 .container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding: var(var(--p-l));
+  padding: var(--p-l);
   box-sizing: border-box;
   overflow-x: hidden;
   max-width: 100vw;
+  position: relative;
 }
 
 /* 顶部导航 */
@@ -36,21 +43,20 @@ page {
   padding: 20rpx 0;
   margin-bottom: 10rpx;
 }
-
-.menu-icon {
-  width: 40rpx;
-  height: 40rpx;
-  background-color: #ddd;
-  border-radius: 8rpx;
+.header-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-frosted);
+  border-radius: 50%;
+  padding: var(--p-m);
+}
+.memory-icon, .list-icon {
+  width: 50rpx;
+  height: 50rpx;
 }
 
-.settings-icon {
-  width: 40rpx;
-  height: 40rpx;
-  background-color: #ddd;
-  border-radius: 8rpx;
-}
-
+/* TODO👇 */
 .pet-info {
   display: flex;
   flex-direction: column;
@@ -109,7 +115,7 @@ page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20rpx;
+  margin-top: 500rpx;
 }
 
 /* 加载覆盖层 */
@@ -299,76 +305,157 @@ page {
   100% { opacity: 1; }
 }
 
-/* 输入区域 */
-.input-area {
+/* 输入卡片区域 */
+.input-card-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  align-items: center;
-  margin-bottom: 20rpx;
-  padding: 0 20rpx;
-  overflow-x: hidden;
-  box-sizing: border-box;
+  flex-direction: column;
+  z-index: 100;
+}
+.input-card {
+  padding: 0 var(--p-l);
+}
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center; /* 默认 */
+  padding: var(--p-s);
+  
+  background-color: var(--bg-frosted);
+  border-radius: 55rpx;
+  border: 1rpx solid var(--border-light);
+  box-shadow: 0 4rpx 20rpx var(--shadow-light);
+  backdrop-filter: blur(20rpx);
 }
 
+/* 当输入框有内容或聚焦时，发送按钮对齐底部 */
+.input-container:has(.chat-input:not(:placeholder-shown)),
+.input-container:has(.chat-input:focus) {
+  align-items: flex-end;
+}
+
+/* 输入框 */
 .chat-input {
   flex: 1;
-  height: 80rpx;
-  background-color: #fff;
-  border: 2rpx solid #eee;
-  border-radius: 40rpx;
-  padding: 0 30rpx;
-  font-size: 28rpx;
-  margin-right: 20rpx;
-  min-width: 0;
+  min-height: 70rpx;
+  max-height: 300rpx;
+  background: transparent;
+  border: none;
+  font-size: var(--f-base);
+  color: var(--text-primary);
   box-sizing: border-box;
+  outline: none;
+  resize: none;
+  line-height: 70rpx; /* 单行时与容器高度匹配 */
+  text-align: center; /* 水平居中 */
+  word-wrap: break-word;
+  word-break: break-all;
+  transition: all 0.2s ease;
 }
 
-.send-button {
-  width: 140rpx;
-  height: 80rpx;
-  background-color: #07c160;
-  color: #fff;
-  border-radius: 40rpx;
-  font-size: 28rpx;
-  line-height: 80rpx;
+.chat-input::placeholder {
+  color: var(--text-tertiary);
   text-align: center;
 }
-.send-button::after {
-  border: none; /* 移除默认的边框效果 */
+
+/* 当输入框有内容时 */
+.chat-input:not(:placeholder-shown) {
+  text-align: left;
+  padding: calc((70rpx - 1.4em) / 2); /* 保持顶部对齐 */
+  line-height: 1.4; /* 多行时使用正常行高 */
 }
-/* 快捷话术 */
+
+/* 输入框聚焦 */
+.chat-input:focus {
+  text-align: left;
+  line-height: 1.4;
+  padding-top: calc((70rpx - 1.4em) / 2);
+}
+
+/* 发送按钮 */
+.send-button {
+  width: 70rpx;
+  height: 70rpx;
+  background-color: var(--bg-frosted);
+  border: 1rpx solid var(--border-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.send-button:active {
+  background-color: var(--bg-frosted-dark);
+  transform: scale(0.95);
+}
+
+.send-icon {
+  width: 45rpx;
+  height: 45rpx;
+  /* filter: brightness(0) saturate(100%) invert(90%); */
+  flex-shrink: 0; /* 防止图标被压缩 */
+  display: block; /* 确保图标正确显示 */
+}
+
+/* 快捷话术容器 */
+.quick-replies-container {
+  margin-top: var(--m-m);
+  z-index: 101;
+  width: 100%;
+  overflow: hidden;
+}
+
+.quick-replies-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
 .quick-replies {
   display: flex;
-  justify-content: space-between;
-  padding: 0 20rpx;
-  margin-bottom: 20rpx;
-  overflow-x: hidden;
-  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: var(--m-s);
+  padding: 0 var(--p-l);
+  white-space: nowrap;
 }
 
 .quick-reply {
-  flex: 1;
-  height: 70rpx;
-  background-color: #fff;
-  border: 2rpx solid #eee;
-  border-radius: 35rpx;
-  font-size: 26rpx;
-  line-height: 70rpx;
+  flex: none;
+  max-width: 200rpx;
+  padding: 0 var(--p-m);
+  background-color: var(--bg-frosted);
+  border: 1rpx solid var(--border-light);
+  border-radius: var(--r-pill);
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
   text-align: center;
-  margin: 0 10rpx;
-  min-width: 0;
+  line-height: 56rpx;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(20rpx);
+  box-sizing: border-box;
 }
 
 .quick-reply::after {
-  border: none; /* 移除默认的边框效果 */
+  border: none;
 }
 
+.quick-reply:active {
+  background-color: ar(--bg-frosted);
+  color: var(--text-primary);
+}
+
+/* 测试按钮 */
 .test-button {
-  background-color: #07c160 !important;
-  color: #fff !important;
-  border-color: #07c160 !important;
+  background-color: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
+  border-color: var(--text-primary) !important;
 }
 
 /* 浮动菜单样式 */

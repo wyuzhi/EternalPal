@@ -4,12 +4,17 @@
   
   <!-- 顶部导航 -->
   <view class="header">
-    <image src="/images/c1.png" mode="aspectFit" class="menu-icon"></image>
+    <view class="header-icon">
+      <image src="/images/mainPage/memory.svg" mode="aspectFit" class="memory-icon"></image>
+    </view>
     <view class="pet-info">
+      <!-- TODO: 宠物头像、宠物名称 -->
       <text class="pet-name">{{petName}}</text>
       <text class="mood-indicator">心情指示</text>
     </view>
-    <image src="/images/c2.png" mode="aspectFit" class="settings-icon" bindtap="onSettingsTap"></image>
+    <view class="header-icon">
+      <image src="/images//mainPage/list.svg" mode="aspectFit" class="list-icon" bindtap="onSettingsTap"></image>
+    </view>  
   </view>
 
   <!-- 浮动功能菜单 -->
@@ -95,16 +100,32 @@
   </view>
 
   <!-- 输入区域 -->
-  <view class="input-area">
-    <input type="text" placeholder="跟ta说些什么呢......" value="{{inputValue}}" bindinput="onInput" class="chat-input"/>
-    <button class="send-button" bindtap="sendMessage">发送</button>
-  </view>
+  <view class="input-card-container" style="padding-bottom: {{safeAreaBottom}}px;">
+    <!-- 输入卡片区域 -->
+    <view class="input-card">
+      <view class="input-container">
+        <textarea placeholder="跟ta说些什么呢......" value="{{inputValue}}" bindinput="onInput" class="chat-input" maxlength="1000" auto-height></textarea>
+        <view class="send-button" bindtap="sendMessage">
+          <image src="/images/mainPage/send.svg" class="send-icon"></image>
+        </view>
+      </view>
+    </view>
 
-  <!-- 快捷话术 -->
-  <view class="quick-replies">
-    <button class="quick-reply" bindtap="useQuickReply" data-text="你好">你好</button>
-    <button class="quick-reply" bindtap="useQuickReply" data-text="今天过得怎么样">今天如何</button>
-    <button class="quick-reply" bindtap="useQuickReply" data-text="讲个笑话">讲个笑话</button>
-    <button class="quick-reply test-button" bindtap="testModelRendering">测试3D功能</button>
+    <!-- 快捷话术区域 -->
+    <view class="quick-replies-container">
+      <scroll-view class="quick-replies-scroll" scroll-x="true" show-scrollbar="false" enhanced="true" bounces="false">
+        <view class="quick-replies">
+          <button 
+            wx:for="{{quickReplies}}" 
+            wx:key="id" 
+            class="quick-reply {{item.isTest ? 'test-button' : ''}}" 
+            bindtap="{{item.isTest ? 'testModelRendering' : 'useQuickReply'}}" 
+            data-text="{{item.text}}"
+          >
+            {{item.text}}
+          </button>
+        </view>
+      </scroll-view>
+    </view>
   </view>
 </view>

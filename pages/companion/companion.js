@@ -94,6 +94,9 @@ Page({
     modelStatus: '未知', // 模型状态
     modelMessage: '无', // 模型消息
     rendererInitialized: false, // 渲染器初始化状态
+    safeAreaBottom: 0, // 底部安全区域距离
+    systemInfo: null, // 系统信息
+    quickReplies: [], // 快捷话术数据
 
   },
   
@@ -101,9 +104,72 @@ Page({
   modelRenderer: null,
   isInitializing3D: false, // 防止重复初始化的标记
 
+  // 初始化快捷话术
+  initQuickReplies: function() {
+    console.log('[Companion] 初始化快捷话术');
+    
+    // 先设置模拟数据
+    const mockReplies = [
+      { id: 1, text: '测试3D功能', isTest: true },
+      { id: 2, text: '哈喽，好久不见', isTest: false },
+      { id: 3, text: '今天过得怎么样', isTest: false },
+      { id: 4, text: '讲个笑话', isTest: false },
+      { id: 5, text: '陪我聊聊天', isTest: false },
+      { id: 6, text: '吃饭了没', isTest: false },
+      { id: 7, text: '我们去散步吧', isTest: false },
+      { id: 8, text: '给你买了逗猫棒', isTest: false },
+      { id: 9, text: '好想你啊', isTest: false },
+      { id: 10, text: '今天好冷', isTest: false }
+    ];
+    
+    this.setData({
+      quickReplies: mockReplies
+    });
+    
+    //TODO: 获取话术数据，AI生成，最多8条
+  },
+
+
+  // 获取系统信息
+  getSystemInfo: function() {
+    const that = this;
+    tt.getSystemInfo({
+      success: function(res) {
+        console.log('[Companion] 获取系统信息成功:', res);
+        
+        // 计算底部安全区域距离
+        let safeAreaBottom = 0;
+        if (res.safeArea) {
+          // 安全区域底部距离 = 屏幕高度 - 安全区域底部坐标
+          safeAreaBottom = res.screenHeight - res.safeArea.bottom;
+        }
+        
+        that.setData({
+          systemInfo: res,
+          safeAreaBottom: safeAreaBottom
+        });
+        
+        console.log('[Companion] 底部安全区域距离:', safeAreaBottom);
+      },
+      fail: function(error) {
+        console.error('[Companion] 获取系统信息失败:', error);
+        // 设置默认值
+        that.setData({
+          safeAreaBottom: 0
+        });
+      }
+    });
+  },
+
   onLoad: function(options) {
     console.log("[Companion] Welcome to Mini Code");
     console.log('[Companion] 页面加载完成，开始初始化');
+    
+    // 获取系统信息
+    this.getSystemInfo();
+    
+    // 初始化快捷话术
+    this.initQuickReplies();
     
     // 从本地存储获取用户信息
     const userInfo = tt.getStorageSync('userInfo') || {};

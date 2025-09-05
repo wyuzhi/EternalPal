@@ -1,2 +1,0 @@
-import NodeMaterial from"./NodeMaterial.js";import{LineBasicMaterial}from"../LineBasicMaterial.js";const _defaultValues=new LineBasicMaterial;class LineBasicNodeMaterial extends NodeMaterial{static get type(){return"LineBasicNodeMaterial"}constructor(e){super(),this.isLineBasicNodeMaterial=!0,this.setDefaultValues(_defaultValues),this.setValues(e)}}export default LineBasicNodeMaterial;
-//# sourceMappingURL=LineBasicNodeMaterial.js.map

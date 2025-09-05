@@ -1,2 +1,0 @@
-import Node from"../core/Node.js";import{nodeProxy}from"../tsl/TSLCore.js";class ExpressionNode extends Node{static get type(){return"ExpressionNode"}constructor(e="",o="void"){super(o),this.snippet=e}generate(e,o){const t=this.getNodeType(e),s=this.snippet;if("void"!==t)return e.format(s,t,o);e.addLineFlowCode(s,this)}}export default ExpressionNode;export const expression=nodeProxy(ExpressionNode).setParameterLength(1,2);
-//# sourceMappingURL=ExpressionNode.js.map

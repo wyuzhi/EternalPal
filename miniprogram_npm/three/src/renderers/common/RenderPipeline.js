@@ -1,2 +1,0 @@
-import Pipeline from"./Pipeline.js";class RenderPipeline extends Pipeline{constructor(e,r,i){super(e),this.vertexProgram=r,this.fragmentProgram=i}}export default RenderPipeline;
-//# sourceMappingURL=RenderPipeline.js.map

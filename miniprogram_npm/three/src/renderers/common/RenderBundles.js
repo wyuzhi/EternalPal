@@ -1,2 +1,0 @@
-import ChainMap from"./ChainMap.js";import RenderBundle from"./RenderBundle.js";const _chainKeys=[];class RenderBundles{constructor(){this.bundles=new ChainMap}get(e,n){const s=this.bundles;_chainKeys[0]=e,_chainKeys[1]=n;let i=s.get(_chainKeys);return void 0===i&&(i=new RenderBundle(e,n),s.set(_chainKeys,i)),_chainKeys.length=0,i}dispose(){this.bundles=new ChainMap}}export default RenderBundles;
-//# sourceMappingURL=RenderBundles.js.map

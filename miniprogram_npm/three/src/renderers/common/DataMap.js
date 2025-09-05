@@ -1,2 +1,0 @@
-class DataMap{constructor(){this.data=new WeakMap}get(t){let a=this.data.get(t);return void 0===a&&(a={},this.data.set(t,a)),a}delete(t){let a=null;return this.data.has(t)&&(a=this.data.get(t),this.data.delete(t)),a}has(t){return this.data.has(t)}dispose(){this.data=new WeakMap}}export default DataMap;
-//# sourceMappingURL=DataMap.js.map

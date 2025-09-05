@@ -1,2 +1,0 @@
-import UniformBuffer from"../UniformBuffer.js";let _id=0;class NodeUniformBuffer extends UniformBuffer{constructor(f,r){super("UniformBuffer_"+_id++,f?f.value:null),this.nodeUniform=f,this.groupNode=r}get buffer(){return this.nodeUniform.value}}export default NodeUniformBuffer;
-//# sourceMappingURL=NodeUniformBuffer.js.map

@@ -1,2 +1,0 @@
-import{Light}from"./Light.js";import{PointLightShadow}from"./PointLightShadow.js";class PointLight extends Light{constructor(t,i,s=0,h=2){super(t,i),this.isPointLight=!0,this.type="PointLight",this.distance=s,this.decay=h,this.shadow=new PointLightShadow}get power(){return 4*this.intensity*Math.PI}set power(t){this.intensity=t/(4*Math.PI)}dispose(){this.shadow.dispose()}copy(t,i){return super.copy(t,i),this.distance=t.distance,this.decay=t.decay,this.shadow=t.shadow.clone(),this}}export{PointLight};
-//# sourceMappingURL=PointLight.js.map

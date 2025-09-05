@@ -1,2 +1,0 @@
-import{Material}from"./Material.js";import{Color}from"../math/Color.js";class LineBasicMaterial extends Material{constructor(i){super(),this.isLineBasicMaterial=!0,this.type="LineBasicMaterial",this.color=new Color(16777215),this.map=null,this.linewidth=1,this.linecap="round",this.linejoin="round",this.fog=!0,this.setValues(i)}copy(i){return super.copy(i),this.color.copy(i.color),this.map=i.map,this.linewidth=i.linewidth,this.linecap=i.linecap,this.linejoin=i.linejoin,this.fog=i.fog,this}}export{LineBasicMaterial};
-//# sourceMappingURL=LineBasicMaterial.js.map

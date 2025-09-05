@@ -1,2 +1,0 @@
-import DFGApprox from"./DFGApprox.js";import{Fn}from"../../tsl/TSLBase.js";const EnvironmentBRDF=Fn((o=>{const{dotNV:r,specularColor:n,specularF90:s,roughness:t}=o,p=DFGApprox({dotNV:r,roughness:t});return n.mul(p.x).add(s.mul(p.y))}));export default EnvironmentBRDF;
-//# sourceMappingURL=EnvironmentBRDF.js.map

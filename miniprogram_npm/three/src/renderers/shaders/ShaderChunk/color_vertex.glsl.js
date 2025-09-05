@@ -1,2 +1,0 @@
-export default"\n#if defined( USE_COLOR_ALPHA )\n\n\tvColor = vec4( 1.0 );\n\n#elif defined( USE_COLOR ) || defined( USE_INSTANCING_COLOR ) || defined( USE_BATCHING_COLOR )\n\n\tvColor = vec3( 1.0 );\n\n#endif\n\n#ifdef USE_COLOR\n\n\tvColor *= color;\n\n#endif\n\n#ifdef USE_INSTANCING_COLOR\n\n\tvColor.xyz *= instanceColor.xyz;\n\n#endif\n\n#ifdef USE_BATCHING_COLOR\n\n\tvec3 batchingColor = getBatchingColor( getIndirectIndex( gl_DrawID ) );\n\n\tvColor.xyz *= batchingColor.xyz;\n\n#endif\n";
-//# sourceMappingURL=color_vertex.glsl.js.map

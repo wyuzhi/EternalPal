@@ -1,2 +1,0 @@
-import{PolyhedronGeometry}from"./PolyhedronGeometry.js";class OctahedronGeometry extends PolyhedronGeometry{constructor(e=1,r=0){super([1,0,0,-1,0,0,0,1,0,0,-1,0,0,0,1,0,0,-1],[0,2,4,0,4,3,0,3,5,0,5,2,1,2,5,1,5,3,1,3,4,1,4,2],e,r),this.type="OctahedronGeometry",this.parameters={radius:e,detail:r}}static fromJSON(e){return new OctahedronGeometry(e.radius,e.detail)}}export{OctahedronGeometry};
-//# sourceMappingURL=OctahedronGeometry.js.map

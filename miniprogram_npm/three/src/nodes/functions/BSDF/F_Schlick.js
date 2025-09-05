@@ -1,2 +1,0 @@
-import{Fn}from"../../tsl/TSLBase.js";const F_Schlick=Fn((({f0:l,f90:t,dotVH:u})=>{const n=u.mul(-5.55473).sub(6.98316).mul(u).exp2();return l.mul(n.oneMinus()).add(t.mul(n))}));export default F_Schlick;
-//# sourceMappingURL=F_Schlick.js.map

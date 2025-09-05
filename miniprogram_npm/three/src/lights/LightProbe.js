@@ -1,2 +1,0 @@
-import{SphericalHarmonics3}from"../math/SphericalHarmonics3.js";import{Light}from"./Light.js";class LightProbe extends Light{constructor(t=new SphericalHarmonics3,r=1){super(void 0,r),this.isLightProbe=!0,this.sh=t}copy(t){return super.copy(t),this.sh.copy(t.sh),this}fromJSON(t){return this.intensity=t.intensity,this.sh.fromArray(t.sh),this}toJSON(t){const r=super.toJSON(t);return r.object.sh=this.sh.toArray(),r}}export{LightProbe};
-//# sourceMappingURL=LightProbe.js.map

@@ -1,2 +1,0 @@
-import{Light}from"./Light.js";import{DirectionalLightShadow}from"./DirectionalLightShadow.js";import{Object3D}from"../core/Object3D.js";class DirectionalLight extends Light{constructor(t,i){super(t,i),this.isDirectionalLight=!0,this.type="DirectionalLight",this.position.copy(Object3D.DEFAULT_UP),this.updateMatrix(),this.target=new Object3D,this.shadow=new DirectionalLightShadow}dispose(){this.shadow.dispose()}copy(t){return super.copy(t),this.target=t.target.clone(),this.shadow=t.shadow.clone(),this}}export{DirectionalLight};
-//# sourceMappingURL=DirectionalLight.js.map

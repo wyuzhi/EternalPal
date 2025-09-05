@@ -1,2 +1,0 @@
-import{ShaderMaterial}from"./ShaderMaterial.js";class RawShaderMaterial extends ShaderMaterial{constructor(a){super(a),this.isRawShaderMaterial=!0,this.type="RawShaderMaterial"}}export{RawShaderMaterial};
-//# sourceMappingURL=RawShaderMaterial.js.map

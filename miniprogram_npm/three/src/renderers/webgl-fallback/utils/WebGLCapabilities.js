@@ -1,2 +1,0 @@
-class WebGLCapabilities{constructor(t){this.backend=t,this.maxAnisotropy=null}getMaxAnisotropy(){if(null!==this.maxAnisotropy)return this.maxAnisotropy;const t=this.backend.gl,i=this.backend.extensions;if(!0===i.has("EXT_texture_filter_anisotropic")){const s=i.get("EXT_texture_filter_anisotropic");this.maxAnisotropy=t.getParameter(s.MAX_TEXTURE_MAX_ANISOTROPY_EXT)}else this.maxAnisotropy=0;return this.maxAnisotropy}}export default WebGLCapabilities;
-//# sourceMappingURL=WebGLCapabilities.js.map

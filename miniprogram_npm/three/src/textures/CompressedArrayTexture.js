@@ -1,2 +1,0 @@
-import{ClampToEdgeWrapping}from"../constants.js";import{CompressedTexture}from"./CompressedTexture.js";class CompressedArrayTexture extends CompressedTexture{constructor(e,r,s,t,a,p){super(e,r,s,a,p),this.isCompressedArrayTexture=!0,this.image.depth=t,this.wrapR=ClampToEdgeWrapping,this.layerUpdates=new Set}addLayerUpdate(e){this.layerUpdates.add(e)}clearLayerUpdates(){this.layerUpdates.clear()}}export{CompressedArrayTexture};
-//# sourceMappingURL=CompressedArrayTexture.js.map

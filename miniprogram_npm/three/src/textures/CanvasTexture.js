@@ -1,2 +1,0 @@
-import{Texture}from"./Texture.js";class CanvasTexture extends Texture{constructor(e,t,s,r,a,u,x,n,T){super(e,t,s,r,a,u,x,n,T),this.isCanvasTexture=!0,this.needsUpdate=!0}}export{CanvasTexture};
-//# sourceMappingURL=CanvasTexture.js.map

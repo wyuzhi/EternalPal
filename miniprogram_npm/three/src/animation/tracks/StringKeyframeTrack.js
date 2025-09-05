@@ -1,2 +1,0 @@
-import{InterpolateDiscrete}from"../../constants.js";import{KeyframeTrack}from"../KeyframeTrack.js";class StringKeyframeTrack extends KeyframeTrack{constructor(r,e,t){super(r,e,t)}}StringKeyframeTrack.prototype.ValueTypeName="string",StringKeyframeTrack.prototype.ValueBufferType=Array,StringKeyframeTrack.prototype.DefaultInterpolation=InterpolateDiscrete,StringKeyframeTrack.prototype.InterpolantFactoryMethodLinear=void 0,StringKeyframeTrack.prototype.InterpolantFactoryMethodSmooth=void 0;export{StringKeyframeTrack};
-//# sourceMappingURL=StringKeyframeTrack.js.map

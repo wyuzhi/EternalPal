@@ -1,2 +1,0 @@
-import{Texture}from"./Texture.js";import{NearestFilter}from"../constants.js";class FramebufferTexture extends Texture{constructor(e,t){super({width:e,height:t}),this.isFramebufferTexture=!0,this.magFilter=NearestFilter,this.minFilter=NearestFilter,this.generateMipmaps=!1,this.needsUpdate=!0}}export{FramebufferTexture};
-//# sourceMappingURL=FramebufferTexture.js.map

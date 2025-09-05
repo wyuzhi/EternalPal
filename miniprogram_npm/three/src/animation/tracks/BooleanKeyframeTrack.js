@@ -1,2 +1,0 @@
-import{InterpolateDiscrete}from"../../constants.js";import{KeyframeTrack}from"../KeyframeTrack.js";class BooleanKeyframeTrack extends KeyframeTrack{constructor(e,o,r){super(e,o,r)}}BooleanKeyframeTrack.prototype.ValueTypeName="bool",BooleanKeyframeTrack.prototype.ValueBufferType=Array,BooleanKeyframeTrack.prototype.DefaultInterpolation=InterpolateDiscrete,BooleanKeyframeTrack.prototype.InterpolantFactoryMethodLinear=void 0,BooleanKeyframeTrack.prototype.InterpolantFactoryMethodSmooth=void 0;export{BooleanKeyframeTrack};
-//# sourceMappingURL=BooleanKeyframeTrack.js.map

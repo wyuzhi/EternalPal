@@ -1,2 +1,0 @@
-import{bvec3,vec3,Fn}from"../../tsl/TSLBase.js";import{greaterThan}from"../../math/OperatorNode.js";import{max,pow,mix}from"../../math/MathNode.js";export const mx_srgb_texture_to_lin_rec709=Fn((([e])=>{const t=vec3(e).toVar(),r=bvec3(greaterThan(t,vec3(.04045))).toVar(),o=vec3(t.div(12.92)).toVar(),a=vec3(pow(max(t.add(vec3(.055)),vec3(0)).div(1.055),vec3(2.4))).toVar();return mix(o,a,r)})).setLayout({name:"mx_srgb_texture_to_lin_rec709",type:"vec3",inputs:[{name:"color",type:"vec3"}]});
-//# sourceMappingURL=mx_transform_color.js.map

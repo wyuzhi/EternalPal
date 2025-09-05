@@ -1,2 +1,0 @@
-import UniformNode from"../core/UniformNode.js";import{nodeObject}from"../tsl/TSLBase.js";class BufferNode extends UniformNode{static get type(){return"BufferNode"}constructor(e,t,r=0){super(e,t),this.isBufferNode=!0,this.bufferType=t,this.bufferCount=r}getElementType(e){return this.getNodeType(e)}getInputType(){return"buffer"}}export default BufferNode;export const buffer=(e,t,r)=>nodeObject(new BufferNode(e,t,r));
-//# sourceMappingURL=BufferNode.js.map

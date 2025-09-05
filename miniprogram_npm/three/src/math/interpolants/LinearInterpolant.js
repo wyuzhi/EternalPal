@@ -1,2 +1,0 @@
-import{Interpolant}from"../Interpolant.js";class LinearInterpolant extends Interpolant{constructor(t,e,r,n){super(t,e,r,n)}interpolate_(t,e,r,n){const o=this.resultBuffer,s=this.sampleValues,a=this.valueSize,l=t*a,p=l-a,i=(r-e)/(n-e),u=1-i;for(let t=0;t!==a;++t)o[t]=s[p+t]*u+s[l+t]*i;return o}}export{LinearInterpolant};
-//# sourceMappingURL=LinearInterpolant.js.map

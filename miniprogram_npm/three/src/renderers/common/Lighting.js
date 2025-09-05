@@ -1,2 +1,0 @@
-import{LightsNode}from"../../nodes/Nodes.js";import ChainMap from"./ChainMap.js";const _defaultLights=new LightsNode,_chainKeys=[];class Lighting extends ChainMap{constructor(){super()}createNode(e=[]){return(new LightsNode).setLights(e)}getNode(e,t){if(e.isQuadMesh)return _defaultLights;_chainKeys[0]=e,_chainKeys[1]=t;let s=this.get(_chainKeys);return void 0===s&&(s=this.createNode(),this.set(_chainKeys,s)),_chainKeys.length=0,s}}export default Lighting;
-//# sourceMappingURL=Lighting.js.map

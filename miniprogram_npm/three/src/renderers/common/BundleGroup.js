@@ -1,2 +1,0 @@
-import{Group}from"../../objects/Group.js";class BundleGroup extends Group{constructor(){super(),this.isBundleGroup=!0,this.type="BundleGroup",this.static=!0,this.version=0}set needsUpdate(s){!0===s&&this.version++}}export default BundleGroup;
-//# sourceMappingURL=BundleGroup.js.map

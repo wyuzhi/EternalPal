@@ -1,2 +1,0 @@
-import{Fn,vec2,vec4}from"../../tsl/TSLBase.js";const DFGApprox=Fn((({roughness:e,dotNV:t})=>{const o=vec4(-1,-.0275,-.572,.022),p=vec4(1,.0425,1.04,-.04),n=e.mul(o).add(p),m=n.x.mul(n.x).min(t.mul(-9.28).exp2()).mul(n.x).add(n.y);return vec2(-1.04,1.04).mul(m).add(n.zw)})).setLayout({name:"DFGApprox",type:"vec2",inputs:[{name:"roughness",type:"float"},{name:"dotNV",type:"vec3"}]});export default DFGApprox;
-//# sourceMappingURL=DFGApprox.js.map

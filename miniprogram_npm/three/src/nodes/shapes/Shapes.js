@@ -1,2 +1,0 @@
-import{Fn,float,select}from"../tsl/TSLBase.js";import{lengthSq,smoothstep}from"../math/MathNode.js";import{uv}from"../accessors/UV.js";export const shapeCircle=Fn((([e=uv()],{renderer:t,material:s})=>{const o=lengthSq(e.mul(2).sub(1));let r;if(s.alphaToCoverage&&t.samples>1){const e=float(o.fwidth()).toVar();r=smoothstep(e.oneMinus(),e.add(1),o).oneMinus()}else r=select(o.greaterThan(1),0,1);return r}));
-//# sourceMappingURL=Shapes.js.map

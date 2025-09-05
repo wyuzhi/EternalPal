@@ -1,2 +1,0 @@
-import InstanceNode from"./InstanceNode.js";import{nodeProxy}from"../tsl/TSLBase.js";class InstancedMeshNode extends InstanceNode{static get type(){return"InstancedMeshNode"}constructor(e){const{count:t,instanceMatrix:n,instanceColor:s}=e;super(t,n,s),this.instancedMesh=e}}export default InstancedMeshNode;export const instancedMesh=nodeProxy(InstancedMeshNode).setParameterLength(1);
-//# sourceMappingURL=InstancedMeshNode.js.map

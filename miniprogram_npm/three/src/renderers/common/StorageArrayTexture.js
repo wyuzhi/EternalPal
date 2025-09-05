@@ -1,2 +1,0 @@
-import{Texture}from"../../textures/Texture.js";import{LinearFilter}from"../../constants.js";class StorageArrayTexture extends Texture{constructor(e=1,t=1,i=1){super(),this.isArrayTexture=!0,this.image={width:e,height:t,depth:i},this.magFilter=LinearFilter,this.minFilter=LinearFilter,this.isStorageTexture=!0}setSize(e,t,i){this.image.width===e&&this.image.height===t&&this.image.depth===i||(this.image.width=e,this.image.height=t,this.image.depth=i,this.dispose())}}export default StorageArrayTexture;
-//# sourceMappingURL=StorageArrayTexture.js.map

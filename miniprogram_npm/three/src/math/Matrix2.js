@@ -1,2 +1,0 @@
-export class Matrix2{constructor(t,e,s,r){Matrix2.prototype.isMatrix2=!0,this.elements=[1,0,0,1],void 0!==t&&this.set(t,e,s,r)}identity(){return this.set(1,0,0,1),this}fromArray(t,e=0){for(let s=0;s<4;s++)this.elements[s]=t[s+e];return this}set(t,e,s,r){const i=this.elements;return i[0]=t,i[2]=e,i[1]=s,i[3]=r,this}}
-//# sourceMappingURL=Matrix2.js.map

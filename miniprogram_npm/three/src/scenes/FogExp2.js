@@ -1,2 +1,0 @@
-import{Color}from"../math/Color.js";class FogExp2{constructor(o,t=25e-5){this.isFogExp2=!0,this.name="",this.color=new Color(o),this.density=t}clone(){return new FogExp2(this.color,this.density)}toJSON(){return{type:"FogExp2",name:this.name,color:this.color.getHex(),density:this.density}}}export{FogExp2};
-//# sourceMappingURL=FogExp2.js.map

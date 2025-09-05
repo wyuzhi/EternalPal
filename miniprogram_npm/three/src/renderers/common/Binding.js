@@ -1,2 +1,0 @@
-class Binding{constructor(i=""){this.name=i,this.visibility=0}setVisibility(i){this.visibility|=i}clone(){return Object.assign(new this.constructor,this)}}export default Binding;
-//# sourceMappingURL=Binding.js.map

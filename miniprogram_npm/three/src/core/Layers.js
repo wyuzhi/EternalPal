@@ -1,2 +1,0 @@
-class Layers{constructor(){this.mask=1}set(s){this.mask=(1<<s|0)>>>0}enable(s){this.mask|=1<<s|0}enableAll(){this.mask=-1}toggle(s){this.mask^=1<<s|0}disable(s){this.mask&=~(1<<s|0)}disableAll(){this.mask=0}test(s){return 0!=(this.mask&s.mask)}isEnabled(s){return 0!=(this.mask&(1<<s|0))}}export{Layers};
-//# sourceMappingURL=Layers.js.map

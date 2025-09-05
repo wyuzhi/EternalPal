@@ -1,2 +1,0 @@
-import Node from"../core/Node.js";class MemberNode extends Node{static get type(){return"MemberNode"}constructor(e,t){super(),this.node=e,this.property=t,this.isMemberNode=!0}getNodeType(e){return this.node.getMemberType(e,this.property)}generate(e){return this.node.build(e)+"."+this.property}}export default MemberNode;
-//# sourceMappingURL=MemberNode.js.map

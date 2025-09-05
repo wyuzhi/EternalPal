@@ -1,2 +1,0 @@
-import{Texture}from"./Texture.js";import{CubeReflectionMapping}from"../constants.js";class CubeTexture extends Texture{constructor(e=[],t=CubeReflectionMapping,s,i,r,u,o,n,p,a){super(e,t,s,i,r,u,o,n,p,a),this.isCubeTexture=!0,this.flipY=!1}get images(){return this.image}set images(e){this.image=e}}export{CubeTexture};
-//# sourceMappingURL=CubeTexture.js.map

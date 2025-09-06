@@ -28,7 +28,7 @@ page {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding: var(--p-l);
+  padding: 0 var(--p-l) var(--p-l) var(--p-l);
   box-sizing: border-box;
   overflow-x: hidden;
   max-width: 100vw;
@@ -37,12 +37,15 @@ page {
 
 /* 顶部导航 */
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--m-l);
-  position: relative;
-  z-index: 10;
+  padding: var(--p-l);
+  z-index: 99;
 }
 
 .header-icon {
@@ -139,6 +142,7 @@ page {
   align-items: center;
   padding: var(--p-m) 0;
   width: 50%;
+  z-index: 100;
   opacity: 1;
   transform: scale(1);
   transition: opacity 0.5s ease-out, transform 0.5s ease-out;
@@ -194,6 +198,7 @@ page {
   width: 100%;
   height: 16rpx;
   background-color: var(--bg-frosted);
+  backdrop-filter: blur(10rpx);
   border-radius: var(--r-pill);
   overflow: hidden;
   position: relative;
@@ -293,7 +298,8 @@ page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 500rpx;
+  margin-top: 200rpx;
+  padding-top: 120rpx; /* 给固定导航留空间 */
 }
 
 /* 加载覆盖层 */
@@ -404,6 +410,7 @@ page {
 .chat-messages {
   flex: 2;
   margin-bottom: 20rpx;
+  margin-top: 120rpx; /* 为固定导航留出空间 */
   padding: 20rpx;
   /* background-color: #fff9f0; */
   border-radius: 20rpx;

@@ -154,35 +154,35 @@ Page({
         intimacyIncrementClass: 'show'
       });
       
-      // 2.5秒后开始消失动画
+      // 1.5秒后开始消失动画
       setTimeout(() => {
         this.setData({
           intimacyIncrementClass: 'hide'
         });
-      }, 2500);
+      }, 1500);
       
-      // 3秒后完全隐藏（等待动画完成）
+      // 2秒后完全隐藏（等待动画完成）
       setTimeout(() => {
         this.setData({
           showIntimacyIncrement: false,
           intimacyIncrementClass: ''
         });
-      }, 3000);
+      }, 2000);
       
-      // 4.5秒后开始整个模块的消失动画
+      // 2.5秒后开始整个模块的消失动画
       setTimeout(() => {
         this.setData({
           intimacyModuleClass: 'hide'
         });
-      }, 4500);
+      }, 2500);
       
-      // 5秒后完全隐藏整个亲密度模块
+      // 3秒后完全隐藏整个亲密度模块
       setTimeout(() => {
         this.setData({
           showIntimacyModule: false,
           intimacyModuleClass: ''
         });
-      }, 5000);
+      }, 3000);
     }
   },
 

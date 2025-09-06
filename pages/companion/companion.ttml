@@ -68,6 +68,13 @@
 
   <!-- 宠物展示区 -->
   <view class="model-display">
+    <!-- 当前对话气泡 - 显示在模型上方 -->
+    <view class="current-chat-bubble" wx:if="{{currentMessage}}">
+      <view class="bubble-content">
+        <text>{{currentMessage}}</text>
+      </view>
+    </view>
+    
     <view id="modelContainer" class="model-container">
         <!-- 3D模型显示区域 -->
         <canvas 
@@ -96,8 +103,6 @@
           <progress wx:if="{{loadingProgress > 0 && loadingProgress < 100}}" percent="{{loadingProgress}}" stroke-width="4" activeColor="#07c160" backgroundColor="#EBEBEB" class="loading-progress"></progress>
         </view>
     </view>
-    <!-- 示例，要删掉 -->
-    <view class="first-success" wx:if="{{firstLoadSuccess}}">嗨，我是{{petName}}！很高兴见到你~</view>
   </view>
 
   <!-- 聊天消息区域 
@@ -111,6 +116,7 @@
     </block>
   </scroll-view>
   -->
+  <!-- TODO: 将pages/chat/chat页面搬到此处，进行集成整合 -->
 
   <!-- 快捷功能区 -->
   <view class="quick-actions" hidden="{{true}}">
@@ -125,6 +131,13 @@
     </view>
     <view class="action-button">
       <image src="/images/magic.png" mode="aspectFit" class="action-icon"></image>
+    </view>
+  </view>
+
+  <!-- 用户消息显示区域 -->
+  <view class="user-message-display" wx:if="{{userMessage}}">
+    <view class="user-message-bubble">
+      <text>{{userMessage}}</text>
     </view>
   </view>
 

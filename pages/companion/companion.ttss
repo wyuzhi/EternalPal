@@ -299,8 +299,142 @@ page {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 340rpx;
+  margin-bottom: 400rpx;
   padding-top: 120rpx; /* 给固定导航留空间 */
+}
+
+/* 当前对话气泡样式 */
+.current-chat-bubble {
+  position: relative;
+  /* padding: 0 var(--p-l); */
+  margin-bottom: var(--m-xxl);
+  z-index: 20;
+  animation: bubbleAppear 0.3s ease-out;
+}
+
+.bubble-content {
+  background-color: var(--bg-frosted);
+  backdrop-filter: blur(20rpx);
+  /* border: 1rpx solid var(--border-light); */
+  border-radius: var(--r-l);
+  padding: var(--p-m);
+  /* box-shadow: 0 4rpx 20rpx var(--shadow-light); */
+  position: relative;
+}
+
+.bubble-content text {
+  font-size: var(--f-base);
+  color: var(--text-primary);
+  line-height: 1.6;
+  word-wrap: break-word;
+  word-break: break-all;
+  display: block;
+  min-width: 60rpx;
+  max-height: 450rpx;
+  overflow-y: auto;
+}
+
+/* 气泡文本滚动条 */
+.bubble-content text::-webkit-scrollbar {
+  width: 4rpx;
+}
+
+.bubble-content text::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bubble-content text::-webkit-scrollbar-thumb {
+  background: var(--text-secondary);
+  border-radius: 2rpx;
+  opacity: 0.6;
+}
+
+.bubble-content text::-webkit-scrollbar-thumb:hover {
+  background: var(--text-primary);
+  opacity: 0.8;
+}
+
+/* 气泡尾巴 */
+.bubble-content:before {
+  content: "";
+  width: 0;
+  height: 0;
+  /*IE6下，height:0;不顶用，可使用font-size:0; + overflow:hidden;修复此问题*/
+  font-size:0;
+  overflow:hidden;
+  display: block;
+  border-width: 20rpx;
+  /*保留我们需要的那边的三角形，其他三角形设置为透明*/
+  border-color: var(--bg-frosted) transparent transparent transparent;
+  border-style: solid dashed dashed dashed;
+  backdrop-filter: blur(20rpx);
+
+  position: absolute;
+  left: 50%; /*相对于矩形高度的位置*/
+  bottom: -39rpx; /* 底部对齐，向下偏移尾巴高度 -矩形边框+三角形边框*2 */
+  transform: translateX(-50%); /* 水平居中 */
+}
+
+/* .bubble-content:after {
+  content: "";
+  width: 0;
+  height: 0;
+  display: block;
+  border-width: 25rpx;
+  border-color: var(--bg-frosted) transparent transparent transparent;
+  border-style: solid dashed dashed dashed;
+  position: absolute;
+  left: 50%;
+  bottom: -50rpx; 自己的边框*2
+  transform: translateX(-50%);
+} */
+
+/* 用户消息显示区域 */
+.user-message-display {
+  position: fixed;
+  bottom: 340rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--p-l);
+  z-index: 99;
+  animation: bubbleAppear 0.3s ease-out;
+}
+
+.user-message-bubble {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border-radius: 0;
+  text-align: center;
+  max-height: 100rpx;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.user-message-bubble text {
+  font-size: var(--f-base);
+  line-height: 1.6;
+  word-wrap: break-word;
+  word-break: break-all;
+  font-weight: 500;
+}
+
+/* 气泡出现动画 */
+@keyframes bubbleAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(20rpx) scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-5rpx) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* 加载覆盖层 */
@@ -405,54 +539,6 @@ page {
   align-items: center;
   width: 100%;
   height: 100%;
-}
-
-/* 聊天消息区域 */
-.chat-messages {
-  flex: 2;
-  margin-bottom: 20rpx;
-  margin-top: 120rpx; /* 为固定导航留出空间 */
-  padding: 20rpx;
-  /* background-color: #fff9f0; */
-  border-radius: 20rpx;
-  height: 33%;
-  width: 100%;
-  overflow-x: hidden;
-  box-sizing: border-box;
-}
-
-.message-container {
-  margin-bottom: 16rpx;
-  display: flex;
-}
-
-.ai-message {
-  justify-content: flex-start;
-}
-
-.user-message {
-  justify-content: flex-end;
-}
-
-.message-bubble {
-  max-width: 70%;
-  padding: 16rpx 20rpx;
-  border-radius: 20rpx;
-  font-size: 28rpx;
-  line-height: 1.5;
-  word-wrap: break-word;
-  word-break: break-all;
-  overflow-wrap: break-word;
-}
-
-.ai-message .message-bubble {
-  background-color: #fff;
-  border: 2rpx solid #eee;
-}
-
-.user-message .message-bubble {
-  background-color: #07c160;
-  color: #fff;
 }
 
 /* 快捷功能区 */

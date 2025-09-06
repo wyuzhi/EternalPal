@@ -112,6 +112,29 @@ Page({
     isVideoActive: false, // 视频激活状态
     isArActive: false, // AR激活状态
     isTextChatActive: false, // 多聊激活状态
+    // 测试模式
+    isMockMode: true, // 是否使用模拟模式（默认开启，方便测试）
+    // 气泡配置
+    bubbleAutoHideTime: 5000, // 气泡自动消失时间/ms
+    // 当前对话气泡
+    currentMessage: '', // 当前显示的消息内容
+    // 用户消息显示
+    userMessage: '', // 用户发送的消息，显示在输入区域上方
+    // AI回复数据
+    aiReplies: [], // AI回复选项，在initQuickReplies中初始化
+    // 模拟聊天数据
+    mockConversations: [
+      { id: 1, text: "今天天气真不错呢！", isUser: false },
+      { id: 2, text: "是啊，很适合出去散步", isUser: true },
+      { id: 3, text: "我们一起去公园玩吧~", isUser: false },
+      { id: 4, text: "好的，带上你最喜欢的玩具", isUser: true },
+      { id: 5, text: "哇！太开心了！", isUser: false },
+      { id: 6, text: "你今天心情看起来很好", isUser: true },
+      { id: 7, text: "嗯嗯，因为有你陪伴呀~", isUser: false },
+      { id: 8, text: "我也很开心能陪着你", isUser: true },
+      { id: 9, text: "我们永远是好朋友对吧？", isUser: false },
+      { id: 10, text: "当然！永远的好伙伴", isUser: true }
+    ]
 
   },
 
@@ -217,19 +240,46 @@ Page({
     const mockReplies = [
       { id: 1, text: '测试3D功能', isTest: true },
       { id: 2, text: '测试亲密度', isTest: true },
-      { id: 3, text: '哈喽，好久不见', isTest: false },
-      { id: 4, text: '今天过得怎么样', isTest: false },
-      { id: 5, text: '讲个笑话', isTest: false },
-      { id: 6, text: '陪我聊聊天', isTest: false },
-      { id: 7, text: '吃饭了没', isTest: false },
-      { id: 8, text: '我们去散步吧', isTest: false },
-      { id: 9, text: '给你买了逗猫棒', isTest: false },
-      { id: 10, text: '好想你啊', isTest: false },
-      { id: 11, text: '今天好冷', isTest: false }
+      { id: 3, text: '切换模拟模式', isTest: true },
+      { id: 5, text: '哈喽，好久不见', isTest: false },
+      { id: 6, text: '今天过得怎么样', isTest: false },
+      { id: 7, text: '讲个笑话', isTest: false },
+      { id: 8, text: '陪我聊聊天', isTest: false },
+      { id: 9, text: '吃饭了没', isTest: false },
+      { id: 10, text: '我们去散步吧', isTest: false },
+      { id: 11, text: '给你买了逗猫棒', isTest: false },
+      { id: 12, text: '好想你啊', isTest: false },
+      { id: 13, text: '今天好冷', isTest: false }
+    ];
+    
+    // 模拟AI回复数据
+    const aiReplies = [
+      { text: "你好呀！很高兴见到你~", intimacyIncrement: 5 },
+      { text: "今天天气真不错呢！我们一起去散步吧~", intimacyIncrement: 3 },
+      { text: "看到你开心我也很开心！让我们一起保持这份快乐吧~", intimacyIncrement: 8 },
+      { text: "我也很喜欢和你在一起！你是我最好的朋友~", intimacyIncrement: 10 },
+      { text: "我也饿了！我们一起去找好吃的吧~", intimacyIncrement: 4 },
+      { text: "那我们休息一下吧！我会陪在你身边的~", intimacyIncrement: 6 },
+      { text: "不用谢！能帮到你我很开心~", intimacyIncrement: 7 },
+      { text: "再见！记得要经常来看我哦~我会想你的！", intimacyIncrement: 5 },
+      { text: "这是个很有趣的问题呢！让我想想...", intimacyIncrement: 3 },
+      { text: "真的吗？听起来很有趣呢！", intimacyIncrement: 4 },
+      { text: "我也这么想的！", intimacyIncrement: 3 },
+      { text: "谢谢你告诉我这些~", intimacyIncrement: 5 },
+      { text: "哇，真的吗？", intimacyIncrement: 4 },
+      { text: "我很开心能和你聊天！", intimacyIncrement: 6 },
+      { text: "这让我想到了一个故事...", intimacyIncrement: 3 },
+      { text: "你说得对！", intimacyIncrement: 4 },
+      { text: "我学到了新东西！", intimacyIncrement: 5 },
+      { text: "让我们一起努力吧~", intimacyIncrement: 6 },
+      { text: "嗯嗯，我明白了！", intimacyIncrement: 3 },
+      { text: "这真是太棒了！", intimacyIncrement: 7 },
+      { text: "我们真是心有灵犀呢~", intimacyIncrement: 8 }
     ];
     
     this.setData({
-      quickReplies: mockReplies
+      quickReplies: mockReplies,
+      aiReplies: aiReplies
     });
     
     //TODO: 获取话术数据，AI生成，最多8条
@@ -251,6 +301,46 @@ Page({
     });
     
     console.log(`[Companion] 亲密度系统初始化完成: ${initialIntimacyPoints}点, ${intimacyInfo.level}级, ${intimacyInfo.progress}%进度`);
+  },
+
+  // 初始化欢迎消息 TODO：AI去生成开场白
+  initWelcomeMessage: function() {
+    console.log('[Companion] 初始化欢迎消息');
+    
+    // 延迟显示欢迎消息，让页面先加载完成
+    setTimeout(() => {
+      let welcomeMessages;
+      
+      if (this.data.isMockMode) {
+        // 模拟模式的欢迎消息
+        welcomeMessages = [
+          "嗨！我是模拟宠物，很高兴见到你~",
+          "今天过得怎么样呀？我在等你呢！",
+          "我一直在等你呢~",
+          "想和我聊聊天吗？我会智能回复哦~",
+          "有什么新鲜事要分享吗？我在~"
+        ];
+      } else {
+        // 真实模式的欢迎消息
+        welcomeMessages = [
+          "嗨！很高兴见到你~",
+          "今天过得怎么样呀？",
+          "我一直在等你呢！",
+          "想和我聊聊天吗？",
+          "有什么新鲜事要分享吗？"
+        ];
+      }
+      
+      const randomWelcome = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+      
+      this.setData({
+        currentMessage: randomWelcome
+      });
+      
+      // 设置欢迎消息自动消失
+      this.setBubbleAutoHide();
+      
+    }, 1000); // 1秒后显示欢迎消息
   },
 
 
@@ -298,6 +388,9 @@ Page({
     // 初始化亲密度系统（设置一些初始值用于演示）
     this.initIntimacySystem();
     
+    // 初始化开场白
+    this.initWelcomeMessage();
+    
     // 从本地存储获取用户信息
     const userInfo = tt.getStorageSync('userInfo') || {};
     const userId = userInfo.id;
@@ -318,17 +411,18 @@ Page({
     // 如果没有从参数中获取到完整的宠物信息，但有用户ID，则从API查询
     if (userId && (!this.data.petId || !this.data.preview_url)) {
       this.fetchUserPetInfo(userId);
-    } else if (this.data.petId) {
-      // 有宠物ID，获取聊天记录
+    } else if (this.data.petId && this.data.petId !== 'mock') {
+      // 有真实宠物ID，获取聊天记录
       this.fetchChatHistory();
     } else if (!this.data.preview_url) {
       // 如果没有preview_url，设置一个默认值用于演示
       this.setData({
-        preview_url: 'https://example.com/mock-pet-animation.gif',
-        petName: '示例宠物',
-        petType: 'default',
+        preview_url: 'images/petTypes/dog.svg',
+        petName: '模拟宠物',
+        petType: 'dog',
         isImageMode: true,
-        modelLoaded: true
+        modelLoaded: true,
+        petId: 'mock' // 设置为mock，确保使用模拟模式
       });
     }
     
@@ -553,8 +647,8 @@ Page({
       this.scrollToBottom();
     }, 300);
     
-    // 如果有宠物ID且未初始化3D渲染器，则尝试初始化
-    if (this.data.petId && !this.modelRenderer) {
+    // 如果有真实宠物ID且未初始化3D渲染器，则尝试初始化
+    if (this.data.petId && this.data.petId !== 'mock' && !this.modelRenderer) {
       console.log('[Companion] onReady中检测到需要初始化3D渲染器');
       setTimeout(() => {
         this.init3DRenderer();
@@ -594,6 +688,12 @@ Page({
       console.log('[Companion] 销毁ModelRenderer实例');
       this.modelRenderer.dispose();
       this.modelRenderer = null;
+    }
+    
+    // 清理气泡消失定时器
+    if (this.bubbleHideTimer) {
+      clearTimeout(this.bubbleHideTimer);
+      this.bubbleHideTimer = null;
     }
   },
   
@@ -733,7 +833,8 @@ Page({
       return;
     }
     
-    if (!this.data.petId) {
+    // 只有在非模拟模式下才检查petId
+    if (!this.data.isMockMode && !this.data.petId) {
       tt.showToast({
         title: '请先创建或选择宠物',
         icon: 'none'
@@ -746,7 +847,12 @@ Page({
       inputValue: ''
     });
     
-    // 添加用户消息到界面
+    // 显示用户消息在输入区域上方
+    this.setData({
+      userMessage: message
+    });
+    
+    // 添加用户消息到历史记录
     const userId = Date.now();
     const newMessages = this.data.messages.concat({
       id: userId,
@@ -765,61 +871,179 @@ Page({
       this.scrollToBottom();
     }, 50);
     
-    // 调用API发送消息
-    tt.request({
-      url: app.globalData.API_BASE_URL + '/pets/' + this.data.petId + '/chat',
-      method: 'POST',
-      data: {
-        message: message,
-        user_id: tt.getStorageSync('userInfo').id || 99 // 默认使用测试用户ID
-      },
-      success: function(res) {
-        console.log('发送消息结果:', res);
-        
-        if (res.data && res.data.status === 'success' && res.data.data) {
-          const aiMessage = res.data.data;
+    // 检查是否使用模拟模式
+    const useMockMode = this.data.isMockMode || !this.data.petId || this.data.petId === 'mock';
+    
+    if (useMockMode) {
+      // 模拟模式：使用本地模拟数据
+      console.log('[Companion] 使用模拟模式发送消息');
+      this.sendMockMessage(message);
+    } else {
+      // 真实模式：调用后端API
+      console.log('[Companion] 使用真实API发送消息');
+      tt.request({
+        url: app.globalData.API_BASE_URL + '/pets/' + this.data.petId + '/chat',
+        method: 'POST',
+        data: {
+          message: message,
+          user_id: tt.getStorageSync('userInfo').id || 99 // 默认使用测试用户ID
+        },
+        success: function(res) {
+          console.log('发送消息结果:', res);
           
-          // 更新AI回复
-          const aiMessageId = aiMessage.id || Date.now() + 1;
-          const updatedMessages = that.data.messages.concat({
-            id: aiMessageId,
-            validId: that.getValidScrollId(aiMessageId),
-            text: aiMessage.content || aiMessage.text,
-            isUser: false,
-            timestamp: new Date().getTime()
-          });
-          
-          that.setData({
-            messages: updatedMessages
-          });
-          
-          // 处理亲密值更新（TODO: 从后端获取新的亲密值）
-          if (aiMessage.intimacy_points !== undefined) {
-            that.updateIntimacyInfo(aiMessage.intimacy_points);
+           if (res.data && res.data.status === 'success' && res.data.data) {
+             const aiMessage = res.data.data;
+             
+             // 清除用户消息显示，更新气泡显示AI回复
+             that.setData({
+               userMessage: '', // 清除用户消息显示
+               currentMessage: aiMessage.content || aiMessage.text
+             });
+             
+             // 设置气泡自动消失
+             that.setBubbleAutoHide();
+             
+             // 更新消息历史记录
+             const aiMessageId = aiMessage.id || Date.now() + 1;
+             const updatedMessages = that.data.messages.concat({
+               id: aiMessageId,
+               validId: that.getValidScrollId(aiMessageId),
+               text: aiMessage.content || aiMessage.text,
+               isUser: false,
+               timestamp: new Date().getTime()
+             });
+             
+             that.setData({
+               messages: updatedMessages
+             });
+             
+             // 处理亲密值更新
+             if (aiMessage.intimacy_points !== undefined) {
+               that.updateIntimacyInfo(aiMessage.intimacy_points);
+             }
+             
+             // 延迟执行滚动，确保DOM已经更新
+             setTimeout(() => {
+               that.scrollToBottom();
+             }, 100);
+          } else {
+            console.error('AI回复失败:', res.data.message || '未知错误');
+            tt.showToast({
+              title: 'AI回复失败',
+              icon: 'none'
+            });
           }
-          
-          // 延迟执行滚动，确保DOM已经更新
-          setTimeout(() => {
-            that.scrollToBottom();
-          }, 100);
-        } else {
-          console.error('AI回复失败:', res.data.message || '未知错误');
+        },
+        fail: function(error) {
+          console.error('发送消息网络失败:', error);
           tt.showToast({
-            title: 'AI回复失败',
+            title: '网络错误，发送失败',
             icon: 'none'
           });
+          
+          // 网络失败时显示默认回复
+          that.setData({
+            currentMessage: "抱歉，网络连接出现问题，请稍后再试~"
+          });
         }
-      },
-      fail: function(error) {
-        console.error('发送消息网络失败:', error);
-        tt.showToast({
-          title: '网络错误，发送失败',
-          icon: 'none'
-        });
-      }
-    });
+      });
+    }
   },
-  
+
+  // 模拟消息发送（用于测试验证）
+  sendMockMessage: function(message) {
+    const that = this;
+    
+    // 模拟网络延迟
+    setTimeout(() => {
+      // 根据用户消息内容生成回复
+      const mockReply = this.generateMockReply(message);
+      
+      // 清除用户消息显示，更新气泡显示AI回复
+      this.setData({
+        userMessage: '', // 清除用户消息显示
+        currentMessage: mockReply.text
+      });
+      
+      // 设置气泡自动消失
+      that.setBubbleAutoHide();
+      
+      // 更新消息历史记录
+      const aiMessageId = Date.now() + 1;
+      const updatedMessages = this.data.messages.concat({
+        id: aiMessageId,
+        validId: this.getValidScrollId(aiMessageId),
+        text: mockReply.text,
+        isUser: false,
+        timestamp: new Date().getTime()
+      });
+      
+      this.setData({
+        messages: updatedMessages
+      });
+      
+      // 模拟亲密度增加
+      if (mockReply.intimacyIncrement > 0) {
+        const currentIntimacy = this.data.intimacyPoints;
+        this.updateIntimacyInfo(currentIntimacy + mockReply.intimacyIncrement);
+      }
+      
+      // 延迟执行滚动，确保DOM已经更新
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 100);
+      
+    }, 1000 + Math.random() * 1000); // 1-2秒的随机延迟，模拟真实网络请求
+  },
+
+  // 生成模拟回复
+  generateMockReply: function(userMessage) {
+    // 从模拟aiReplies中随机选择回复
+    const aiReplies = this.data.aiReplies || [];
+    const randomReply = aiReplies[Math.floor(Math.random() * aiReplies.length)];
+    
+    return randomReply || {
+      text: "嗯嗯，我明白了！",
+      intimacyIncrement: 3
+    };
+  },
+
+  // 设置气泡自动消失
+  setBubbleAutoHide: function() {
+    const that = this;
+    
+    // 清除之前的定时器
+    if (this.bubbleHideTimer) {
+      clearTimeout(this.bubbleHideTimer);
+    }
+    
+    // 设置新的定时器，根据配置时间自动消失
+    this.bubbleHideTimer = setTimeout(() => {
+      that.setData({
+        currentMessage: ''
+      });
+      console.log('[Companion] 气泡自动消失');
+    }, this.data.bubbleAutoHideTime);
+  },
+
+  // 切换模拟模式
+  toggleMockMode: function() {
+    const newMockMode = !this.data.isMockMode;
+    this.setData({
+      isMockMode: newMockMode
+    });
+    
+    const modeText = newMockMode ? '模拟模式' : '真实API模式';
+    tt.showToast({
+      title: `已切换到${modeText}`,
+      icon: 'none',
+      duration: 2000
+    });
+    
+    console.log(`[Companion] 切换到${modeText}`);
+  },
+
+
   // 使用快捷回复
   useQuickReply: function(e) {
     const text = e.currentTarget.dataset.text;
@@ -832,6 +1056,11 @@ Page({
     
     if (text === '测试3D功能') {
       this.testModelRendering();
+      return;
+    }
+    
+    if (text === '切换模拟模式') {
+      this.toggleMockMode();
       return;
     }
     
@@ -1159,24 +1388,19 @@ Page({
     }
   },
 
-  // TODO: 实现多聊功能
+  // 实现多聊功能 - 切换到纯文字聊天页面
   onTextChatTap: function() {
-    console.log('[Companion] 点击多聊功能');
-    const newTextChatState = !this.data.isTextChatActive;
-    this.setData({
-      isTextChatActive: newTextChatState
-    });
+    console.log('[Companion] 点击多聊功能，切换到纯文字聊天模式');
     
-    if (newTextChatState) {
-      tt.showToast({
-        title: '多聊功能已激活',
-        icon: 'none'
-      });
-    } else {
-      tt.showToast({
-        title: '多聊功能已关闭',
-        icon: 'none'
-      });
-    }
-  }
+    // 跳转到聊天页面，传递当前宠物信息
+    tt.navigateTo({
+      url: `/pages/chat/chat?petId=${this.data.petId}&petName=${this.data.petName}&petType=${this.data.petType}`,
+      success: () => {
+        console.log('[Companion] 成功跳转到聊天页面');
+      },
+      fail: (error) => {
+        console.error('[Companion] 跳转到聊天页面失败:', error);
+      }
+    });
+  },
 });

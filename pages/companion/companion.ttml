@@ -45,15 +45,21 @@
     </view>  
   </view>
 
+  <!-- 菜单遮罩层 -->
+  <view class="menu-mask" wx:if="{{showFloatMenu}}" bindtap="onMenuMaskTap"></view>
+  
   <!-- 浮动功能菜单 -->
-  <view class="float-menu" wx:if="{{showFloatMenu}}">
+  <view class="float-menu {{menuAnimationClass}}" wx:if="{{showFloatMenu}}">
     <view class="menu-item" bindtap="onMenuItemTap" data-action="info">
+      <image src="/images/mainPage/list/animalFile.svg" class="menu-item-icon" mode="aspectFit"></image>
       <text>信息</text>
     </view>
     <view class="menu-item" bindtap="onMenuItemTap" data-action="settings">
+      <image src="/images/mainPage/list/settings.svg" class="menu-item-icon" mode="aspectFit"></image>
       <text>设置</text>
     </view>
     <view class="menu-item" bindtap="onMenuItemTap" data-action="share">
+      <image src="/images/mainPage/list/share.svg" class="menu-item-icon" mode="aspectFit"></image>
       <text>分享</text>
     </view>
   </view>
@@ -90,10 +96,11 @@
           <progress wx:if="{{loadingProgress > 0 && loadingProgress < 100}}" percent="{{loadingProgress}}" stroke-width="4" activeColor="#07c160" backgroundColor="#EBEBEB" class="loading-progress"></progress>
         </view>
     </view>
+    <!-- 示例，要删掉 -->
     <view class="first-success" wx:if="{{firstLoadSuccess}}">嗨，我是{{petName}}！很高兴见到你~</view>
   </view>
 
-  <!-- 聊天消息区域 -->
+  <!-- 聊天消息区域 
   <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollToMessageId}}" scroll-with-animation>
     <block wx:for="{{messages}}" wx:key="id">
       <view id="message-{{item.validId}}" class="message-container {{item.isUser ? 'user-message' : 'ai-message'}}">
@@ -103,6 +110,7 @@
       </view>
     </block>
   </scroll-view>
+  -->
 
   <!-- 快捷功能区 -->
   <view class="quick-actions" hidden="{{true}}">
@@ -122,6 +130,25 @@
 
   <!-- 输入区域 -->
   <view class="input-card-container" style="padding-bottom: {{safeAreaBottom}}px;">
+    <!-- 功能区 -->
+    <view class="function-area">
+      <view class="function-item {{isVideoActive ? 'active' : ''}}" bindtap="onVideoTap">
+        <image src="/images/mainPage/video.svg" class="function-icon"></image>
+      </view>
+      <view class="function-item" bindtap="onMicTap">
+        <image src="/images/mainPage/{{isMicOn ? 'mic' : 'micOff'}}.svg" class="function-icon"></image>
+      </view>
+      <view class="function-item" bindtap="onSpeakerTap">
+        <image src="/images/mainPage/{{isSpeakerOn ? 'speaker' : 'speakerOff'}}.svg" class="function-icon"></image>
+      </view>
+      <view class="function-item {{isArActive ? 'active' : ''}}" bindtap="onArTap">
+        <image src="/images/mainPage/ar.svg" class="function-icon"></image>
+      </view>
+      <view class="function-item {{isTextChatActive ? 'active' : ''}}" bindtap="onTextChatTap">
+        <image src="/images/mainPage/textChat.svg" class="function-icon"></image>
+      </view>
+    </view>
+    
     <!-- 输入卡片区域 -->
     <view class="input-card">
       <view class="input-container">

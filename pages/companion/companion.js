@@ -99,12 +99,19 @@ Page({
     firstLoadSuccess: false,
     scrollToMessageId: '',
     showFloatMenu: false, // 控制浮动菜单显示
+    menuAnimationClass: '', // 菜单动效类名
     modelStatus: '未知', // 模型状态
     modelMessage: '无', // 模型消息
     rendererInitialized: false, // 渲染器初始化状态
     safeAreaBottom: 0, // 底部安全区域距离
     systemInfo: null, // 系统信息
     quickReplies: [], // 快捷话术数据
+    // 功能区状态
+    isMicOn: false, // 麦克风开关状态
+    isSpeakerOn: false, // 扬声器开关状态
+    isVideoActive: false, // 视频激活状态
+    isArActive: false, // AR激活状态
+    isTextChatActive: false, // 多聊激活状态
 
   },
 
@@ -931,9 +938,38 @@ Page({
 
   // 点击设置图标
   onSettingsTap: function() {
+    const showMenu = !this.data.showFloatMenu;
+    
+    if (showMenu) {
+      // 显示菜单
+      this.setData({
+        showFloatMenu: true,
+        menuAnimationClass: 'show'
+      });
+    } else {
+      // 隐藏菜单
+      this.hideMenu();
+    }
+  },
+
+  // 点击遮罩层关闭菜单
+  onMenuMaskTap: function() {
+    this.hideMenu();
+  },
+
+  // 隐藏菜单的通用方法
+  hideMenu: function() {
     this.setData({
-      showFloatMenu: !this.data.showFloatMenu
+      menuAnimationClass: 'hide'
     });
+    
+    // 等待动画完成后隐藏菜单
+    setTimeout(() => {
+      this.setData({
+        showFloatMenu: false,
+        menuAnimationClass: ''
+      });
+    }, 200); // 与CSS动画时间保持一致
   },
 
   // 菜单项点击事件
@@ -958,7 +994,7 @@ Page({
     }
     
     // 关闭菜单
-    this.setData({ showFloatMenu: false });
+    this.hideMenu();
   },
 
   handleCanvasTouchStart(e) {
@@ -1035,6 +1071,112 @@ Page({
   handleCanvasDoubleTap() {
     if (this.modelRenderer) {
       this.modelRenderer.resetModelScale();
+    }
+  },
+
+  // 功能区事件处理函数
+  // TODO: 实现视频功能
+  onVideoTap: function() {
+    console.log('[Companion] 点击视频功能');
+    const newVideoState = !this.data.isVideoActive;
+    this.setData({
+      isVideoActive: newVideoState
+    });
+    
+    if (newVideoState) {
+      tt.showToast({
+        title: '视频功能已激活',
+        icon: 'none'
+      });
+    } else {
+      tt.showToast({
+        title: '视频功能已关闭',
+        icon: 'none'
+      });
+    }
+  },
+
+  // TODO: 实现麦克风功能
+  onMicTap: function() {
+    console.log('[Companion] 点击麦克风功能');
+    const newMicState = !this.data.isMicOn;
+    this.setData({
+      isMicOn: newMicState
+    });
+    
+    if (newMicState) {
+      tt.showToast({
+        title: '麦克风已开启',
+        icon: 'none'
+      });
+    } else {
+      tt.showToast({
+        title: '麦克风已关闭',
+        icon: 'none'
+      });
+    }
+  },
+
+  // TODO: 实现扬声器功能
+  onSpeakerTap: function() {
+    console.log('[Companion] 点击扬声器功能');
+    const newSpeakerState = !this.data.isSpeakerOn;
+    this.setData({
+      isSpeakerOn: newSpeakerState
+    });
+    
+    if (newSpeakerState) {
+      tt.showToast({
+        title: '扬声器已开启',
+        icon: 'none'
+      });
+    } else {
+      tt.showToast({
+        title: '扬声器已关闭',
+        icon: 'none'
+      });
+    }
+  },
+
+  // TODO: 实现AR功能
+  onArTap: function() {
+    console.log('[Companion] 点击AR功能');
+    const newArState = !this.data.isArActive;
+    this.setData({
+      isArActive: newArState
+    });
+    
+    if (newArState) {
+      tt.showToast({
+        title: 'AR功能已激活',
+        icon: 'none'
+      });
+    } else {
+      tt.showToast({
+        title: 'AR功能已关闭',
+        icon: 'none'
+      });
+    }
+  },
+
+  // TODO: 实现多聊功能
+  onTextChatTap: function() {
+    console.log('[Companion] 点击多聊功能');
+    const newTextChatState = !this.data.isTextChatActive;
+    this.setData({
+      isTextChatActive: newTextChatState
+    });
+    
+    if (newTextChatState) {
+      tt.showToast({
+        title: '多聊功能已激活',
+        icon: 'none'
+      });
+    } else {
+      tt.showToast({
+        title: '多聊功能已关闭',
+        icon: 'none'
+      });
     }
   }
 });

@@ -298,7 +298,8 @@ page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 200rpx;
+  justify-content: flex-end;
+  margin-bottom: 340rpx;
   padding-top: 120rpx; /* 给固定导航留空间 */
 }
 
@@ -500,6 +501,44 @@ page {
   flex-direction: column;
   z-index: 100;
 }
+
+/* 功能区 */
+.function-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--m-m);
+  padding: var(--p-m) var(--p-l);
+}
+
+.function-item {
+  width: 190rpx;
+  height: 80rpx;
+  background-color: var(--bg-frosted);
+  border: 1rpx solid var(--border-light);
+  border-radius: var(--r-l);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 8rpx var(--shadow-light);
+  backdrop-filter: blur(10rpx);
+  transition: all 0.2s ease;
+}
+
+.function-item:active {
+  transform: scale(0.95);
+  background-color: var(--bg-frosted-dark);
+}
+
+.function-item.active {
+  background-color: var(--bg-frosted-dark);
+}
+
+.function-icon {
+  width: 50rpx;
+  height: 50rpx;
+}
+
 .input-card {
   padding: 0 var(--p-l);
 }
@@ -642,40 +681,107 @@ page {
   border-color: var(--text-primary) !important;
 }
 
+/* 菜单遮罩层 */
+.menu-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 998;
+  background-color: transparent;
+}
+
 /* 浮动菜单样式 */
 .float-menu {
   position: fixed;
-  top: 200rpx;
-  right: 40rpx;
+  top: 120rpx; /* 相对于header的位置 */
+  right: var(--p-l);
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 16rpx;
-  padding: 20rpx;
+  background-color: var(--bg-frosted);
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid var(--border-light);
+  border-radius: var(--r-l);
+  padding: var(--p-m) var(--p-s);
   z-index: 999;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4rpx 20rpx var(--shadow-light);
+  min-width: 120rpx;
+  opacity: 0;
+}
+
+/* 菜单显示状态 */
+.float-menu.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  animation: menuShow 0.2s ease-out;
+}
+
+/* 菜单隐藏状态 */
+.float-menu.hide {
+  opacity: 0;
+  transform: scale(0.95) translateY(-10rpx);
+  animation: menuHide 0.2s ease-in;
 }
 
 .menu-item {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  margin-bottom: 30rpx;
-  color: #fff;
+  justify-content: flex-start;
+  margin-bottom: var(--m-m);
+  padding: var(--p-m) var(--p-l);
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .menu-item:last-child {
   margin-bottom: 0;
 }
 
-.icon {
-  width: 48rpx;
-  height: 48rpx;
-  margin-bottom: 10rpx;
+.menu-item:active {
+  background-color: var(--bg-frosted-dark);
+  transform: scale(0.98);
+}
+
+.menu-item-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: var(--m-m);
+  flex-shrink: 0;
 }
 
 .menu-item text {
   font-size: 28rpx;
-  color: #ffffff;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+/* 菜单动效关键帧 */
+@keyframes menuShow {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10rpx);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes menuHide {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10rpx);
+  }
 }

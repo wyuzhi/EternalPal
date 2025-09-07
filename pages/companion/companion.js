@@ -1400,6 +1400,25 @@ Page({
     });
   },
 
+  // 点击记忆图标跳转到记忆页面
+  onMemoryTap: function() {
+    console.log('[Companion] 点击记忆图标，跳转到记忆页面');
+    
+    tt.navigateTo({
+      url: '/pages/memory/memory',
+      success: function() {
+        console.log('[Companion] 成功跳转到记忆页面');
+      },
+      fail: function(error) {
+        console.error('[Companion] 跳转到记忆页面失败:', error);
+        tt.showToast({
+          title: '跳转失败',
+          icon: 'none'
+        });
+      }
+    });
+  },
+
   // 分享功能实现
   onShareAppMessage: function(shareOption) {
     console.log('[Companion] 分享被触发，参数:', shareOption);

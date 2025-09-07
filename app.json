@@ -1,24 +1,27 @@
 {
-  "pages": [
-    "pages/guide/guide",
-    "pages/pet/pet",
-    "pages/companion/companion",
-    "pages/petProfile/petProfile",
-    "pages/settings/settings",
-    "pages/settings/info/info"
-  ],
-  "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "灵伴",
-    "navigationBarTextStyle": "black"
-  },
-  "privacy": {
-    "requiredPrivateInfos": ["chooseImage"],
-    "scope": {
-      "chooseImage": {
-        "desc": "用于上传宠物照片，以便生成虚拟灵伴形象"
-      }
+    "pages": [
+        "pages/guide/guide",
+        "pages/pet/pet",
+        "pages/companion/companion",
+        "pages/petProfile/petProfile",
+        "pages/settings/settings",
+        "pages/settings/info/info",
+        "pages/memory/memory"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#fff",
+        "navigationBarTitleText": "灵伴",
+        "navigationBarTextStyle": "black"
+    },
+    "privacy": {
+        "requiredPrivateInfos": [
+            "chooseImage"
+        ],
+        "scope": {
+            "chooseImage": {
+                "desc": "用于上传宠物照片，以便生成虚拟灵伴形象"
+            }
+        }
     }
-  }
 }

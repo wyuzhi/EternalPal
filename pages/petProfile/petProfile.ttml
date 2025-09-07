@@ -9,14 +9,20 @@
         <text class="pet-name">{{petName}}</text>
         <view class="pet-meta">
           <text class="pet-type">{{petType}}</text>
-          <text class="pet-gender">{{petGender === 'male' ? '男孩' : petGender === 'female' ? '女孩' : '未知'}}</text>
-          <text class="pet-birthday" wx:if="{{petBirthday}}">{{petBirthday}}</text>
+          <view class="pet-gender-tag">
+            <image src="/images/petProfile/{{petGender === 'male' ? 'male' : 'female'}}.svg" mode="aspectFit" class="meta-icon"></image>
+            <text class="pet-gender">{{petGender === 'male' ? '男孩' : petGender === 'female' ? '女孩' : '未知'}}</text>
+          </view>
+          <view class="pet-birthday-tag" wx:if="{{petBirthday}}">
+            <image src="/images/petProfile/date.svg" mode="aspectFit" class="meta-icon"></image>
+            <text class="pet-birthday">{{petBirthday}}</text>
+          </view>
         </view>
       </view>
 
-      <view class="edit-button" bindtap="onEditTap">
+      <!-- <view class="edit-button" bindtap="onEditTap">
         <image src="/images/petProfile/desc.svg" mode="aspectFit" class="edit-icon"></image>
-      </view>
+      </view> -->
     </view>
     
     <!-- 宠物描述 -->

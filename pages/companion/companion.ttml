@@ -53,7 +53,7 @@
   <view class="float-menu {{menuAnimationClass}}" wx:if="{{showFloatMenu}}">
     <button class="menu-item" bindtap="onMenuItemTap" data-action="info">
       <image src="/images/mainPage/list/animalFile.svg" class="menu-item-icon" mode="aspectFit"></image>
-      <text>信息</text>
+      <text>档案</text>
     </button>
     <button class="menu-item" bindtap="onMenuItemTap" data-action="settings">
       <image src="/images/mainPage/list/settings.svg" class="menu-item-icon" mode="aspectFit"></image>

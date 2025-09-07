@@ -67,6 +67,7 @@ page {
   --r-card: 20rpx;      /* 卡片圆角 */
   --r-button: 8rpx;     /* 按钮圆角 */
   --r-input: 6rpx;      /* 输入框圆角 */
+  --r-bubble: 48rpx;    /* 气泡圆角 */
   
   /* 字体大小变量 - Font Size */
   --f-xs: 20rpx;          /* 超小字体 */

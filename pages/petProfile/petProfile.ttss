@@ -1,0 +1,251 @@
+.container {
+  min-height: 100vh;
+  padding: var(--p-l);
+  padding-bottom: 50rpx;
+  background: linear-gradient(180deg, 
+    #ebf5ff 6%, 
+    #e7f6c7 40%, 
+    #f7f9df 76%, 
+    #fffbeb 100%);
+}
+
+/* 宠物信息卡片 */
+.pet-card {
+  background: var(--bg-frosted);
+  border-radius: var(--r-card);
+  padding: var(--p-xl);
+  margin-bottom: var(--p-l);
+  box-shadow: 0 4rpx 20rpx var(--shadow-light);
+  border: 1rpx solid var(--border-light);
+  backdrop-filter: blur(10rpx);
+}
+
+.pet-header {
+  display: flex;
+  align-items: center;
+}
+
+.pet-avatar-container {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: var(--p-l);
+  background-color: var(--bg-tertiary);
+}
+
+.pet-avatar {
+  width: 100%;
+  height: 100%;
+}
+
+.pet-basic-info {
+  flex: 1;
+}
+
+.pet-name {
+  font-size: var(--f-lg);
+  font-weight: bold;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: var(--p-s);
+}
+
+.pet-meta {
+  display: flex;
+  gap: var(--m-m);
+}
+
+.pet-type {
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+  background-color: var(--bg-tertiary);
+  padding: var(--p-s) var(--m-m);
+  border-radius: var(--r-m);
+}
+
+.pet-gender-tag, .pet-birthday-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--p-s);
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+  background-color: var(--bg-tertiary);
+  padding: var(--p-s) var(--m-m);
+  border-radius: var(--r-m);
+}
+
+.meta-icon {
+  width: 28rpx;
+  height: 28rpx;
+}
+
+.edit-button {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--r-pill);
+}
+
+.edit-icon {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+.pet-description {
+  margin-bottom: var(--p-l);
+}
+
+.pet-description text {
+  font-size: var(--f-base);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* 亲密度信息 */
+.intimacy-info {
+  /* background-color: var(--bg-frosted-dark); */
+  border-radius: var(--r-m);
+  padding: var(--p-m);
+  margin-top: var(--m-l);
+}
+
+.intimacy-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--m-m);
+}
+
+.heart-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: var(--p-s);
+}
+
+.intimacy-title {
+  font-size: var(--f-base);
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-right: var(--m-m);
+}
+
+.intimacy-level {
+  font-size: var(--f-sm);
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.intimacy-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--m-m);
+}
+
+.progress-bar {
+  flex: 1;
+  height: 12rpx;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--r-s);
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(45deg, #7968E5, #E076D6, #FF7787);
+  border-radius: var(--r-s);
+  transition: width 0.3s ease;
+}
+
+.intimacy-points {
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+  min-width: 120rpx;
+  text-align: right;
+}
+
+/* 通用section样式 */
+.section {
+  background: var(--bg-frosted);
+  border-radius: var(--r-card);
+  padding: var(--p-xl);
+  margin-bottom: var(--p-l);
+  border: 1rpx solid var(--border-light);
+  box-shadow: 0 4rpx 20rpx var(--shadow-light);
+  backdrop-filter: blur(10rpx);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+}
+
+.section-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: var(--p-s);
+}
+
+.section-title {
+  font-size: var(--f-md);
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+/* 喜好标签 */
+.likes-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--m-m);
+  padding-top: var(--p-m);
+}
+
+.like-tag {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: var(--bg-primary);
+  padding: var(--p-s) var(--p-l);
+  border-radius: var(--r-pill);
+  font-size: var(--f-sm);
+}
+
+/* 故事内容 */
+.info-desc {
+  font-size: var(--f-base);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-top: var(--p-m);
+}
+
+/* 统计信息 */
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--m-m) 0;
+  border-bottom: 1rpx solid var(--border-light);
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.stat-label {
+  font-size: var(--f-base);
+  color: var(--text-secondary);
+}
+
+.stat-value {
+  font-size: var(--f-base);
+  color: var(--text-primary);
+  font-weight: 500;
+}

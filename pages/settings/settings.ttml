@@ -1,0 +1,98 @@
+<view class="container">
+  <!-- 通知设置 -->
+  <view class="section-title">通知设置</view>
+  <view class="section">
+
+        <view class="setting-item">
+        <view class="setting-info">
+            <text class="setting-label">推送通知</text>
+            <text class="setting-desc">接收应用推送消息</text>
+        </view>
+        <switch checked="{{settings.enableNotifications}}" bindchange="onNotificationToggle" color="var(--primary-color)"></switch>
+        </view>
+
+        <view class="setting-item">
+        <view class="setting-info">
+            <text class="setting-label">声音提醒</text>
+            <text class="setting-desc">通知时播放提示音</text>
+        </view>
+        <switch checked="{{settings.enableSound}}" bindchange="onSoundToggle" color="var(--primary-color)"></switch>
+        </view>
+
+        <view class="setting-item">
+        <view class="setting-info">
+            <text class="setting-label">震动提醒</text>
+            <text class="setting-desc">通知时震动提醒</text>
+        </view>
+        <switch checked="{{settings.enableVibration}}" bindchange="onVibrationToggle" color="var(--primary-color)"></switch>
+        </view>
+    </view>
+
+
+  <!-- 授权设置 -->
+  <view class="section-title">授权设置</view>
+  <view class="section">
+    
+    <view class="setting-item">
+      <view class="setting-info">
+        <text class="setting-label">数据收集</text>
+        <text class="setting-desc">允许收集使用数据以改善体验</text>
+      </view>
+      <switch checked="{{settings.enableDataCollection}}" bindchange="onDataCollectionToggle" color="var(--primary-color)"></switch>
+    </view>
+    
+    <!-- 位置权限 -->
+    <view class="setting-item">
+      <view class="setting-info">
+        <text class="setting-label">位置权限</text>
+        <text class="setting-desc">允许获取您的位置信息</text>
+      </view>
+      <switch checked="{{settings.enableLocation}}" bindchange="onLocationToggle" color="var(--primary-color)"></switch>
+    </view>
+  </view>
+
+  <!-- 其他设置 -->
+  <view class="section-title">其他设置</view>
+  <view class="section">    
+    <view class="setting-item clickable" bindtap="onClearCache">
+      <view class="setting-info">
+        <text class="setting-label">清除缓存</text>
+        <text class="setting-desc">清除应用缓存数据</text>
+      </view>
+    </view>
+    
+    <view class="setting-item clickable danger" bindtap="onDeletePetData">
+      <view class="setting-info">
+        <text class="setting-label">删除宠物数据</text>
+        <text class="setting-desc">删除当前宠物的所有数据，此操作不可恢复</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 关于应用 -->
+  <view class="section-title">关于</view>
+  <view class="section">
+    
+    <view class="setting-item clickable" bindtap="onAbout">
+      <view class="setting-info">
+        <text class="setting-label">关于灵伴</text>
+        <text class="setting-desc">版本信息和应用介绍</text>
+      </view>
+      <image class="arrow-icon" src="/images/mainPage/list/arrow.svg" mode="aspectFit"></image>
+    </view>
+    
+    <view class="setting-item clickable" bindtap="onPrivacy">
+      <view class="setting-info">
+        <text class="setting-label">隐私政策</text>
+        <text class="setting-desc">了解我们如何保护您的隐私</text>
+      </view>
+    </view>
+    
+    <view class="setting-item clickable" bindtap="onTerms">
+      <view class="setting-info">
+        <text class="setting-label">用户协议</text>
+        <text class="setting-desc">使用条款和条件</text>
+      </view>
+    </view>
+  </view>
+</view>

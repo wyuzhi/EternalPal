@@ -1,0 +1,111 @@
+<view class="container">
+  <!-- 顶部宠物信息卡片 -->
+  <view class="pet-card">
+    <view class="pet-header">
+      <view class="pet-avatar-container">
+        <image src="{{petImage || '/images/logo.svg'}}" mode="aspectFit" class="pet-avatar"></image>
+      </view>
+      <view class="pet-basic-info">
+        <text class="pet-name">{{petName}}</text>
+        <view class="pet-meta">
+          <text class="pet-type">{{petType}}</text>
+          <text class="pet-gender">{{petGender === 'male' ? '男孩' : petGender === 'female' ? '女孩' : '未知'}}</text>
+          <text class="pet-birthday" wx:if="{{petBirthday}}">{{petBirthday}}</text>
+        </view>
+      </view>
+
+      <view class="edit-button" bindtap="onEditTap">
+        <image src="/images/petProfile/desc.svg" mode="aspectFit" class="edit-icon"></image>
+      </view>
+    </view>
+    
+    <!-- 宠物描述 -->
+    <!-- <view class="pet-description">
+      <text>{{petDescription}}</text>
+    </view> -->
+    
+    <!-- 亲密度信息 -->
+    <view class="intimacy-info">
+      <view class="intimacy-header">
+        <image src="/images/mainPage/heart.svg" mode="aspectFit" class="heart-icon"></image>
+        <text class="intimacy-title">亲密度</text>
+        <text class="intimacy-level">Lv.{{intimacyLevel}}</text>
+      </view>
+      <view class="intimacy-progress">
+        <view class="progress-bar">
+          <view class="progress" style="width: {{intimacyProgress}}%;"></view>
+        </view>
+        <text class="intimacy-points">{{intimacyPoints}}/{{(intimacyLevel + 1) * 100}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 宠物性格 -->
+  <view class="section" wx:if="{{petPersonalities.length > 0}}">
+    <view class="section-header">
+      <image src="/images/petProfile/character.svg" mode="aspectFit" class="section-icon"></image>
+      <text class="section-title">性格</text>
+    </view>
+    <view class="likes-container">
+      <view wx:for="{{petPersonalities}}" wx:key="*this" class="like-tag">
+        <text>{{item}}</text>
+      </view>
+    </view>
+    <view class="info-desc">
+      <text>{{petPersonalities_desc}}</text>
+    </view>
+  </view>
+
+  <!-- 宠物爱好 -->
+  <view class="section" wx:if="{{petHobbies.length > 0}}">
+    <view class="section-header">
+      <image src="/images/petProfile/likes.svg" mode="aspectFit" class="section-icon"></image>
+      <text class="section-title">爱好</text>
+    </view>
+    <view class="likes-container">
+      <view wx:for="{{petHobbies}}" wx:key="*this" class="like-tag">
+        <text>{{item}}</text>
+      </view>
+    </view>
+    <view class="info-desc">
+      <text>{{petHobbies_desc}}</text>
+    </view>
+  </view>
+
+  <!-- 宠物故事 -->
+  <view class="section" wx:if="{{petStory}}">
+    <view class="section-header">
+      <image src="/images/petProfile/desc.svg" mode="aspectFit" class="section-icon"></image>
+      <text class="section-title">故事</text>
+    </view>
+    <view class="info-desc">
+      <text>{{petStory}}</text>
+    </view>
+  </view>
+  
+  <!-- 统计信息 -->
+  <view class="section">
+    <view class="section-header">
+      <image src="/images/petProfile/date.svg" mode="aspectFit" class="section-icon"></image>
+      <text class="section-title">统计信息</text>
+    </view>
+    <view class="stats-container">
+      <view class="stat-item">
+        <text class="stat-label">创建时间</text>
+        <text class="stat-value">{{createdDate}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-label">最后活跃</text>
+        <text class="stat-value">{{lastActiveDate}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-label">聊天次数</text>
+        <text class="stat-value">{{totalChatCount}}次</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-label">陪伴时长</text>
+        <text class="stat-value">{{totalPlayTime}}分钟</text>
+      </view>
+    </view>
+  </view>
+</view>

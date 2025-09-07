@@ -437,6 +437,127 @@ page {
   }
 }
 
+/* 气泡消失动画 */
+@keyframes bubbleDisappear {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(2rpx) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(5rpx) scale(0.95);
+  }
+}
+
+/* 气泡消失状态 */
+.current-chat-bubble.hide, .user-message-display.hide {
+  animation: bubbleDisappear 0.3s ease-out;
+}
+
+/* 聊天历史显示区域 */
+.chat-history-display {
+  position: fixed;
+  top: 110rpx;
+  bottom: 310rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  /* 添加渐变遮罩效果 - 上下从半透明到显示再到半透明 */
+  mask: linear-gradient(to bottom, 
+    rgba(0, 0, 0, 0.1) 0%, 
+    rgba(0, 0, 0, 0.4) 2%, 
+    rgba(0, 0, 0, 0.7) 4%, 
+    rgba(0, 0, 0, 1) 12%, 
+    rgba(0, 0, 0, 1) 90%, 
+    rgba(0, 0, 0, 0.7) 96%, 
+    rgba(0, 0, 0, 0.4) 98%, 
+    rgba(0, 0, 0, 0.1) 100%);
+  -webkit-mask: linear-gradient(to bottom, 
+    rgba(0, 0, 0, 0.1) 0%, 
+    rgba(0, 0, 0, 0.4) 2%, 
+    rgba(0, 0, 0, 0.7) 4%, 
+    rgba(0, 0, 0, 1) 12%, 
+    rgba(0, 0, 0, 1) 90%, 
+    rgba(0, 0, 0, 0.7) 96%, 
+    rgba(0, 0, 0, 0.4) 98%, 
+    rgba(0, 0, 0, 0.1) 100%);
+  
+}
+
+.chat-history-display .chat-messages {
+  flex: 1;
+  padding: var(--p-l);
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.chat-history-display .message-container {
+  margin-bottom: var(--m-l);
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-history-display .ai-message {
+  align-items: flex-start;
+  border-top-right-radius: var(--r-l);
+}
+
+.chat-history-display .user-message {
+  align-items: flex-end;
+}
+
+.chat-history-display .message-bubble {
+  max-width: 80%;
+  padding: var(--p-m) var(--p-l);
+  font-size: var(--f-base);
+  line-height: 1.6;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  position: relative;
+}
+
+.chat-history-display .ai-message .message-bubble {
+  background-color: var(--bg-frosted-dark);
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid var(--border-light);
+  color: var(--text-primary);
+  box-shadow: 0 2rpx 8rpx var(--shadow-light);
+  border-radius: var(--r-bubble) var(--r-bubble) var(--r-bubble) var(--r-m); /* 左下角圆角小 */
+}
+
+.chat-history-display .user-message .message-bubble {
+  background-color: var(--bg-frosted);
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid var(--border-light);
+  color: var(--text-primary);
+  box-shadow: 0 2rpx 8rpx var(--shadow-light);
+  border-radius: var(--r-bubble) var(--r-bubble) var(--r-m) var(--r-bubble); /* 右下角圆角小 */
+}
+
+.chat-history-display .message-time {
+  font-size: 22rpx;
+  color: var(--text-tertiary);
+  margin-top: 8rpx;
+  line-height: 1.2;
+}
+
+.chat-history-display .ai-message .message-time {
+  align-self: flex-start;
+  margin-left: 16rpx;
+}
+
+.chat-history-display .user-message .message-time {
+  align-self: flex-end;
+  margin-right: 16rpx;
+}
+
 /* 加载覆盖层 */
 .loading-overlay {
   position: absolute;
@@ -541,41 +662,7 @@ page {
   height: 100%;
 }
 
-/* 快捷功能区 */
-.quick-actions {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20rpx;
-  padding: 0 20rpx;
-  overflow-x: hidden;
-  box-sizing: border-box;
-}
 
-.action-button {
-  width: 80rpx;
-  height: 80rpx;
-  background-color: #fff;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
-}
-
-.action-icon {
-  width: 40rpx;
-  height: 40rpx;
-}
-
-.action-icon.recording {
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
 
 /* 输入卡片区域 */
 .input-card-container {
@@ -623,6 +710,11 @@ page {
 .function-icon {
   width: 50rpx;
   height: 50rpx;
+  transition: transform 0.2s ease;
+}
+
+.function-item:active .function-icon {
+  transform: scale(0.8);
 }
 
 .input-card {
@@ -817,10 +909,22 @@ page {
   align-items: center;
   justify-content: flex-start;
   margin-bottom: var(--m-m);
-  padding: var(--p-m) var(--p-l);
+  padding: var(--p-s) var(--p-m);
   transition: all 0.2s ease;
   width: 100%;
   box-sizing: border-box;
+  /* 按钮样式 */
+  background: none;
+  border: none;
+  outline: none;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+.menu-item::after {
+  border: none;
 }
 
 .menu-item:last-child {
@@ -828,7 +932,6 @@ page {
 }
 
 .menu-item:active {
-  background-color: var(--bg-frosted-dark);
   transform: scale(0.98);
 }
 
@@ -844,6 +947,7 @@ page {
   color: var(--text-primary);
   line-height: 1.4;
 }
+
 
 /* 菜单动效关键帧 */
 @keyframes menuShow {

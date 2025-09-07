@@ -24,8 +24,20 @@ Page({
     isAuthorized: false,
     userName: '你好呀' // 用户名，默认值为"你好呀"
   },
-  onLoad: function () {
-    console.log('AI萌宠应用启动')
+  onLoad: function (options) {
+    console.log('应用启动')
+    console.log('Guide页面参数:', options);
+    
+    // 检查是否来自分享链接
+    if (options && options.isShare === 'true') {
+      console.log('Guide页面: 来自分享链接，来源:', options.from);
+      tt.showToast({
+        title: '欢迎来到灵伴 EternalPal！',
+        icon: 'none',
+        duration: 3000
+      });
+    }
+    
     // 页面加载时自动尝试登录
     this.loginAndCheckUser()
   },

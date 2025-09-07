@@ -2,7 +2,10 @@
   "pages": [
     "pages/guide/guide",
     "pages/pet/pet",
-    "pages/companion/companion"
+    "pages/companion/companion",
+    "pages/petProfile/petProfile",
+    "pages/settings/settings",
+    "pages/settings/info/info"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -116,10 +116,15 @@ Page({
     isMockMode: true, // 是否使用模拟模式（默认开启，方便测试）
     // 气泡配置
     bubbleAutoHideTime: 5000, // 气泡自动消失时间/ms
+    // 聊天模式状态
+    chatMode: false, // 是否处于聊天模式
+    showChatHistory: false, // 是否显示聊天历史
     // 当前对话气泡
     currentMessage: '', // 当前显示的消息内容
+    bubbleAnimationClass: '', // 气泡动画类名
     // 用户消息显示
     userMessage: '', // 用户发送的消息，显示在输入区域上方
+    userMessageAnimationClass: '', // 用户消息动画类名
     // AI回复数据
     aiReplies: [], // AI回复选项，在initQuickReplies中初始化
     // 模拟聊天数据
@@ -334,7 +339,8 @@ Page({
       const randomWelcome = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
       
       this.setData({
-        currentMessage: randomWelcome
+        currentMessage: randomWelcome,
+        bubbleAnimationClass: ''
       });
       
       // 设置欢迎消息自动消失
@@ -378,6 +384,7 @@ Page({
   onLoad: function(options) {
     console.log("[Companion] Welcome to Mini Code");
     console.log('[Companion] 页面加载完成，开始初始化');
+    console.log('[Companion] 页面参数:', options);
     
     // 获取系统信息
     this.getSystemInfo();
@@ -497,12 +504,35 @@ Page({
     console.log('[Companion] 开始初始化3D渲染器');
     const that = this;
     
+    // 检查是否在宠物模式
+    if (this.data.chatMode) {
+      console.log('[Companion] 当前在聊天模式，跳过3D渲染器初始化');
+      return;
+    }
+    
     try {
       // 防止重复初始化
       if (this.modelRenderer) {
         console.log('[Companion] ModelRenderer已存在，先销毁');
-        this.modelRenderer.dispose();
-        this.modelRenderer = null;
+        try {
+          // 先尝试停止动画循环
+          if (this.modelRenderer.stopAnimation && typeof this.modelRenderer.stopAnimation === 'function') {
+            this.modelRenderer.stopAnimation();
+          }
+          
+          // 然后安全地销毁渲染器
+          if (this.modelRenderer.dispose && typeof this.modelRenderer.dispose === 'function') {
+            this.modelRenderer.dispose();
+          }
+        } catch (error) {
+          console.warn('[Companion] 销毁渲染器时出现警告:', error);
+          // 忽略Three.js的cancelAnimationFrame警告，这是已知的兼容性问题
+          if (!error.message || !error.message.includes('cancelAnimationFrame')) {
+            console.error('[Companion] 销毁渲染器时出现严重错误:', error);
+          }
+        } finally {
+          this.modelRenderer = null;
+        }
       }
       
       // 添加初始化标记，防止并发初始化
@@ -519,8 +549,13 @@ Page({
       // 延迟初始化，避免canvas未准备好
       console.log('[Companion] 设置延迟初始化，等待canvas准备');
       setTimeout(() => {
-        console.log('[Companion] 开始初始化ModelRenderer，canvas ID: modelCanvas');
-        this.modelRenderer.init('modelCanvas').then((success) => {
+        // 检查canvas是否存在
+        const query = tt.createSelectorQuery();
+        query.select('#modelCanvas').boundingClientRect((rect) => {
+          if (rect) {
+            console.log('[Companion] Canvas元素已准备就绪:', rect);
+            console.log('[Companion] 开始初始化ModelRenderer，canvas ID: modelCanvas');
+            this.modelRenderer.init('modelCanvas').then((success) => {
           console.log('[Companion] ModelRenderer初始化结果:', success);
           if (success) {
             console.log('[Companion] 3D渲染器初始化成功');
@@ -571,6 +606,17 @@ Page({
           // 清除初始化标记
           that.isInitializing3D = false;
         });
+          } else {
+            console.error('[Companion] Canvas元素不存在或不可见');
+            that.setData({
+              modelLoaded: false,
+              modelPlaceholderText: 'Canvas元素不可用'
+            });
+            
+            // 清除初始化标记
+            that.isInitializing3D = false;
+          }
+        }).exec();
       }, 500);
     } catch (error) {
       console.error('[Companion] 创建ModelRenderer实例失败:', error);
@@ -694,6 +740,12 @@ Page({
     if (this.bubbleHideTimer) {
       clearTimeout(this.bubbleHideTimer);
       this.bubbleHideTimer = null;
+    }
+    
+    // 清理用户消息消失定时器
+    if (this.userMessageHideTimer) {
+      clearTimeout(this.userMessageHideTimer);
+      this.userMessageHideTimer = null;
     }
   },
   
@@ -847,10 +899,21 @@ Page({
       inputValue: ''
     });
     
-    // 显示用户消息在输入区域上方
-    this.setData({
-      userMessage: message
-    });
+    // 根据模式显示用户消息
+    if (this.data.chatMode) {
+      // 聊天模式：不显示用户消息在输入区域上方
+      this.setData({
+        userMessage: ''
+      });
+    } else {
+      // 宠物模式：显示用户消息在输入区域上方
+      this.setData({
+        userMessage: message,
+        userMessageAnimationClass: ''
+      });
+    }
+    
+    // 不立即设置用户消息自动消失，等待AI回复后再消失
     
     // 添加用户消息到历史记录
     const userId = Date.now();
@@ -894,14 +957,26 @@ Page({
            if (res.data && res.data.status === 'success' && res.data.data) {
              const aiMessage = res.data.data;
              
-             // 清除用户消息显示，更新气泡显示AI回复
-             that.setData({
-               userMessage: '', // 清除用户消息显示
-               currentMessage: aiMessage.content || aiMessage.text
-             });
-             
-             // 设置气泡自动消失
-             that.setBubbleAutoHide();
+             // 根据模式处理AI回复显示
+             if (that.data.chatMode) {
+               // 聊天模式：不显示气泡，AI回复已在消息历史中
+               that.setData({
+                 userMessage: '',
+                 userMessageAnimationClass: '',
+                 currentMessage: ''
+               });
+             } else {
+               // 宠物模式：清除用户消息显示，更新气泡显示AI回复
+               that.setData({
+                 userMessage: '', // 清除用户消息显示
+                 userMessageAnimationClass: '', // 重置用户消息动画状态
+                 currentMessage: aiMessage.content || aiMessage.text,
+                 bubbleAnimationClass: ''
+               });
+               
+               // 设置气泡自动消失
+               that.setBubbleAutoHide();
+             }
              
              // 更新消息历史记录
              const aiMessageId = aiMessage.id || Date.now() + 1;
@@ -922,16 +997,21 @@ Page({
                that.updateIntimacyInfo(aiMessage.intimacy_points);
              }
              
-             // 延迟执行滚动，确保DOM已经更新
-             setTimeout(() => {
-               that.scrollToBottom();
-             }, 100);
+             // 聊天模式下延迟执行滚动，确保DOM已经更新
+             if (that.data.chatMode) {
+               setTimeout(() => {
+                 that.scrollToBottom();
+               }, 100);
+             }
           } else {
             console.error('AI回复失败:', res.data.message || '未知错误');
             tt.showToast({
               title: 'AI回复失败',
               icon: 'none'
             });
+            
+            // AI回复失败时，设置用户消息自动消失
+            that.setUserMessageAutoHide();
           }
         },
         fail: function(error) {
@@ -943,8 +1023,15 @@ Page({
           
           // 网络失败时显示默认回复
           that.setData({
-            currentMessage: "抱歉，网络连接出现问题，请稍后再试~"
+            currentMessage: "抱歉，网络连接出现问题，请稍后再试~",
+            bubbleAnimationClass: ''
           });
+          
+          // 设置气泡自动消失
+          that.setBubbleAutoHide();
+          
+          // 设置用户消息自动消失（因为AI没有回复）
+          that.setUserMessageAutoHide();
         }
       });
     }
@@ -959,14 +1046,26 @@ Page({
       // 根据用户消息内容生成回复
       const mockReply = this.generateMockReply(message);
       
-      // 清除用户消息显示，更新气泡显示AI回复
-      this.setData({
-        userMessage: '', // 清除用户消息显示
-        currentMessage: mockReply.text
-      });
-      
-      // 设置气泡自动消失
-      that.setBubbleAutoHide();
+      // 根据模式处理AI回复显示
+      if (that.data.chatMode) {
+        // 聊天模式：不显示气泡，AI回复已在消息历史中
+        that.setData({
+          userMessage: '',
+          userMessageAnimationClass: '',
+          currentMessage: ''
+        });
+      } else {
+        // 宠物模式：清除用户消息显示，更新气泡显示AI回复
+        that.setData({
+          userMessage: '', // 清除用户消息显示
+          userMessageAnimationClass: '', // 重置用户消息动画状态
+          currentMessage: mockReply.text,
+          bubbleAnimationClass: ''
+        });
+        
+        // 设置气泡自动消失
+        that.setBubbleAutoHide();
+      }
       
       // 更新消息历史记录
       const aiMessageId = Date.now() + 1;
@@ -988,10 +1087,12 @@ Page({
         this.updateIntimacyInfo(currentIntimacy + mockReply.intimacyIncrement);
       }
       
-      // 延迟执行滚动，确保DOM已经更新
-      setTimeout(() => {
-        this.scrollToBottom();
-      }, 100);
+      // 聊天模式下延迟执行滚动，确保DOM已经更新
+      if (that.data.chatMode) {
+        setTimeout(() => {
+          that.scrollToBottom();
+        }, 100);
+      }
       
     }, 1000 + Math.random() * 1000); // 1-2秒的随机延迟，模拟真实网络请求
   },
@@ -1019,11 +1120,47 @@ Page({
     
     // 设置新的定时器，根据配置时间自动消失
     this.bubbleHideTimer = setTimeout(() => {
+      // 先添加消失动画类
       that.setData({
-        currentMessage: ''
+        bubbleAnimationClass: 'hide'
       });
-      console.log('[Companion] 气泡自动消失');
+      
+      // 等待动画完成后清空消息
+      setTimeout(() => {
+        that.setData({
+          currentMessage: '',
+          bubbleAnimationClass: ''
+        });
+        console.log('[Companion] 气泡自动消失');
+      }, 300); // 与CSS动画时间保持一致
     }, this.data.bubbleAutoHideTime);
+  },
+
+  // 设置用户消息自动消失
+  setUserMessageAutoHide: function() {
+    const that = this;
+    
+    // 清除之前的定时器
+    if (this.userMessageHideTimer) {
+      clearTimeout(this.userMessageHideTimer);
+    }
+    
+    // 设置新的定时器，用户消息显示时间较短
+    this.userMessageHideTimer = setTimeout(() => {
+      // 先添加消失动画类
+      that.setData({
+        userMessageAnimationClass: 'hide'
+      });
+      
+      // 等待动画完成后清空消息
+      setTimeout(() => {
+        that.setData({
+          userMessage: '',
+          userMessageAnimationClass: ''
+        });
+        console.log('[Companion] 用户消息自动消失');
+      }, 300); // 与CSS动画时间保持一致
+    }, 2000); // 用户消息显示2秒后消失
   },
 
   // 切换模拟模式
@@ -1209,21 +1346,93 @@ Page({
     // 根据action执行不同操作
     switch(action) {
       case 'info':
-        tt.showToast({ title: '查看宠物信息', icon: 'none' });
+        // 跳转到宠物档案页面
+        this.navigateToPetProfile();
         break;
       case 'settings':
-        tt.showToast({ title: '打开设置', icon: 'none' });
+        // 跳转到设置页面
+        tt.navigateTo({
+          url: '/pages/settings/settings'
+        });
         break;
       case 'share':
-        tt.showShareMenu({
-          withShareTicket: true,
-          menus: ['shareAppMessage', 'shareTimeline']
-        });
+        // 分享功能由onShareAppMessage方法处理
+        tt.showToast({ title: '请使用右上角分享按钮', icon: 'none' });
         break;
     }
     
     // 关闭菜单
     this.hideMenu();
+  },
+
+  // 跳转到宠物档案页面
+  navigateToPetProfile: function() {
+    console.log('[Companion] 跳转到宠物档案页面');
+    
+    // 准备传递给宠物档案页面的参数(示例)
+    const petInfo = {
+      petName: this.data.petName,
+      petType: this.data.petType,
+      petId: this.data.petId,
+      preview_url: this.data.preview_url,
+      generatedPetImage: this.data.generatedPetImage,
+      intimacyPoints: this.data.intimacyPoints,
+      intimacyLevel: this.data.intimacyLevel
+    };
+    
+    // 构建跳转URL
+    const url = `/pages/petProfile/petProfile?petName=${encodeURIComponent(petInfo.petName)}&petType=${encodeURIComponent(petInfo.petType)}&petId=${encodeURIComponent(petInfo.petId)}&preview_url=${encodeURIComponent(petInfo.preview_url)}&generatedPetImage=${encodeURIComponent(petInfo.generatedPetImage)}&intimacyPoints=${petInfo.intimacyPoints}&intimacyLevel=${petInfo.intimacyLevel}`;
+    
+    console.log('[Companion] 跳转URL:', url);
+    
+    tt.navigateTo({
+      url: url,
+      success: function() {
+        console.log('[Companion] 成功跳转到宠物档案页面');
+      },
+      fail: function(error) {
+        console.error('[Companion] 跳转到宠物档案页面失败:', error);
+        tt.showToast({
+          title: '跳转失败',
+          icon: 'none'
+        });
+      }
+    });
+  },
+
+  // 分享功能实现
+  onShareAppMessage: function(shareOption) {
+    console.log('[Companion] 分享被触发，参数:', shareOption);
+    
+    // 分享小程序，用户打开后进入引导页面
+    const sharePath = `/pages/guide/guide?from=share&isShare=true`;
+    
+    return {
+      // 分享地址，用户打开后进入引导页面
+      path: sharePath,
+      // 分享模板ID（需要在抖音开放平台后台配置）
+      templateId: "3h8i11h04d3g40njx3", // 这是一个示例ID，实际使用时需要替换为真实的模板ID
+      // 分享标题
+      title: '灵伴 EternalPal - 你的专属AI宠物',
+      // 分享成功回调
+      // success: function() {
+      //   console.log('[Companion] 分享面板调起成功');
+      //   tt.showToast({
+      //     title: '分享成功',
+      //     icon: 'success',
+      //     duration: 2000
+      //   });
+      // },
+      // 分享失败回调
+      fail: function(e) {
+        console.error('[Companion] 分享面板调起失败:', e);
+        tt.showToast({
+          title: '分享失败',
+          icon: 'none',
+          duration: 2000
+        });
+      }
+    };
   },
 
   handleCanvasTouchStart(e) {
@@ -1388,19 +1597,95 @@ Page({
     }
   },
 
-  // 实现多聊功能 - 切换到纯文字聊天页面
+  // 实现多聊功能 - 切换聊天模式
   onTextChatTap: function() {
-    console.log('[Companion] 点击多聊功能，切换到纯文字聊天模式');
+    console.log('[Companion] 点击多聊功能，切换聊天模式');
+    this.toggleChatMode();
+  },
+
+  // 切换聊天模式
+  toggleChatMode: function() {
+    const newChatMode = !this.data.chatMode;
     
-    // 跳转到聊天页面，传递当前宠物信息
-    tt.navigateTo({
-      url: `/pages/chat/chat?petId=${this.data.petId}&petName=${this.data.petName}&petType=${this.data.petType}`,
-      success: () => {
-        console.log('[Companion] 成功跳转到聊天页面');
-      },
-      fail: (error) => {
-        console.error('[Companion] 跳转到聊天页面失败:', error);
-      }
+    this.setData({
+      chatMode: newChatMode,
+      showChatHistory: newChatMode,
+      isTextChatActive: newChatMode
     });
+    
+    // 如果切换到聊天模式，清除当前气泡和用户消息
+    if (newChatMode) {
+      this.setData({
+        currentMessage: '',
+        userMessage: ''
+      });
+      
+      // 清除气泡自动消失定时器
+      if (this.bubbleHideTimer) {
+        clearTimeout(this.bubbleHideTimer);
+        this.bubbleHideTimer = null;
+      }
+      
+      console.log('[Companion] 切换到聊天模式');
+    } else {
+      console.log('[Companion] 切换到宠物模式');
+      
+      // 切换回宠物模式时，延迟重新初始化3D渲染器
+      // 给DOM更新一些时间
+      setTimeout(() => {
+        this.reinit3DRenderer();
+      }, 300);
+    }
+  },
+
+  // 重新初始化3D渲染器（用于模式切换后恢复模型显示）
+  reinit3DRenderer: function() {
+    console.log('[Companion] 重新初始化3D渲染器');
+    const that = this;
+    
+    // 检查canvas是否可见
+    const query = tt.createSelectorQuery();
+    query.select('#modelCanvas').boundingClientRect((rect) => {
+      if (rect && rect.width > 0 && rect.height > 0) {
+        console.log('[Companion] Canvas可见，尺寸:', rect.width, 'x', rect.height);
+        
+        // 强制重新初始化渲染器，因为WebGL上下文可能已丢失
+        console.log('[Companion] 强制重新初始化3D渲染器');
+        
+        // 清理旧的渲染器状态
+        if (that.modelRenderer) {
+          try {
+            // 先尝试停止动画循环
+            if (that.modelRenderer.stopAnimation && typeof that.modelRenderer.stopAnimation === 'function') {
+              that.modelRenderer.stopAnimation();
+            }
+            
+            // 然后安全地销毁渲染器
+            if (that.modelRenderer.dispose && typeof that.modelRenderer.dispose === 'function') {
+              that.modelRenderer.dispose();
+            }
+          } catch (error) {
+            console.warn('[Companion] 清理旧渲染器时出现警告:', error);
+            // 忽略Three.js的cancelAnimationFrame警告，这是已知的兼容性问题
+            if (!error.message || !error.message.includes('cancelAnimationFrame')) {
+              console.error('[Companion] 清理渲染器时出现严重错误:', error);
+            }
+          } finally {
+            that.modelRenderer = null;
+          }
+        }
+        
+        // 重置初始化标记
+        that.isInitializing3D = false;
+        
+        that.init3DRenderer();
+      } else {
+        console.error('[Companion] Canvas不可见或尺寸为0，延迟重试');
+        // Canvas不可见，延迟重试
+        setTimeout(() => {
+          that.reinit3DRenderer();
+        }, 200);
+      }
+    }).exec();
   },
 });

@@ -1,0 +1,63 @@
+<view class="container">
+  <!-- 应用信息头部 -->
+  <view class="app-header">
+    <view class="logo-container">
+      <image src="{{appInfo.logo}}" mode="aspectFit" class="app-logo"></image>
+    </view>
+    <view class="app-info">
+      <text class="app-name">{{appInfo.name}}</text>
+      <view class="version-container" bindtap="onCopyVersion">
+        <text class="app-version">{{appInfo.version}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 应用简介 -->
+    <view class="section-title">应用简介</view>
+  <view class="section">
+    <view class="description-card">
+      <text class="app-description">{{appInfo.description}}</text>
+    </view>
+  </view>
+
+  <!-- 核心功能 -->
+  <view class="section-title">核心功能</view>
+  
+    <view class="bento-grid">
+      <view wx:for="{{appInfo.features}}" wx:key="*this" class="bento-item {{index % 3 === 0 ? 'large' : 'small'}}">
+        <view class="bento-content">
+          <view class="bento-icon">
+            <text class="icon-text">{{item.charAt(0)}}</text>
+          </view>
+          <text class="bento-title">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  
+
+  <!-- 开发时间线 -->
+  <view class="section-title">开发时间线</view>
+  <view class="section">
+    <view class="timeline-container">
+      <view wx:for="{{timeline}}" wx:key="date" class="timeline-item {{item.status}}">
+        <view class="timeline-date">
+          <text>{{item.date}}</text>
+        </view>
+        <view class="timeline-content">
+          <view class="timeline-dot"></view>
+          <view class="timeline-info">
+            <text class="timeline-title">{{item.title}}</text>
+            <text class="timeline-desc">{{item.description}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+  <!-- 版权信息 -->
+  <view class="footer">
+    <text class="copyright">© 2025 灵伴团队. All rights reserved.</text>
+    <text class="powered">Powered by AI & Love</text>
+  </view>
+</view>

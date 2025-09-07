@@ -4,6 +4,7 @@
   
   <!-- 顶部导航 -->
   <view class="header">
+    <!-- 点击打开记忆页面：/pages/memory/memory，包含陪伴天数、日历（打卡）、记忆记录、纪念日 -->
     <view class="header-icon">
       <image src="/images/mainPage/memory.svg" mode="aspectFit" class="memory-icon"></image>
     </view>
@@ -50,26 +51,26 @@
   
   <!-- 浮动功能菜单 -->
   <view class="float-menu {{menuAnimationClass}}" wx:if="{{showFloatMenu}}">
-    <view class="menu-item" bindtap="onMenuItemTap" data-action="info">
+    <button class="menu-item" bindtap="onMenuItemTap" data-action="info">
       <image src="/images/mainPage/list/animalFile.svg" class="menu-item-icon" mode="aspectFit"></image>
       <text>信息</text>
-    </view>
-    <view class="menu-item" bindtap="onMenuItemTap" data-action="settings">
+    </button>
+    <button class="menu-item" bindtap="onMenuItemTap" data-action="settings">
       <image src="/images/mainPage/list/settings.svg" class="menu-item-icon" mode="aspectFit"></image>
       <text>设置</text>
-    </view>
-    <view class="menu-item" bindtap="onMenuItemTap" data-action="share">
+    </button>
+    <button class="menu-item" open-type="share" data-action="share">
       <image src="/images/mainPage/list/share.svg" class="menu-item-icon" mode="aspectFit"></image>
       <text>分享</text>
-    </view>
+    </button>
   </view>
 
   
 
-  <!-- 宠物展示区 -->
-  <view class="model-display">
+  <!-- 宠物展示区（宠物模式） -->
+  <view class="model-display" wx:if="{{!chatMode}}">
     <!-- 当前对话气泡 - 显示在模型上方 -->
-    <view class="current-chat-bubble" wx:if="{{currentMessage}}">
+    <view class="current-chat-bubble {{bubbleAnimationClass}}" wx:if="{{currentMessage}}">
       <view class="bubble-content">
         <text>{{currentMessage}}</text>
       </view>
@@ -105,44 +106,32 @@
     </view>
   </view>
 
-  <!-- 聊天消息区域 
-  <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollToMessageId}}" scroll-with-animation>
-    <block wx:for="{{messages}}" wx:key="id">
-      <view id="message-{{item.validId}}" class="message-container {{item.isUser ? 'user-message' : 'ai-message'}}">
-        <view class="message-bubble">
-          <text>{{item.text}}</text>
-        </view>
-      </view>
-    </block>
-  </scroll-view>
-  -->
-  <!-- TODO: 将pages/chat/chat页面搬到此处，进行集成整合 -->
-
-  <!-- 快捷功能区 -->
-  <view class="quick-actions" hidden="{{true}}">
-    <view class="action-button" bindtap="takePhoto">
-      <image src="/images/camera.png" mode="aspectFit" class="action-icon"></image>
-    </view>
-    <view class="action-button" bindtap="{{isRecording ? 'stopRecording' : 'startRecording'}}">
-      <image src="/images/microphone.png" mode="aspectFit" class="action-icon {{isRecording ? 'recording' : ''}}"></image>
-    </view>
-    <view class="action-button">
-      <image src="/images/voice.png" mode="aspectFit" class="action-icon"></image>
-    </view>
-    <view class="action-button">
-      <image src="/images/magic.png" mode="aspectFit" class="action-icon"></image>
-    </view>
-  </view>
-
   <!-- 用户消息显示区域 -->
-  <view class="user-message-display" wx:if="{{userMessage}}">
+  <view class="user-message-display {{userMessageAnimationClass}}" wx:if="{{userMessage}}">
     <view class="user-message-bubble">
       <text>{{userMessage}}</text>
     </view>
   </view>
 
+  <!-- 聊天历史区域（聊天模式） -->
+  <!-- TODO：聊天历史区域适应聊天输入框高度变化 -->
+  <view class="chat-history-display" wx:if="{{chatMode}}">
+    <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollToMessageId}}" scroll-with-animation>
+      <block wx:for="{{messages}}" wx:key="id">
+        <view id="message-{{item.validId}}" class="message-container {{item.isUser ? 'user-message' : 'ai-message'}}">
+          <view class="message-bubble">
+            <text>{{item.text}}</text>
+          </view>
+          <view class="message-time">
+            {{item.timestamp ? new Date(item.timestamp).toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) : ''}}
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+
   <!-- 输入区域 -->
-  <view class="input-card-container" style="padding-bottom: {{safeAreaBottom}}px;">
+  <view class="input-card-container" style="padding-bottom: calc({{safeAreaBottom}}rpx + 24rpx);">
     <!-- 功能区 -->
     <view class="function-area">
       <view class="function-item {{isVideoActive ? 'active' : ''}}" bindtap="onVideoTap">
@@ -158,7 +147,7 @@
         <image src="/images/mainPage/ar.svg" class="function-icon"></image>
       </view>
       <view class="function-item {{isTextChatActive ? 'active' : ''}}" bindtap="onTextChatTap">
-        <image src="/images/mainPage/textChat.svg" class="function-icon"></image>
+        <image src="/images/mainPage/{{isTextChatActive ? 'petChat' : 'textChat'}}.svg" class="function-icon"></image>
       </view>
     </view>
     

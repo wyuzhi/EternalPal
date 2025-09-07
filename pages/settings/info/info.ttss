@@ -1,0 +1,280 @@
+@import '../settings.ttss';
+
+.container {
+  padding: var(--p-container);
+  /* background-color: var(--bg-primary); */
+  min-height: 100vh;
+  padding: var(--p-l);
+  background: linear-gradient(180deg, 
+    #ebf5ff 6%, 
+    #e7f6c7 40%, 
+    #f7f9df 76%, 
+    #fffbeb 100%);
+}
+
+/* 应用信息头部 */
+.app-header {
+  display: flex;
+  align-items: center;
+  padding: var(--p-xl) 0;
+  margin-bottom: var(--m-l);
+}
+
+.logo-container {
+  margin-right: var(--m-l);
+}
+
+.app-logo {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  box-shadow: 0 8rpx 24rpx var(--shadow-medium);
+}
+
+.app-info {
+  flex: 1;
+}
+
+.app-name {
+  font-size: var(--f-xl);
+  font-weight: bold;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: var(--m-s);
+}
+
+.version-container {
+  display: flex;
+  align-items: center;
+  gap: var(--p-s);
+  padding: var(--p-s) var(--p-m);
+  background-color: var(--bg-primary);
+  border-radius: var(--r-pill);
+  width: fit-content;
+}
+
+.app-version {
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+}
+
+/* 描述卡片 */
+.app-description {
+  font-size: var(--f-base);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Bento网格布局 */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--p-m);
+  height: 400rpx;
+}
+
+.bento-item {
+  background-color: var(--bg-frosted);
+  border-radius: var(--r-card);
+  border: 1rpx solid var(--border-light);
+  box-shadow: 0 4rpx 20rpx var(--shadow-light);
+  backdrop-filter: blur(10rpx);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.bento-item:active {
+  transform: scale(0.98);
+}
+
+.bento-item.large {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.bento-item.small {
+  grid-column: 2 / 4;
+}
+
+.bento-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: var(--p-m);
+  text-align: center;
+}
+
+.bento-icon {
+  width: 100rpx;
+  height: 100rpx;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  border-radius: var(--r-l);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--m-m);
+  box-shadow: 0 4rpx 12rpx rgba(255, 191, 107, 0.3);
+}
+
+.bento-item.large .bento-icon {
+  width: 180rpx;
+  height: 180rpx;
+  margin-bottom: var(--m-l);
+}
+
+.icon-text {
+  font-size: var(--f-lg);
+  font-weight: bold;
+  color: var(--bg-primary);
+}
+
+.bento-item.large .icon-text {
+  font-size: var(--f-xl);
+}
+
+.bento-title {
+  font-size: var(--f-base);
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.bento-item.large .bento-title {
+  font-size: var(--f-base);
+}
+
+/* 时间线样式 */
+/* .timeline-container {
+  
+} */
+
+.timeline-item {
+  display: flex;
+  margin-bottom: var(--m-l);
+  position: relative;
+}
+.timeline-item:first-child {
+  margin-top: 0;
+}
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-date {
+  width: 120rpx;
+  flex-shrink: 0;
+}
+
+.timeline-date text {
+  font-size: var(--f-sm);
+  color: var(--text-tertiary);
+  line-height: 1;
+}
+
+.timeline-content {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.timeline-dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  margin-right: var(--m-m);
+  margin-top: 16rpx; /* 特殊处理 */
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.timeline-info {
+  flex: 1;
+}
+
+.timeline-title {
+  font-size: var(--f-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+  /* margin-bottom: var(--m-s); */
+}
+
+.timeline-desc {
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* 时间线状态样式 */
+.timeline-item.completed .timeline-dot {
+  background-color: var(--success-color);
+}
+
+.timeline-item.in-progress .timeline-dot {
+  background-color: var(--primary-color);
+}
+
+.timeline-item.planned .timeline-dot {
+  background-color: var(--text-tertiary);
+}
+
+/* 连接线 */
+/* .timeline-item:not(:last-child) .timeline-dot::after {
+  content: '';
+  position: absolute;
+  top: 10rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2rpx;
+  height: 100rpx;
+  background-color: var(--border-medium);
+} */
+
+
+/* 页脚 */
+.footer {
+  text-align: center;
+  padding: var(--p-xl) 0;
+  border-top: 1rpx solid var(--border-light);
+  margin-top: var(--m-xl);
+}
+
+.copyright {
+  font-size: var(--f-sm);
+  color: var(--text-tertiary);
+  display: block;
+  margin-bottom: var(--m-s);
+}
+
+.powered {
+  font-size: var(--f-xs);
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .app-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .logo-container {
+    margin-right: 0;
+    margin-bottom: var(--m-m);
+  }
+  
+  .timeline-item {
+    flex-direction: column;
+  }
+  
+  .timeline-date {
+    width: auto;
+    margin-bottom: var(--m-s);
+  }
+}

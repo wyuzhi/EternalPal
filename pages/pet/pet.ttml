@@ -64,11 +64,11 @@
             <radio-group bindchange="selectPetGender" class="gender-radio-group">
               <label class="gender-radio {{petGender === 'male'}}" data-gender="male">
                 <radio value="male" checked="{{petGender === 'male'}}" class="radio-input" color="#FFBF6B"/>
-                <text>雄性</text>
+                <text>男孩</text>
               </label>
               <label class="gender-radio {{petGender === 'female'}}" data-gender="female">
                 <radio value="female" checked="{{petGender === 'female'}}" class="radio-input" color="#FFBF6B"/>
-                <text>雌性</text>
+                <text>女孩</text>
               </label>
             </radio-group>
           </view>

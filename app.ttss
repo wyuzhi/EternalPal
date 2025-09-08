@@ -4,7 +4,10 @@
 page {
   --primary-color: #FFBF6B;
   --primary-light: #FFFBEB;
-  --primary-dark: #f0a23d;
+  --primary-dark: #F0A23D;
+  --primary-deep: #FF936B;
+  --primary-alpha: rgba(255, 191, 107, 0.2);
+  
   /* 中性色 */
   --text-primary: #1c1c1e;        /* 主要文字颜色 */
   --text-secondary: #666666;      /* 次要文字颜色 */

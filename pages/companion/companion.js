@@ -37,7 +37,7 @@ Page({
           // 延迟执行滚动，确保DOM已经更新
           setTimeout(() => {
             that.scrollToBottom();
-          }, 100);
+          }, 200);
         } else {
           console.error('获取聊天记录失败:', res.data.message || '未知错误');
           tt.showToast({
@@ -68,6 +68,10 @@ Page({
     if (!/^[a-zA-Z]/.test(validId)) {
       validId = 'msg_' + validId; // 使用'msg_'作为前缀确保以字母开头
     }
+    
+    // 添加时间戳确保唯一性
+    const timestamp = Date.now();
+    validId = validId + '_' + timestamp;
     
     return validId;
   },
@@ -105,6 +109,8 @@ Page({
     rendererInitialized: false, // 渲染器初始化状态
     safeAreaBottom: 0, // 底部安全区域距离
     systemInfo: null, // 系统信息
+    keyboardHeight: 0, // 键盘高度（px）
+    showUIElements: true, // 是否显示UI元素（快捷话术区和功能区）
     quickReplies: [], // 快捷话术数据
     // 功能区状态
     isMicOn: false, // 麦克风开关状态
@@ -640,10 +646,6 @@ Page({
       return;
     }
     
-    tt.showLoading({
-      title: '正在加载3D模型...',
-    });
-    
     // 初始化加载状态
     console.log('[Companion] 设置加载状态');
     that.setData({
@@ -655,7 +657,6 @@ Page({
     
     console.log('[Companion] 调用ModelRenderer.loadOBJModel');
     this.modelRenderer.loadOBJModel(modelUrl, this.data.material_url, this.data.texture_url).then((model) => {
-      tt.hideLoading();
       console.log('[Companion] 3D模型加载成功');
       
       // 模型加载成功后启动动画循环
@@ -672,7 +673,6 @@ Page({
         modelMessage: '模型已就绪，动画运行中'
       });
     }).catch((error) => {
-      tt.hideLoading();
       console.error('[Companion] 加载3D模型异常:', error);
       
       that.setData({
@@ -691,7 +691,7 @@ Page({
     // 页面渲染完成后滚动到底部
     setTimeout(() => {
       this.scrollToBottom();
-    }, 300);
+    }, 500);
     
     // 如果有真实宠物ID且未初始化3D渲染器，则尝试初始化
     if (this.data.petId && this.data.petId !== 'mock' && !this.modelRenderer) {
@@ -746,6 +746,12 @@ Page({
     if (this.userMessageHideTimer) {
       clearTimeout(this.userMessageHideTimer);
       this.userMessageHideTimer = null;
+    }
+    
+    // 清理延迟显示定时器
+    if (this.delayShowTimer) {
+      clearTimeout(this.delayShowTimer);
+      this.delayShowTimer = null;
     }
   },
   
@@ -836,6 +842,56 @@ Page({
       inputValue: e.detail.value
     });
   },
+
+  // 输入框聚焦事件
+  onInputFocus: function(e) {
+    const keyboardHeight = e.detail.height || 0;
+    console.log('[Companion] 输入框聚焦，键盘高度:', keyboardHeight);
+    console.log('[Companion] 系统信息:', this.data.systemInfo);
+    
+    // 清除延迟显示定时器（如果存在）
+    if (this.delayShowTimer) {
+      clearTimeout(this.delayShowTimer);
+      this.delayShowTimer = null;
+    }
+    
+    // 获取系统信息来判断是否为iOS设备
+    const systemInfo = this.data.systemInfo;
+    let adjustedKeyboardHeight = keyboardHeight;
+    
+    if (systemInfo && systemInfo.platform === 'ios') {
+      // iOS设备上，键盘高度通常已经包含了安全区域
+      // 但我们需要确保输入框紧贴键盘顶部
+      console.log('[Companion] iOS设备，使用原始键盘高度:', keyboardHeight);
+    } else {
+      // Android设备或其他平台
+      console.log('[Companion] 非iOS设备，键盘高度:', keyboardHeight);
+    }
+    
+    // 立即隐藏UI元素
+    this.setData({
+      keyboardHeight: adjustedKeyboardHeight,
+      showUIElements: false
+    });
+  },
+
+  // 输入框失焦事件
+  onInputBlur: function(e) {
+    console.log('[Companion] 输入框失焦，键盘高度:', e.detail.height);
+    
+    // 立即重置键盘高度
+    this.setData({
+      keyboardHeight: 0
+    });
+    
+    // 延迟显示UI元素，避免与键盘收起动画冲突
+    this.delayShowTimer = setTimeout(() => {
+      console.log('[Companion] 延迟显示UI元素');
+      this.setData({
+        showUIElements: true
+      });
+    }, 200);
+  },
   
   // 滚动到底部方法 - 使用scroll-into-view方式
   scrollToBottom: function() {
@@ -845,19 +901,22 @@ Page({
     if (messages && messages.length > 0) {
       const latestMessage = messages[messages.length - 1];
       const validScrollId = `message-${latestMessage.validId || this.getValidScrollId(latestMessage.id)}`;
-      console.log('尝试滚动到最新消息，ID:', validScrollId);
+      console.log('尝试滚动到最新消息，ID:', validScrollId, '消息内容:', latestMessage.text);
       
-      // 设置scroll-into-view属性，指向最新消息的id
+      // 先清空scroll-into-view属性，确保下次设置能触发滚动
       this.setData({
-        scrollToMessageId: validScrollId
+        scrollToMessageId: ''
       });
       
-      // 为了确保每次都能触发滚动，添加一个延迟重置的逻辑
+      // 延迟设置scroll-into-view属性，确保DOM已更新
       setTimeout(() => {
         this.setData({
           scrollToMessageId: validScrollId
         });
-      }, 100);
+        console.log('已设置scrollToMessageId:', validScrollId);
+      }, 50);
+    } else {
+      console.log('没有消息，跳过滚动操作');
     }
   },
   
@@ -932,7 +991,7 @@ Page({
     // 用户消息显示后立即滚动到最新消息
     setTimeout(() => {
       this.scrollToBottom();
-    }, 50);
+    }, 100);
     
     // 检查是否使用模拟模式
     const useMockMode = this.data.isMockMode || !this.data.petId || this.data.petId === 'mock';
@@ -1001,7 +1060,7 @@ Page({
              if (that.data.chatMode) {
                setTimeout(() => {
                  that.scrollToBottom();
-               }, 100);
+               }, 150);
              }
           } else {
             console.error('AI回复失败:', res.data.message || '未知错误');
@@ -1091,7 +1150,7 @@ Page({
       if (that.data.chatMode) {
         setTimeout(() => {
           that.scrollToBottom();
-        }, 100);
+        }, 150);
       }
       
     }, 1000 + Math.random() * 1000); // 1-2秒的随机延迟，模拟真实网络请求

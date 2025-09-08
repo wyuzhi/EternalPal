@@ -95,12 +95,12 @@
           <image src="{{preview_url}}" mode="aspectFit" class="pet-image"></image>
           <!-- 如果preview_url为空，则显示占位符 -->
           <view wx:if="{{!preview_url}}" class="model-placeholder">
-            <text>{{modelPlaceholderText || '加载中...'}}</text>
+            <loader size="50px" color="#333" speed="0.8s"></loader>
           </view>
         </view>
         <!-- 加载提示 -->
         <view wx:if="{{!modelLoaded}}" class="loading-overlay">
-          <text>{{modelPlaceholderText || '正在加载3D模型...'}}</text>
+          <loader size="50px" color="#333" speed="0.8s"></loader>
           <progress wx:if="{{loadingProgress > 0 && loadingProgress < 100}}" percent="{{loadingProgress}}" stroke-width="4" activeColor="#07c160" backgroundColor="#EBEBEB" class="loading-progress"></progress>
         </view>
     </view>
@@ -113,71 +113,84 @@
     </view>
   </view>
 
-  <!-- 聊天历史区域（聊天模式） -->
-  <!-- TODO：聊天历史区域适应聊天输入框高度变化 -->
-  <view class="chat-history-display" wx:if="{{chatMode}}">
-    <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollToMessageId}}" scroll-with-animation>
-      <block wx:for="{{messages}}" wx:key="id">
-        <view id="message-{{item.validId}}" class="message-container {{item.isUser ? 'user-message' : 'ai-message'}}">
-          <view class="message-bubble">
-            <text>{{item.text}}</text>
-          </view>
-          <view class="message-time">
-            {{item.timestamp ? new Date(item.timestamp).toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) : ''}}
-          </view>
-        </view>
-      </block>
-    </scroll-view>
-  </view>
-
   <!-- 输入区域 -->
-  <view class="input-card-container" style="padding-bottom: calc({{safeAreaBottom}}rpx + 24rpx);">
-    <!-- 功能区 -->
-    <view class="function-area">
-      <view class="function-item {{isVideoActive ? 'active' : ''}}" bindtap="onVideoTap">
-        <image src="/images/mainPage/video.svg" class="function-icon"></image>
-      </view>
-      <view class="function-item" bindtap="onMicTap">
-        <image src="/images/mainPage/{{isMicOn ? 'mic' : 'micOff'}}.svg" class="function-icon"></image>
-      </view>
-      <view class="function-item" bindtap="onSpeakerTap">
-        <image src="/images/mainPage/{{isSpeakerOn ? 'speaker' : 'speakerOff'}}.svg" class="function-icon"></image>
-      </view>
-      <view class="function-item {{isArActive ? 'active' : ''}}" bindtap="onArTap">
-        <image src="/images/mainPage/ar.svg" class="function-icon"></image>
-      </view>
-      <view class="function-item {{isTextChatActive ? 'active' : ''}}" bindtap="onTextChatTap">
-        <image src="/images/mainPage/{{isTextChatActive ? 'petChat' : 'textChat'}}.svg" class="function-icon"></image>
-      </view>
+  <view class="chat-flow" style="bottom: {{keyboardHeight > 0 ? (keyboardHeight + 8) + 'px' : '0px'}}; padding-bottom: {{keyboardHeight > 0 ? '0rpx' : 'calc(' + safeAreaBottom + 'rpx + 24rpx)'}};">
+    
+    <!-- 聊天历史区域（聊天模式） -->
+    <view class="chat-history-display" wx:if="{{chatMode}}">
+      <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollToMessageId}}" scroll-with-animation>
+        <block wx:for="{{messages}}" wx:key="id">
+          <view id="message-{{item.validId}}" class="message-container {{item.isUser ? 'user-message' : 'ai-message'}}">
+            
+            <!-- TODO：一定时间之后的聊天记录才显示时间戳 -->
+            <!-- <view class="message-time">
+              {{item.timestamp ? new Date(item.timestamp).toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) : ''}}
+            </view> -->
+            <view class="message-bubble">
+              <text>{{item.text}}</text>
+            </view>
+          </view>
+        </block>
+      </scroll-view>
     </view>
     
-    <!-- 输入卡片区域 -->
-    <view class="input-card">
-      <view class="input-container">
-        <textarea placeholder="跟ta说些什么呢......" value="{{inputValue}}" bindinput="onInput" class="chat-input" maxlength="1000" auto-height></textarea>
-        <view class="send-button" bindtap="sendMessage">
-          <image src="/images/mainPage/send.svg" class="send-icon"></image>
+    <view class="send-container">
+      <!-- 快捷话术区域 -->
+      <view class="quick-replies-container {{!showUIElements ? 'hide' : ''}}">
+        <scroll-view class="quick-replies-scroll" scroll-x="true" show-scrollbar="false" enhanced="true" bounces="false">
+          <view class="quick-replies">
+            <button 
+              wx:for="{{quickReplies}}" 
+              wx:key="id" 
+              class="quick-reply {{item.isTest ? 'test-button' : ''}}" 
+              bindtap="useQuickReply" 
+              data-text="{{item.text}}"
+            >
+              {{item.text}}
+            </button>
+            <!-- 右边距占位元素 -->
+            <view class="quick-reply-spacer"></view>
+          </view>
+        </scroll-view>
+      </view>
+      
+      <!-- 功能区 -->
+      <view class="function-area {{!showUIElements ? 'hide' : ''}}">
+        <view class="function-item {{isVideoActive ? 'active' : ''}}" bindtap="onVideoTap">
+          <image src="/images/mainPage/video.svg" class="function-icon"></image>
+        </view>
+        <view class="function-item" bindtap="onMicTap">
+          <image src="/images/mainPage/{{isMicOn ? 'mic' : 'micOff'}}.svg" class="function-icon"></image>
+        </view>
+        <view class="function-item" bindtap="onSpeakerTap">
+          <image src="/images/mainPage/{{isSpeakerOn ? 'speaker' : 'speakerOff'}}.svg" class="function-icon"></image>
+        </view>
+        <view class="function-item {{isArActive ? 'active' : ''}}" bindtap="onArTap">
+          <image src="/images/mainPage/ar.svg" class="function-icon"></image>
+        </view>
+        <view class="function-item" bindtap="onTextChatTap">
+          <image src="/images/mainPage/{{isTextChatActive ? 'petChat' : 'textChat'}}.svg" class="function-icon"></image>
         </view>
       </view>
-    </view>
-
-    <!-- 快捷话术区域 -->
-    <view class="quick-replies-container">
-      <scroll-view class="quick-replies-scroll" scroll-x="true" show-scrollbar="false" enhanced="true" bounces="false">
-        <view class="quick-replies">
-          <button 
-            wx:for="{{quickReplies}}" 
-            wx:key="id" 
-            class="quick-reply {{item.isTest ? 'test-button' : ''}}" 
-            bindtap="useQuickReply" 
-            data-text="{{item.text}}"
-          >
-            {{item.text}}
-          </button>
-          <!-- 右边距占位元素 -->
-          <view class="quick-reply-spacer"></view>
+      
+      <!-- 输入卡片区域 -->
+      <view class="input-card">
+        <view class="input-container">
+          <textarea 
+            placeholder="跟ta说些什么呢..." 
+            value="{{inputValue}}" 
+            bindinput="onInput" 
+            bindfocus="onInputFocus"
+            bindblur="onInputBlur"
+            class="chat-input" 
+            maxlength="1000" 
+            auto-height 
+            adjust-position="{{false}}"></textarea>
+          <view class="send-button" bindtap="sendMessage">
+            <image src="/images/mainPage/send.svg" class="send-icon"></image>
+          </view>
         </view>
-      </scroll-view>
+      </view>
     </view>
   </view>
 </view>

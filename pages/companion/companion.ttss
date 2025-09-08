@@ -45,7 +45,7 @@ page {
   justify-content: space-between;
   align-items: flex-start;
   padding: var(--p-l);
-  z-index: 99;
+  z-index: 199;
 }
 
 .header-icon {
@@ -313,12 +313,12 @@ page {
 }
 
 .bubble-content {
-  background-color: var(--bg-frosted);
+  background-color: var(--bg-primary);
   backdrop-filter: blur(20rpx);
   /* border: 1rpx solid var(--border-light); */
   border-radius: var(--r-l);
   padding: var(--p-m);
-  /* box-shadow: 0 4rpx 20rpx var(--shadow-light); */
+  box-shadow: 0 2rpx 8rpx var(--shadow-light);
   position: relative;
 }
 
@@ -365,7 +365,7 @@ page {
   display: block;
   border-width: 20rpx;
   /*保留我们需要的那边的三角形，其他三角形设置为透明*/
-  border-color: var(--bg-frosted) transparent transparent transparent;
+  border-color: var(--bg-primary) transparent transparent transparent;
   border-style: solid dashed dashed dashed;
   backdrop-filter: blur(20rpx);
 
@@ -458,106 +458,6 @@ page {
   animation: bubbleDisappear 0.3s ease-out;
 }
 
-/* 聊天历史显示区域 */
-.chat-history-display {
-  position: fixed;
-  top: 110rpx;
-  bottom: 310rpx;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  z-index: 10;
-  /* 添加渐变遮罩效果 - 上下从半透明到显示再到半透明 */
-  mask: linear-gradient(to bottom, 
-    rgba(0, 0, 0, 0.1) 0%, 
-    rgba(0, 0, 0, 0.4) 2%, 
-    rgba(0, 0, 0, 0.7) 4%, 
-    rgba(0, 0, 0, 1) 12%, 
-    rgba(0, 0, 0, 1) 90%, 
-    rgba(0, 0, 0, 0.7) 96%, 
-    rgba(0, 0, 0, 0.4) 98%, 
-    rgba(0, 0, 0, 0.1) 100%);
-  -webkit-mask: linear-gradient(to bottom, 
-    rgba(0, 0, 0, 0.1) 0%, 
-    rgba(0, 0, 0, 0.4) 2%, 
-    rgba(0, 0, 0, 0.7) 4%, 
-    rgba(0, 0, 0, 1) 12%, 
-    rgba(0, 0, 0, 1) 90%, 
-    rgba(0, 0, 0, 0.7) 96%, 
-    rgba(0, 0, 0, 0.4) 98%, 
-    rgba(0, 0, 0, 0.1) 100%);
-  
-}
-
-.chat-history-display .chat-messages {
-  flex: 1;
-  padding: var(--p-l);
-  overflow-x: hidden;
-  box-sizing: border-box;
-}
-
-.chat-history-display .message-container {
-  margin-bottom: var(--m-l);
-  display: flex;
-  flex-direction: column;
-}
-
-.chat-history-display .ai-message {
-  align-items: flex-start;
-  border-top-right-radius: var(--r-l);
-}
-
-.chat-history-display .user-message {
-  align-items: flex-end;
-}
-
-.chat-history-display .message-bubble {
-  max-width: 80%;
-  padding: var(--p-m) var(--p-l);
-  font-size: var(--f-base);
-  line-height: 1.6;
-  word-wrap: break-word;
-  word-break: break-all;
-  overflow-wrap: break-word;
-  position: relative;
-}
-
-.chat-history-display .ai-message .message-bubble {
-  background-color: var(--bg-frosted-dark);
-  backdrop-filter: blur(10rpx);
-  border: 1rpx solid var(--border-light);
-  color: var(--text-primary);
-  box-shadow: 0 2rpx 8rpx var(--shadow-light);
-  border-radius: var(--r-bubble) var(--r-bubble) var(--r-bubble) var(--r-m); /* 左下角圆角小 */
-}
-
-.chat-history-display .user-message .message-bubble {
-  background-color: var(--bg-frosted);
-  backdrop-filter: blur(10rpx);
-  border: 1rpx solid var(--border-light);
-  color: var(--text-primary);
-  box-shadow: 0 2rpx 8rpx var(--shadow-light);
-  border-radius: var(--r-bubble) var(--r-bubble) var(--r-m) var(--r-bubble); /* 右下角圆角小 */
-}
-
-.chat-history-display .message-time {
-  font-size: 22rpx;
-  color: var(--text-tertiary);
-  margin-top: 8rpx;
-  line-height: 1.2;
-}
-
-.chat-history-display .ai-message .message-time {
-  align-self: flex-start;
-  margin-left: 16rpx;
-}
-
-.chat-history-display .user-message .message-time {
-  align-self: flex-end;
-  margin-right: 16rpx;
-}
-
 /* 加载覆盖层 */
 .loading-overlay {
   position: absolute;
@@ -570,6 +470,7 @@ page {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 20rpx;
   z-index: 10;
 }
 
@@ -665,14 +566,132 @@ page {
 
 
 /* 输入卡片区域 */
-.input-card-container {
+.chat-flow {
   position: fixed;
-  bottom: 0;
   left: 0;
   right: 0;
+  bottom: 0;
+  /* margin-top: 100rpx; */
   display: flex;
   flex-direction: column;
   z-index: 100;
+  transition: bottom 0.3s ease;
+  /* 确保容器有明确的高度约束 */
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 聊天历史显示区域 */
+.chat-history-display {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  /* 使用flex布局自动占用剩余空间 */
+  flex: 1;
+  min-height: 0; /* 允许flex子元素收缩 */
+  margin-top: 120rpx; /* 为顶部导航留空间 */
+  /* 添加渐变遮罩效果 - 上下从半透明到显示再到半透明 */
+  mask: linear-gradient(to bottom, 
+    rgba(0, 0, 0, 0.1) 0%, 
+    rgba(0, 0, 0, 0.8) 2%, 
+    rgba(0, 0, 0, 0.9) 4%, 
+    rgba(0, 0, 0, 1) 12%, 
+    rgba(0, 0, 0, 1) 90%, 
+    rgba(0, 0, 0, 0.9) 96%, 
+    rgba(0, 0, 0, 0.8) 98%, 
+    rgba(0, 0, 0, 0.1) 100%);
+  -webkit-mask: linear-gradient(to bottom, 
+    rgba(0, 0, 0, 0.1) 0%, 
+    rgba(0, 0, 0, 0.8) 2%, 
+    rgba(0, 0, 0, 0.9) 4%, 
+    rgba(0, 0, 0, 1) 12%, 
+    rgba(0, 0, 0, 1) 90%, 
+    rgba(0, 0, 0, 0.9) 96%, 
+    rgba(0, 0, 0, 0.8) 98%, 
+    rgba(0, 0, 0, 0.1) 100%);
+}
+
+.chat-history-display .chat-messages {
+  flex: 1;
+  padding: 0 var(--p-l);
+  overflow-x: hidden;
+  overflow-y: auto; /* 确保垂直滚动 */
+  box-sizing: border-box;
+  min-height: 0; /* 允许flex子元素收缩 */
+}
+
+.chat-history-display .message-container {
+  /* margin: var(--m-l) 0; */
+  display: flex;
+  row-gap: var(--m-l);
+  flex-direction: column;
+}
+
+.chat-history-display .message-container:first-child {
+  margin-top: var(--m-l);
+}
+
+.chat-history-display .ai-message {
+  align-items: flex-start;
+  border-top-right-radius: var(--r-l);
+}
+
+.chat-history-display .user-message {
+  align-items: flex-end;
+}
+
+.chat-history-display .message-bubble {
+  max-width: 80%;
+  padding: var(--p-m) var(--p-l);
+  font-size: var(--f-base);
+  line-height: 1.6;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  position: relative;
+}
+
+.chat-history-display .ai-message .message-bubble {
+  background-color: var(--bg-primary);
+  backdrop-filter: blur(20rpx);
+  border: 1rpx solid var(--border-light);
+  color: var(--text-primary);
+  box-shadow: 0 2rpx 8rpx var(--shadow-light);
+  border-radius: var(--r-bubble) var(--r-bubble) var(--r-bubble) var(--r-m); /* 左下角圆角小 */
+}
+
+.chat-history-display .user-message .message-bubble {
+  background-color: var(--bg-frosted-dark);
+  backdrop-filter: blur(20rpx);
+  border: 1rpx solid var(--border-light);
+  color: var(--text-primary);
+  box-shadow: 0 2rpx 8rpx var(--shadow-light);
+  border-radius: var(--r-bubble) var(--r-bubble) var(--r-m) var(--r-bubble); /* 右下角圆角小 */
+}
+
+.chat-history-display .message-time {
+  font-size: var(--f-sm);
+  color: var(--text-tertiary);
+  margin-top: 8rpx;
+  line-height: 1.2;
+}
+
+.chat-history-display .ai-message .message-time {
+  align-self: flex-start;
+  margin-left: 16rpx;
+}
+
+.chat-history-display .user-message .message-time {
+  align-self: flex-end;
+  margin-right: 16rpx;
+}
+
+/* send */
+.send-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto; /* 将输入区域推到底部 */
 }
 
 /* 功能区 */
@@ -682,6 +701,18 @@ page {
   justify-content: space-between;
   gap: var(--m-m);
   padding: var(--p-m) var(--p-l);
+  transition: all 0.3s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 功能区隐藏状态 */
+.function-area.hide {
+  opacity: 0;
+  transform: translateY(20rpx);
+  height: 0;
+  padding: 0 var(--p-l);
+  overflow: hidden;
 }
 
 .function-item {
@@ -694,7 +725,7 @@ page {
   align-items: center;
   justify-content: center;
   box-shadow: 0 2rpx 8rpx var(--shadow-light);
-  backdrop-filter: blur(10rpx);
+  backdrop-filter: blur(20rpx);
   transition: all 0.2s ease;
 }
 
@@ -732,7 +763,7 @@ page {
   border-radius: 55rpx;
   border: 1rpx solid var(--border-light);
   box-shadow: 0 4rpx 20rpx var(--shadow-light);
-  backdrop-filter: blur(10rpx);
+  backdrop-filter: blur(20rpx);
 }
 
 /* 输入框 */
@@ -799,9 +830,21 @@ page {
 
 /* 快捷话术容器 */
 .quick-replies-container {
-  margin-top: var(--m-m);
+  /* margin-top: var(--m-m); */
   z-index: 101;
   width: 100%;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 快捷话术容器隐藏状态 */
+.quick-replies-container.hide {
+  opacity: 0;
+  transform: translateY(20rpx);
+  height: 0;
+  margin-top: 0;
   overflow: hidden;
 }
 
@@ -828,11 +871,11 @@ page {
   flex: none;
   max-width: 200rpx;
   padding: 0 var(--p-m);
-  background-color: var(--bg-frosted);
+  background-color: var(--bg-frosted-dark);
   border: 1rpx solid var(--border-light);
   border-radius: var(--r-pill);
   font-size: var(--f-sm);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   text-align: center;
   line-height: 56rpx;
   white-space: nowrap;

@@ -11,6 +11,21 @@
     #fffbeb 100%);
 }
 
+/* 加载容器样式 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 30rpx;
+}
+
+.loading-text {
+  font-size: var(--f-md);
+  color: var(--text-secondary);
+}
+
 /* 引导页容器 */
 .guide-container {
   display: flex;
@@ -73,6 +88,13 @@
   overflow: hidden;
   box-shadow: 0 8rpx 12rpx var(--shadow-medium);
   transition: transform 0.3s ease;
+  opacity: 0;
+}
+
+/* 卡片滑入 */
+.slide-item:first-child .card.animate-in {
+  opacity: 1;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .slide-item:first-child .card image {
@@ -88,24 +110,39 @@
 .slide-item:first-child .card:nth-child(1) {
   top: 100rpx;
   left: 0rpx;
-  transform: rotate(-8deg);
+  transform: rotate(-25deg) translateX(-400rpx) scale(0.6);
   z-index: 3;
+}
+
+.slide-item:first-child .card:nth-child(1).animate-in {
+  transform: rotate(-8deg) translateX(0) scale(1);
+  transition-delay: 0.1s;
 }
 
 /* 第二张卡片 - 右方上 */
 .slide-item:first-child .card:nth-child(2) {
   top: -40rpx;
   right: 20rpx;
-  transform: rotate(12deg);
+  transform: rotate(25deg) translateX(400rpx) scale(0.6);
   z-index: 2;
+}
+
+.slide-item:first-child .card:nth-child(2).animate-in {
+  transform: rotate(12deg) translateX(0) scale(1);
+  transition-delay: 0.3s;
 }
 
 /* 第三张卡片 - 右方下 */
 .slide-item:first-child .card:nth-child(3) {
   top: 320rpx;
   right: 40rpx;
-  transform: rotate(20deg);
+  transform: rotate(30deg) translateX(400rpx) scale(0.6);
   z-index: 1;
+}
+
+.slide-item:first-child .card:nth-child(3).animate-in {
+  transform: rotate(20deg) translateX(0) scale(1);
+  transition-delay: 0.3s;
 }
 
 /* 第二个滑块 - 操作指引图标 */
@@ -191,13 +228,22 @@
   position: fixed;
   bottom: -80vh;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(200rpx);
   width: 240vw;
   height: 240vw;
   background-color: white;
   border-radius: 50%;
   z-index: 10;
   box-shadow: 0 -10rpx 30rpx var(--shadow-light);
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 圆弧滑入动画 */
+.text-area.animate-in {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  transition-delay: 0.1s;
 }
 
 /* 文本容器样式 */
@@ -230,15 +276,14 @@
 
 /* 分页指示器容器 */
 .pagination-container {
-  position: fixed;
-  bottom: 38vh;
-  left: 0;
-  right: 0;
+  position: absolute;
+  top: 75rpx;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 12;
-  transform: translateY(-40rpx);
 }
 
 .pagination-dots {

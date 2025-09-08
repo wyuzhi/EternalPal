@@ -120,7 +120,7 @@
   font-weight: 700;
   line-height: 1;
   text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
-  color: var(--primary-color);
+  color: var(--primary-deep);
 }
 
 .days-subtitle {
@@ -296,7 +296,7 @@
 /* 有记录的日期样式 */
 .day-item.checked.today .day-circle {
   background: var(--primary-color);
-  border: 4rpx solid var(--primary-dark);
+  border: 4rpx solid var(--primary-deep);
 }
 
 /* .day-item.checked.past .day-circle {
@@ -305,8 +305,9 @@
 
 .check-dot {
   position: absolute;
-  top: 4rpx;
-  right: 4rpx;
+  bottom: -12rpx;
+  left: 50%;
+  transform: translateX(-50%);
   width: 10rpx;
   height: 10rpx;
   background: var(--success-color);
@@ -474,7 +475,7 @@
 
 .tag {
   font-size: var(--f-xs);
-  color: var(--primary-color);
+  color: var(--primary-deep);
   background: var(--primary-light);
   margin-top: var(--m-s);
   padding: 4rpx var(--p-s);

@@ -206,13 +206,22 @@
     <!-- 步骤4: 生成中 -->
     <view wx:if="{{currentStep === 4}}" class="step4-container">
       
-      <!-- 生成步骤提示 -->
-      <view class="generation-step-text">{{generationStepText}}</view>
 
       <!-- 占位图 -->
       <view class="placeholder-container">
-        <view class="placeholder-image"></view>
+        <view class="model-container">
+          <view class="spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </view>
+        </view>
       </view>
+      <!-- 生成步骤提示 -->
+      <view class="generation-step-text">{{generationStepText}}</view>
       
       <!-- 进度信息 -->
       <view class="progress-info">
@@ -244,13 +253,13 @@
       
       <!-- 占位图容器 -->
       <view class="placeholder-container">
-        <view class="placeholder-image step5-model-display">
+        <view class="model-container step5-model-display">
           <!-- 3D模型展示区域 -->
           <view class="model-3d-wrapper" wx:if="{{modelUrl}}">
             <!-- 这里假设使用小程序的3D渲染能力，具体实现需要根据实际框架调整 -->
             <!-- 显示3D模型图片预览 -->
             <image src="{{modelUrl}}" mode="aspectFit" class="model-image"></image>
-            <text class="model-3d-label">3D模型</text>
+            <!-- <text class="model-3d-label">3D模型</text> -->
           </view>
           <!-- 当3D模型不可用时显示普通图片 -->
           <image src="{{generatedPetImage}}" mode="aspectFit" class="model-image" wx:else></image>

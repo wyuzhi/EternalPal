@@ -1,2 +1,0 @@
-import{nodeObject}from"../tsl/TSLBase.js";import PropertyNode from"./PropertyNode.js";class ParameterNode extends PropertyNode{static get type(){return"ParameterNode"}constructor(e,r=null){super(e,r),this.isParameterNode=!0}getHash(){return this.uuid}generate(){return this.name}}export default ParameterNode;export const parameter=(e,r)=>nodeObject(new ParameterNode(e,r));
-//# sourceMappingURL=ParameterNode.js.map

@@ -1,2 +1,0 @@
-class GLBufferAttribute{constructor(t,e,i,s,r,h=!1){this.isGLBufferAttribute=!0,this.name="",this.buffer=t,this.type=e,this.itemSize=i,this.elementSize=s,this.count=r,this.normalized=h,this.version=0}set needsUpdate(t){!0===t&&this.version++}setBuffer(t){return this.buffer=t,this}setType(t,e){return this.type=t,this.elementSize=e,this}setItemSize(t){return this.itemSize=t,this}setCount(t){return this.count=t,this}}export{GLBufferAttribute};
-//# sourceMappingURL=GLBufferAttribute.js.map

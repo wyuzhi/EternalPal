@@ -64,11 +64,11 @@
             <radio-group bindchange="selectPetGender" class="gender-radio-group">
               <label class="gender-radio {{petGender === 'male'}}" data-gender="male">
                 <radio value="male" checked="{{petGender === 'male'}}" class="radio-input" color="#FFBF6B"/>
-                <text>雄性</text>
+                <text>男孩</text>
               </label>
               <label class="gender-radio {{petGender === 'female'}}" data-gender="female">
                 <radio value="female" checked="{{petGender === 'female'}}" class="radio-input" color="#FFBF6B"/>
-                <text>雌性</text>
+                <text>女孩</text>
               </label>
             </radio-group>
           </view>
@@ -206,13 +206,22 @@
     <!-- 步骤4: 生成中 -->
     <view wx:if="{{currentStep === 4}}" class="step4-container">
       
-      <!-- 生成步骤提示 -->
-      <view class="generation-step-text">{{generationStepText}}</view>
 
       <!-- 占位图 -->
       <view class="placeholder-container">
-        <view class="placeholder-image"></view>
+        <view class="model-container">
+          <view class="spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </view>
+        </view>
       </view>
+      <!-- 生成步骤提示 -->
+      <view class="generation-step-text">{{generationStepText}}</view>
       
       <!-- 进度信息 -->
       <view class="progress-info">
@@ -239,18 +248,18 @@
       <!-- 顶部信息区 -->
       <view class="pet-info-header">
         <image class="pet-avatar" src="/images/logo.svg" mode="aspectFit"></image>
-        <text class="pet-name">{{petName || '小可爱'}}</text>
+        <text class="pet-name">{{petName || '我的宠物'}}</text>
       </view>
       
       <!-- 占位图容器 -->
       <view class="placeholder-container">
-        <view class="placeholder-image step5-model-display">
+        <view class="model-container step5-model-display">
           <!-- 3D模型展示区域 -->
           <view class="model-3d-wrapper" wx:if="{{modelUrl}}">
             <!-- 这里假设使用小程序的3D渲染能力，具体实现需要根据实际框架调整 -->
             <!-- 显示3D模型图片预览 -->
             <image src="{{modelUrl}}" mode="aspectFit" class="model-image"></image>
-            <text class="model-3d-label">3D模型</text>
+            <!-- <text class="model-3d-label">3D模型</text> -->
           </view>
           <!-- 当3D模型不可用时显示普通图片 -->
           <image src="{{generatedPetImage}}" mode="aspectFit" class="model-image" wx:else></image>
@@ -260,16 +269,16 @@
       <view class="feedback">
         <!-- 操作按钮 -->
         <view class="action-buttons">
-          <view class="like-btn" bindtap="likePet">
-            <image src="/images/guide/like.svg" mode="aspectFit" class="action-icon"></image>
+          <view class="like-btn {{likeBtnAnimating ? 'animate' : ''}}" bindtap="likePet">
+            <image src="{{isLiked ? '/images/guide/likeFilled.svg' : '/images/guide/like.svg'}}" mode="aspectFit" class="action-icon"></image>
           </view>
-          <view class="dislike-btn" bindtap="dislikePet">
-            <image src="/images/guide/dislike.svg" mode="aspectFit" class="action-icon"></image>
+          <view class="dislike-btn {{dislikeBtnAnimating ? 'animate' : ''}}" bindtap="dislikePet">
+            <image src="{{isDisliked ? '/images/guide/dislikeFilled.svg' : '/images/guide/dislike.svg'}}" mode="aspectFit" class="action-icon"></image>
           </view>
         </view>
         
-        <!-- 反馈 -->
-        <text class="unsatisfied-text" bindtap="unsatisfied">对结果不满意</text>
+        <!-- 反馈 - 只在dislike时显示 -->
+        <text class="unsatisfied-text" bindtap="unsatisfied" wx:if="{{isDisliked}}">对结果不满意</text>
       </view>
       
     </view>

@@ -1,2 +1,0 @@
-import Node from"../core/Node.js";class ArrayElementNode extends Node{static get type(){return"ArrayElementNode"}constructor(e,t){super(),this.node=e,this.indexNode=t,this.isArrayElementNode=!0}getNodeType(e){return this.node.getElementType(e)}generate(e){const t=this.indexNode.getNodeType(e);return`${this.node.build(e)}[ ${this.indexNode.build(e,!e.isVector(t)&&e.isInteger(t)?t:"uint")} ]`}}export default ArrayElementNode;
-//# sourceMappingURL=ArrayElementNode.js.map

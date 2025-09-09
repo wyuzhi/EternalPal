@@ -151,7 +151,7 @@
   margin-bottom: var(--m-l);
   box-shadow: 0 2rpx 20rpx var(--shadow-light);
   border: 0.5rpx solid var(--border-light);
-  backdrop-filter: blur(20rpx);
+  backdrop-filter: blur(10rpx);
 }
 
 .card-header {
@@ -383,11 +383,11 @@
 /* 补充输入框 */
 .form-input-supplement {
   width: 100%;
-  min-height: 88rpx;
+  min-height: 100rpx;
   border: 1rpx solid var(--border-frosted);
   border-radius: var(--r-m);
   padding: var(--p-m);
-  padding-bottom: 60rpx; /* 为字数统计留出空间 */
+  padding-bottom: var(--p-xxl);
   font-size: var(--f-base);
   background-color: var(--bg-frosted-dark);
   color: var(--text-primary);
@@ -416,12 +416,10 @@
   position: absolute;
   bottom: 12rpx;
   right: 16rpx;
-  font-size: 24rpx;
+  font-size: var(--f-sm);
   color: var(--text-tertiary);
   pointer-events: none; /* 防止干扰输入 */
-  background-color: var(--bg-frosted-dark);
-  padding: 4rpx 8rpx;
-  border-radius: 8rpx;
+  padding: var(--p-s);
 }
 
 /* 按钮容器 - 同步guide页面 */
@@ -496,7 +494,7 @@
   color: var(--text-secondary);
   cursor: not-allowed;
 }
-.generating-btn .btn-icon {
+/* .generating-btn .btn-icon {
   animation: spin 2s linear infinite;
 }
 @keyframes spin {
@@ -506,7 +504,7 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
 
 /* 返回按钮样式 */
 .back-btn {
@@ -620,10 +618,7 @@
   transition: all 0.3s ease;
 }
 
-.delete-photo-btn:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-  transform: scale(1.1);
-}
+
 
 .delete-photo-btn:active {
   transform: scale(0.95);
@@ -649,11 +644,7 @@
   cursor: pointer;
 }
 
-.single-upload-box:hover {
-  border-color: var(--text-primary);
-  border: 2rpx solid var(--text-primary);
-  background-color: var(--bg-overlay);
-}
+
 
 .upload-text {
   font-size: var(--f-sm);
@@ -684,20 +675,9 @@
   padding: var(--p-m) 0;
 }
 
-.model-container {
-  width: 320rpx;
-  height: 320rpx;
-  margin: var(--m-xl) 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--bg-primary);
-  border-radius: var(--r-card);
-  box-shadow: 0 4rpx 10rpx var(--shadow-light);
-}
 
 /* 3D模型标签样式 */
-.model-3d-label {
+/* .model-3d-label {
   position: absolute;
   bottom: 20rpx;
   left: 50%;
@@ -708,7 +688,7 @@
   border-radius: var(--r-s);
   font-size: var(--f-sm);
   font-weight: 500;
-}
+} */
 
 /* 步骤5的占位图容器样式调整 */
 .step5-container .placeholder-container {
@@ -759,12 +739,15 @@
   align-items: center;
 }
 
-.placeholder-image {
+.model-container {
   width: 600rpx;
   height: 600rpx;
-  background-color: var(--bg-frosted);
+  /* background-color: var(--bg-frosted);
   border-radius: var(--r-card);
-  box-shadow: 0 6rpx 16rpx var(--shadow-light);
+  box-shadow: 0 6rpx 16rpx var(--shadow-light); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* 步骤5 */
@@ -853,11 +836,40 @@
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .action-icon {
   width: 40rpx;
   height: 40rpx;
+  transition: all 0.3s ease;
+}
+
+/* 点赞按钮旋转动画 */
+.like-btn.animate .action-icon {
+  animation: likeRotate 0.6s ease;
+}
+
+/* 点踩按钮旋转动画 */
+.dislike-btn.animate .action-icon {
+  animation: dislikeRotate 0.6s ease;
+}
+
+@keyframes likeRotate {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+  75% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes dislikeRotate {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(15deg); }
+  50% { transform: rotate(-15deg); }
+  75% { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
 }
 
 /* 不满意文字 - 底部右侧 */
@@ -865,6 +877,9 @@
   font-size: var(--f-sm);
   color: var(--text-tertiary);
   border-bottom: 1rpx solid var(--border-medium);
+  padding: 8rpx 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 /* 生成步骤 */
@@ -915,6 +930,22 @@
   background: linear-gradient(90deg, #7968E5, #E076D6, #FF7787);
   border-radius: 8rpx;
   transition: width 0.5s ease;
+  position: relative;
+}
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 
@@ -962,4 +993,62 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.spinner {
+  width: 200rpx;
+  height: 200rpx;
+  animation: spinner-y0fdc1 2s infinite ease;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.spinner > div {
+  background-color: var(--primary-alpha);
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  border: 4rpx solid var(--primary-color);
+}
+
+.spinner div:nth-of-type(1) {
+  transform: translateZ(-100rpx) rotateY(180deg); /* 是边长的一半 */
+}
+
+.spinner div:nth-of-type(2) {
+  transform: rotateY(-270deg) translateX(50%);
+  transform-origin: top right;
+}
+
+.spinner div:nth-of-type(3) {
+  transform: rotateY(270deg) translateX(-50%);
+  transform-origin: center left;
+}
+
+.spinner div:nth-of-type(4) {
+  transform: rotateX(90deg) translateY(-50%);
+  transform-origin: top center;
+}
+
+.spinner div:nth-of-type(5) {
+  transform: rotateX(-90deg) translateY(50%);
+  transform-origin: bottom center;
+}
+
+.spinner div:nth-of-type(6) {
+  transform: translateZ(100rpx); /* 是边长的一半 */
+}
+
+@keyframes spinner-y0fdc1 {
+  0% {
+    transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
+  }
+
+  50% {
+    transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
+  }
+
+  100% {
+    transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
+  }
 }

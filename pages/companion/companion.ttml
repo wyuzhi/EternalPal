@@ -1,38 +1,81 @@
 <view class="container">
+  <!-- 背景图片层 -->
+  <image src="/images/scenario/spring_sunny.png" mode="aspectFill" class="background-image"></image>
+  
   <!-- 顶部导航 -->
   <view class="header">
-    <image src="/images/c1.png" mode="aspectFit" class="menu-icon"></image>
-    <view class="pet-info">
-      <text class="pet-name">{{petName}}</text>
-      <text class="mood-indicator">心情指示</text>
+    <!-- 点击打开记忆页面：/pages/memory/memory，包含陪伴天数、本月日历（打卡）、记忆记录、纪念日 -->
+    <view class="header-icon" bindtap="onMemoryTap">
+      <image src="/images/mainPage/memory.svg" mode="aspectFit" class="memory-icon"></image>
     </view>
-    <image src="/images/c2.png" mode="aspectFit" class="settings-icon" bindtap="onSettingsTap"></image>
+    
+    <!-- 宠物信息 -->
+    <view class="pet-info-container">
+      <view class="pet-info">
+        <!-- 宠物头像 -->
+        <view class="pet-avatar-container">
+          <image src="{{petAvatar || '/images/logo.svg'}}" mode="aspectFit" class="pet-avatar"></image>
+          
+        </view>
+        <!-- 细节 -->
+        <view class="pet-details">
+          <text class="pet-name">{{petName || '我的宠物'}}</text>
+          <view class="mood-status">
+            <text class="mood-emoji">{{moodEmoji || '😊'}}</text>
+            <text class="mood-text">{{moodText || '开心'}}</text>
+          </view>
+        </view>
+      </view>
+      <!-- 亲密度 -->
+      <view class="intimacy {{intimacyModuleClass}}" wx:if="{{showIntimacyModule}}">
+        <view class="heart-container">
+          <image src="/images/mainPage/heart.svg" mode="aspectFit" class="heart-icon"></image>
+          <text class="intimacy-level">{{intimacyLevel}}</text>
+        </view>
+        <view class="progress-container">
+          <view class="progress-bar">
+            <view class="progress" style="width: {{intimacyProgress}}%;"></view>
+          </view>
+          <!-- 亲密值增加提示 -->
+          <view class="intimacy-increment {{intimacyIncrementClass}}" wx:if="{{showIntimacyIncrement}}">+{{intimacyIncrement}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="header-icon">
+      <image src="/images/mainPage/menu.svg" mode="aspectFit" class="menu-icon" bindtap="onSettingsTap"></image>
+    </view>  
   </view>
 
+  <!-- 菜单遮罩层 -->
+  <view class="menu-mask" wx:if="{{showFloatMenu}}" bindtap="onMenuMaskTap"></view>
+  
   <!-- 浮动功能菜单 -->
-  <view class="float-menu" wx:if="{{showFloatMenu}}">
-    <view class="menu-item" bindtap="onMenuItemTap" data-action="info">
-      <text>信息</text>
-    </view>
-    <view class="menu-item" bindtap="onMenuItemTap" data-action="settings">
+  <view class="float-menu {{menuAnimationClass}}" wx:if="{{showFloatMenu}}">
+    <button class="menu-item" bindtap="onMenuItemTap" data-action="info">
+      <image src="/images/mainPage/list/animalFile.svg" class="menu-item-icon" mode="aspectFit"></image>
+      <text>档案</text>
+    </button>
+    <button class="menu-item" bindtap="onMenuItemTap" data-action="settings">
+      <image src="/images/mainPage/list/settings.svg" class="menu-item-icon" mode="aspectFit"></image>
       <text>设置</text>
-    </view>
-    <view class="menu-item" bindtap="onMenuItemTap" data-action="share">
+    </button>
+    <button class="menu-item" open-type="share" data-action="share">
+      <image src="/images/mainPage/list/share.svg" class="menu-item-icon" mode="aspectFit"></image>
       <text>分享</text>
-    </view>
+    </button>
   </view>
 
-  <!-- 心情条 -->
-  <view class="mood-bar">
-    <view class="heart-icon">❤</view>
-    <view class="progress-bar">
-      <view class="progress" style="width: {{moodLevel * 25}}%;"></view>
-    </view>
-    <text class="mood-value">{{moodLevel}}</text>
-  </view>
+  
 
-  <!-- 宠物展示区 -->
-  <view class="model-display">
+  <!-- 宠物展示区（宠物模式） -->
+  <view class="model-display" wx:if="{{!chatMode}}">
+    <!-- 当前对话气泡 - 显示在模型上方 -->
+    <view class="current-chat-bubble {{bubbleAnimationClass}}" wx:if="{{currentMessage}}">
+      <view class="bubble-content">
+        <text>{{currentMessage}}</text>
+      </view>
+    </view>
+    
     <view id="modelContainer" class="model-container">
         <!-- 3D模型显示区域 -->
         <canvas 
@@ -52,56 +95,102 @@
           <image src="{{preview_url}}" mode="aspectFit" class="pet-image"></image>
           <!-- 如果preview_url为空，则显示占位符 -->
           <view wx:if="{{!preview_url}}" class="model-placeholder">
-            <text>{{modelPlaceholderText || '加载中...'}}</text>
+            <loader size="50px" color="#333" speed="0.8s"></loader>
           </view>
         </view>
         <!-- 加载提示 -->
         <view wx:if="{{!modelLoaded}}" class="loading-overlay">
-          <text>{{modelPlaceholderText || '正在加载3D模型...'}}</text>
+          <loader size="50px" color="#333" speed="0.8s"></loader>
           <progress wx:if="{{loadingProgress > 0 && loadingProgress < 100}}" percent="{{loadingProgress}}" stroke-width="4" activeColor="#07c160" backgroundColor="#EBEBEB" class="loading-progress"></progress>
         </view>
     </view>
-    <view class="first-success" wx:if="{{firstLoadSuccess}}">嗨，我是{{petName}}！很高兴见到你~</view>
   </view>
 
-  <!-- 聊天消息区域 -->
-  <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollToMessageId}}" scroll-with-animation>
-    <block wx:for="{{messages}}" wx:key="id">
-      <view id="message-{{item.validId}}" class="message-container {{item.isUser ? 'user-message' : 'ai-message'}}">
-        <view class="message-bubble">
-          <text>{{item.text}}</text>
-        </view>
-      </view>
-    </block>
-  </scroll-view>
-
-  <!-- 快捷功能区 -->
-  <view class="quick-actions" hidden="{{true}}">
-    <view class="action-button" bindtap="takePhoto">
-      <image src="/images/camera.png" mode="aspectFit" class="action-icon"></image>
-    </view>
-    <view class="action-button" bindtap="{{isRecording ? 'stopRecording' : 'startRecording'}}">
-      <image src="/images/microphone.png" mode="aspectFit" class="action-icon {{isRecording ? 'recording' : ''}}"></image>
-    </view>
-    <view class="action-button">
-      <image src="/images/voice.png" mode="aspectFit" class="action-icon"></image>
-    </view>
-    <view class="action-button">
-      <image src="/images/magic.png" mode="aspectFit" class="action-icon"></image>
+  <!-- 用户消息显示区域 -->
+  <view class="user-message-display {{userMessageAnimationClass}}" wx:if="{{userMessage}}">
+    <view class="user-message-bubble">
+      <text>{{userMessage}}</text>
     </view>
   </view>
 
   <!-- 输入区域 -->
-  <view class="input-area">
-    <input type="text" placeholder="跟ta说些什么呢......" value="{{inputValue}}" bindinput="onInput" class="chat-input"/>
-    <button class="send-button" bindtap="sendMessage">发送</button>
-  </view>
-
-  <!-- 快捷话术 -->
-  <view class="quick-replies">
-    <button class="quick-reply" bindtap="useQuickReply" data-text="你好">你好</button>
-    <button class="quick-reply" bindtap="useQuickReply" data-text="今天过得怎么样">今天如何</button>
-    <button class="quick-reply" bindtap="useQuickReply" data-text="讲个笑话">讲个笑话</button>
-    <button class="quick-reply test-button" bindtap="testModelRendering">测试3D功能</button>
+  <view class="chat-flow" style="bottom: {{keyboardHeight > 0 ? (keyboardHeight + 8) + 'px' : '0px'}}; padding-bottom: {{keyboardHeight > 0 ? '0rpx' : 'calc(' + safeAreaBottom + 'rpx + 24rpx)'}};">
+    
+    <!-- 聊天历史区域（聊天模式） -->
+    <view class="chat-history-display" wx:if="{{chatMode}}">
+      <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollToMessageId}}" scroll-with-animation>
+        <block wx:for="{{messages}}" wx:key="id">
+          <view id="message-{{item.validId}}" class="message-container {{item.isUser ? 'user-message' : 'ai-message'}}">
+            
+            <!-- TODO：一定时间之后的聊天记录才显示时间戳 -->
+            <!-- <view class="message-time">
+              {{item.timestamp ? new Date(item.timestamp).toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) : ''}}
+            </view> -->
+            <view class="message-bubble">
+              <text>{{item.text}}</text>
+            </view>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+    
+    <view class="send-container">
+      <!-- 快捷话术区域 -->
+      <view class="quick-replies-container {{!showUIElements ? 'hide' : ''}}">
+        <scroll-view class="quick-replies-scroll" scroll-x="true" show-scrollbar="false" enhanced="true" bounces="false">
+          <view class="quick-replies">
+            <button 
+              wx:for="{{quickReplies}}" 
+              wx:key="id" 
+              class="quick-reply {{item.isTest ? 'test-button' : ''}}" 
+              bindtap="useQuickReply" 
+              data-text="{{item.text}}"
+            >
+              {{item.text}}
+            </button>
+            <!-- 右边距占位元素 -->
+            <view class="quick-reply-spacer"></view>
+          </view>
+        </scroll-view>
+      </view>
+      
+      <!-- 功能区 -->
+      <view class="function-area {{!showUIElements ? 'hide' : ''}}">
+        <view class="function-item {{isVideoActive ? 'active' : ''}}" bindtap="onVideoTap">
+          <image src="/images/mainPage/video.svg" class="function-icon"></image>
+        </view>
+        <view class="function-item" bindtap="onMicTap">
+          <image src="/images/mainPage/{{isMicOn ? 'mic' : 'micOff'}}.svg" class="function-icon"></image>
+        </view>
+        <view class="function-item" bindtap="onSpeakerTap">
+          <image src="/images/mainPage/{{isSpeakerOn ? 'speaker' : 'speakerOff'}}.svg" class="function-icon"></image>
+        </view>
+        <view class="function-item {{isArActive ? 'active' : ''}}" bindtap="onArTap">
+          <image src="/images/mainPage/ar.svg" class="function-icon"></image>
+        </view>
+        <view class="function-item" bindtap="onTextChatTap">
+          <image src="/images/mainPage/{{isTextChatActive ? 'petChat' : 'textChat'}}.svg" class="function-icon"></image>
+        </view>
+      </view>
+      
+      <!-- 输入卡片区域 -->
+      <view class="input-card">
+        <view class="input-container">
+          <textarea 
+            placeholder="跟ta说些什么呢..." 
+            value="{{inputValue}}" 
+            bindinput="onInput" 
+            bindfocus="onInputFocus"
+            bindblur="onInputBlur"
+            class="chat-input" 
+            maxlength="1000" 
+            auto-height 
+            adjust-position="{{false}}"></textarea>
+          <view class="send-button" bindtap="sendMessage">
+            <image src="/images/mainPage/send.svg" class="send-icon"></image>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </view>

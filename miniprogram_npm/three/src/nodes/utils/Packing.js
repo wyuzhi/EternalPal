@@ -1,2 +1,0 @@
-import{nodeObject}from"../tsl/TSLBase.js";export const directionToColor=o=>nodeObject(o).mul(.5).add(.5);export const colorToDirection=o=>nodeObject(o).mul(2).sub(1);
-//# sourceMappingURL=Packing.js.map

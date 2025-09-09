@@ -1,0 +1,5 @@
+<view class="three-body" style="--uib-size: {{size}}; --uib-color: {{color}}; --uib-speed: {{speed}};">
+  <view class="three-body__dot"></view>
+  <view class="three-body__dot"></view>
+  <view class="three-body__dot"></view>
+</view>

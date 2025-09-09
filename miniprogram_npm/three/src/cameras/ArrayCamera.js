@@ -1,2 +1,0 @@
-import{PerspectiveCamera}from"./PerspectiveCamera.js";class ArrayCamera extends PerspectiveCamera{constructor(r=[]){super(),this.isArrayCamera=!0,this.isMultiViewCamera=!1,this.cameras=r}}export{ArrayCamera};
-//# sourceMappingURL=ArrayCamera.js.map

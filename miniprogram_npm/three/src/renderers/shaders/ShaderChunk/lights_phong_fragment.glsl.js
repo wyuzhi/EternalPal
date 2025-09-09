@@ -1,2 +1,0 @@
-export default"\nBlinnPhongMaterial material;\nmaterial.diffuseColor = diffuseColor.rgb;\nmaterial.specularColor = specular;\nmaterial.specularShininess = shininess;\nmaterial.specularStrength = specularStrength;\n";
-//# sourceMappingURL=lights_phong_fragment.glsl.js.map

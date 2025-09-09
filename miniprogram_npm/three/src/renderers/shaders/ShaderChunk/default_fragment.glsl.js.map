@@ -1,1 +1,0 @@
-{"version":3,"file":"node_modules/three/src/renderers/shaders/ShaderChunk/default_fragment.glsl.js","names":[],"sources":["node_modules/three/src/renderers/shaders/ShaderChunk/default_fragment.glsl.js"],"sourcesContent":["export default /* glsl */`\nvoid main() {\n\tgl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );\n}\n`;\n"],"mappings":"cAAyB","ignoreList":[]}

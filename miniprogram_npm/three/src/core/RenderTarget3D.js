@@ -1,2 +1,0 @@
-import{RenderTarget}from"./RenderTarget.js";import{Data3DTexture}from"../textures/Data3DTexture.js";class RenderTarget3D extends RenderTarget{constructor(e=1,t=1,r=1,s={}){super(e,t,s),this.isRenderTarget3D=!0,this.depth=r,this.texture=new Data3DTexture(null,e,t,r),this._setTextureOptions(s),this.texture.isRenderTargetTexture=!0}}export{RenderTarget3D};
-//# sourceMappingURL=RenderTarget3D.js.map

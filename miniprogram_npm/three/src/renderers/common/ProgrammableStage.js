@@ -1,2 +1,0 @@
-let _id=0;class ProgrammableStage{constructor(t,s,e,a=null,i=null){this.id=_id++,this.code=t,this.stage=s,this.name=e,this.transforms=a,this.attributes=i,this.usedTimes=0}}export default ProgrammableStage;
-//# sourceMappingURL=ProgrammableStage.js.map

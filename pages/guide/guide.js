@@ -22,10 +22,23 @@ Page({
       '声音采集'
     ],
     isAuthorized: false,
-    userName: '你好呀' // 用户名，默认值为"你好呀"
+    userName: '你好呀', // 用户名，默认值为"你好呀"
+    showWelcomeAnimation: false // 控制欢迎图片动画显示
   },
-  onLoad: function () {
-    console.log('AI萌宠应用启动')
+  onLoad: function (options) {
+    console.log('应用启动')
+    console.log('Guide页面参数:', options);
+    
+    // 检查是否来自分享链接
+    if (options && options.isShare === 'true') {
+      console.log('Guide页面: 来自分享链接，来源:', options.from);
+      tt.showToast({
+        title: '欢迎来到灵伴 EternalPal！',
+        icon: 'none',
+        duration: 3000
+      });
+    }
+    
     // 页面加载时自动尝试登录
     this.loginAndCheckUser()
   },
@@ -142,6 +155,9 @@ Page({
     // 设置授权状态为true，允许用户继续使用基础功能
     that.setData({ isAuthorized: true })
     
+    // 触发欢迎图片动画
+    that.triggerWelcomeAnimation()
+    
     // 清除可能存在的无效用户信息
     app.logout()
   },
@@ -163,13 +179,28 @@ Page({
         } else {
           // 用户没有宠物，停留在当前页面
           that.setData({ isAuthorized: true })
+          // 触发欢迎图片动画
+          that.triggerWelcomeAnimation()
         }
       },
       fail: (error) => {
         console.error('检查宠物状态失败:', error)
         that.setData({ isAuthorized: true })
+        // 触发欢迎图片动画
+        that.triggerWelcomeAnimation()
       }
     })
+  },
+
+  // 触发欢迎图片滑入动画
+  triggerWelcomeAnimation: function() {
+    const that = this
+    // 延迟一点时间确保页面渲染完成
+    setTimeout(() => {
+      that.setData({
+        showWelcomeAnimation: true
+      })
+    }, 300)
   },
 
   // 滑动切换事件处理

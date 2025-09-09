@@ -1,2 +1,0 @@
-import InputNode from"./InputNode.js";const _regNum=/float|u?int/;class ConstNode extends InputNode{static get type(){return"ConstNode"}constructor(t,e=null){super(t,e),this.isConstNode=!0}generateConst(t){return t.generateConst(this.getNodeType(t),this.value)}generate(t,e){const o=this.getNodeType(t);return _regNum.test(o)&&_regNum.test(e)?t.generateConst(e,this.value):t.format(this.generateConst(t),o,e)}}export default ConstNode;
-//# sourceMappingURL=ConstNode.js.map

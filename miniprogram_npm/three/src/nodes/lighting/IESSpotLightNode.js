@@ -1,2 +1,0 @@
-import SpotLightNode from"./SpotLightNode.js";import{texture}from"../accessors/TextureNode.js";import{vec2}from"../tsl/TSLBase.js";class IESSpotLightNode extends SpotLightNode{static get type(){return"IESSpotLightNode"}getSpotAttenuation(t,e){const o=this.light.iesMap;let s=null;if(o&&!0===o.isTexture){const t=e.acos().mul(1/Math.PI);s=texture(o,vec2(t,0),0).r}else s=super.getSpotAttenuation(e);return s}}export default IESSpotLightNode;
-//# sourceMappingURL=IESSpotLightNode.js.map

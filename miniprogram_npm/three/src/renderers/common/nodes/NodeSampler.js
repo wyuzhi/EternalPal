@@ -1,2 +1,0 @@
-import Sampler from"../Sampler.js";class NodeSampler extends Sampler{constructor(e,t,r){super(e,t?t.value:null),this.textureNode=t,this.groupNode=r}update(){this.texture=this.textureNode.value}}export default NodeSampler;
-//# sourceMappingURL=NodeSampler.js.map

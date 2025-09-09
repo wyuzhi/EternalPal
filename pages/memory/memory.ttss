@@ -1,0 +1,698 @@
+/* 记忆页面样式 */
+
+.container {
+  min-height: 100vh;
+  
+  background: linear-gradient(180deg, 
+    #ebf5ff 6%, 
+    #e7f6c7 40%, 
+    #f7f9df 76%, 
+    #fffbeb 100%);
+
+  position: relative;
+  padding: var(--p-l);
+  box-sizing: border-box;
+}
+
+/* 背景图片 */
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  opacity: 0.3;
+}
+
+/* 陪伴天数样式 */
+.companion-days {
+  text-align: center;
+  padding: var(--p-xl) var(--p-card);
+  margin-bottom: var(--m-l);
+}
+
+.days-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--f-xl);
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: var(--m-s);
+  flex-wrap: wrap;
+}
+
+.days-prefix,
+.days-suffix {
+  font-size: var(--f-xl);
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+/* 翻页计数器样式 */
+.flip-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 var(--m-s);
+}
+
+.flip-digit {
+  margin: 0 4rpx;
+}
+
+.flip-card {
+  width: 80rpx;
+  height: 100rpx;
+  perspective: 1000rpx;
+  position: relative;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flip-card.flipping .flip-card-inner {
+  transform: rotateX(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--r-m);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 32rpx var(--shadow-light);
+  border: 2rpx solid var(--border-frosted);
+  backdrop-filter: blur(20rpx);
+  background: var(--bg-frosted-dark);
+}
+
+.flip-card-front {
+  background: linear-gradient(135deg, 
+    var(--bg-frosted-dark) 0%, 
+    var(--bg-frosted) 100%);
+  color: var(--text-primary);
+  backdrop-filter: blur(20rpx);
+}
+
+.flip-card-back {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.25) 0%, 
+    rgba(255, 255, 255, 0.15) 100%);
+  color: var(--text-primary);
+  backdrop-filter: blur(20rpx);
+  transform: rotateX(180deg);
+}
+
+.digit {
+  font-size: 60rpx;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  color: var(--primary-deep);
+}
+
+.days-subtitle {
+  display: block;
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* 通用卡片样式 */
+.calendar-card,
+.anniversary-card,
+.memory-records-card {
+  background: var(--bg-frosted);
+  backdrop-filter: blur(10rpx);
+  border-radius: var(--r-card);
+  border: 2rpx solid var(--border-light);
+  margin-bottom: var(--m-l);
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx var(--shadow-light);
+}
+
+.memory-records-card {
+  margin-bottom: 0;
+}
+
+/* 卡片头部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--p-m) var(--p-s);
+}
+
+.title {
+  font-size: var(--f-lg);
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+
+/* 日历卡片 */
+.month-year {
+  font-size: var(--f-base);
+  color: var(--text-secondary);
+}
+
+.calendar-grid {
+  padding: var(--p-card);
+}
+
+.week-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--m-s);
+  margin: var(--m-l) 0;
+}
+
+.week-day {
+  font-size: var(--f-sm);
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--m-s);
+}
+
+.day-item {
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.day-circle {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.day-number {
+  font-size: var(--f-sm);
+  color: var(--text-primary);
+  z-index: 2;
+}
+
+.day-emoji {
+  font-size: 48rpx;
+  z-index: 2;
+}
+
+/* 其他月份的日期 */
+.day-item.other-month .day-number {
+  color: var(--text-disabled);
+}
+
+/* 当月日期 */
+.day-item.current-month .day-circle {
+  border: 4rpx solid var(--text-tertiary);
+}
+
+.day-item.current-month .day-number {
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+/* 有emoji的日期 - 无背景无边框 */
+.day-item.has-emoji .day-circle {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* 确保有emoji的日期不受其他样式影响 */
+.day-item.has-emoji.current-month .day-circle {
+  border: none !important;
+  background: transparent !important;
+}
+
+.day-item.has-emoji.past .day-circle {
+  border: none !important;
+  background: transparent !important;
+}
+
+.day-item.has-emoji.today .day-circle {
+  border: none !important;
+  background: transparent !important;
+}
+
+.day-item.has-emoji.future .day-circle {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* 今天之前的日期 */
+/* .day-item.past .day-circle {
+  background: var(--primary-color);
+} */
+.day-item.past .day-number {
+  /* color: white; */
+  font-weight: bold;
+}
+
+/* 今天 */
+.day-item.today .day-circle {
+  background: var(--bg-frosted);
+  border: 4rpx solid var(--primary-color);
+}
+.day-item.today .day-number {
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+/* 今天之后 */
+/* .day-item.future .day-circle {
+  border: 4rpx solid var(--bg-overlay-dark);
+  background: var(--bg-frosted);
+} */
+.day-item.future .day-number {
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+/* 有记录的日期样式 */
+.day-item.checked.today .day-circle {
+  background: var(--primary-color);
+  border: 4rpx solid var(--primary-deep);
+}
+
+/* .day-item.checked.past .day-circle {
+  border: 4rpx solid var(--primary-dark);
+} */
+
+.check-dot {
+  position: absolute;
+  bottom: -12rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10rpx;
+  height: 10rpx;
+  background: var(--success-color);
+  border-radius: 50%;
+  z-index: 3;
+}
+
+/* 纪念日卡片 */
+.add-btn {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.add-btn:active {
+  transform: scale(0.95);
+}
+
+.add-icon {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.anniversary-list {
+  padding: var(--p-card);
+}
+
+.anniversary-item {
+  display: flex;
+  align-items: center;
+  padding: var(--p-m) 0;
+  border-bottom: 1rpx solid var(--border-frosted);
+}
+
+.anniversary-item:last-child {
+  border-bottom: none;
+}
+
+.anniversary-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background: var(--bg-secondary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--m-m);
+}
+
+.emoji {
+  font-size: var(--f-xl);
+}
+
+.anniversary-info {
+  flex: 1;
+}
+
+.anniversary-title {
+  display: block;
+  font-size: var(--f-base);
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: var(--m-s);
+}
+
+.anniversary-date {
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+}
+
+.anniversary-days {
+  text-align: right;
+}
+
+.days-count {
+  display: block;
+  font-size: var(--f-lg);
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.days-label {
+  font-size: var(--f-xs);
+  color: var(--text-tertiary);
+}
+
+/* 记忆记录卡片 */
+.record-count {
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+}
+
+.records-list {
+  padding: var(--p-card);
+}
+
+.record-item {
+  display: flex;
+  align-items: flex-start;
+  padding: var(--p-m) 0;
+  border-bottom: 1rpx solid var(--border-frosted);
+}
+
+.record-item:last-child {
+  border-bottom: none;
+}
+
+.record-date {
+  width: 120rpx;
+  text-align: center;
+  margin-right: var(--m-m);
+}
+
+.month-day {
+  display: block;
+  font-size: var(--f-lg);
+  color: var(--text-primary);
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.year {
+  font-size: var(--f-xs);
+  color: var(--text-tertiary);
+}
+
+.record-content {
+  flex: 1;
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--m-s);
+}
+
+.record-title {
+  font-size: var(--f-base);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.record-time {
+  font-size: var(--f-xs);
+  color: var(--text-tertiary);
+}
+
+.record-description {
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+  line-height: 1.2;
+  margin-bottom: var(--m-s);
+}
+
+.record-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--m-s);
+}
+
+.tag {
+  font-size: var(--f-xs);
+  color: var(--primary-deep);
+  background: var(--primary-light);
+  margin-top: var(--m-s);
+  padding: 4rpx var(--p-s);
+  border-radius: var(--r-s);
+  border: 1rpx solid var(--primary-color);
+}
+
+.record-mood {
+  width: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: var(--m-s);
+}
+
+.mood-emoji {
+  font-size: var(--f-xl);
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: var(--p-xxl);
+}
+
+.empty-text {
+  display: block;
+  font-size: var(--f-base);
+  color: var(--text-secondary);
+  margin-bottom: var(--m-s);
+}
+
+.empty-hint {
+  font-size: var(--f-sm);
+  color: var(--text-tertiary);
+}
+
+/* 添加纪念日弹窗(暂时注释掉) */
+.anniversary-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.anniversary-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-overlay);
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 600rpx;
+  background: var(--bg-primary);
+  border-radius: var(--r-card);
+  box-shadow: 0 16rpx 64rpx var(--shadow-dark);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--p-l);
+  border-bottom: 2rpx solid var(--border-light);
+}
+
+.modal-title {
+  font-size: var(--f-lg);
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.close-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  transition: all 0.2s ease;
+}
+
+.close-btn:active {
+  transform: scale(0.95);
+  background: var(--bg-tertiary);
+}
+
+.close-icon {
+  font-size: var(--f-xl);
+  color: var(--text-secondary);
+}
+
+.modal-body {
+  padding: var(--p-l);
+}
+
+.input-group {
+  margin-bottom: var(--m-l);
+}
+
+.label {
+  display: block;
+  font-size: var(--f-base);
+  color: var(--text-primary);
+  margin-bottom: var(--m-s);
+  font-weight: 500;
+}
+
+.input {
+  width: 100%;
+  padding: var(--p-m);
+  border: 2rpx solid var(--border-light);
+  border-radius: var(--r-input);
+  font-size: var(--f-base);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: var(--primary-color);
+}
+
+.date-picker {
+  width: 100%;
+}
+
+.picker-display {
+  padding: var(--p-m);
+  border: 2rpx solid var(--border-light);
+  border-radius: var(--r-input);
+  font-size: var(--f-base);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+
+.emoji-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--m-s);
+}
+
+.emoji-item {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid var(--border-light);
+  border-radius: var(--r-m);
+  transition: all 0.2s ease;
+}
+
+.emoji-item.selected {
+  border-color: var(--primary-color);
+  background: var(--primary-light);
+}
+
+.emoji-item:active {
+  transform: scale(0.95);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--m-m);
+  padding: var(--p-l);
+  border-top: 2rpx solid var(--border-light);
+}
+
+.cancel-btn,
+.confirm-btn {
+  padding: var(--p-m) var(--p-l);
+  border-radius: var(--r-button);
+  font-size: var(--f-base);
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.cancel-btn {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.cancel-btn:active {
+  background: var(--bg-tertiary);
+}
+
+.confirm-btn {
+  background: var(--primary-color);
+  color: white;
+}
+
+.confirm-btn:active {
+  background: var(--primary-dark);
+}
+
+/* 底部安全区域 */
+.safe-area-bottom {
+  width: 100%;
+}

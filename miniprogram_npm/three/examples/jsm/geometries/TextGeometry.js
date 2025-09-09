@@ -1,2 +1,0 @@
-import{ExtrudeGeometry}from"three";class TextGeometry extends ExtrudeGeometry{constructor(e,t={}){const o=t.font;if(void 0===o)super();else{const r=o.generateShapes(e,t.size);void 0===t.depth&&(t.depth=50),void 0===t.bevelThickness&&(t.bevelThickness=10),void 0===t.bevelSize&&(t.bevelSize=8),void 0===t.bevelEnabled&&(t.bevelEnabled=!1),super(r,t)}this.type="TextGeometry"}}export{TextGeometry};
-//# sourceMappingURL=TextGeometry.js.map

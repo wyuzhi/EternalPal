@@ -1,14 +1,3 @@
-# 后端相关
-backend/
-
-# 小程序依赖
-miniprogram_npm/
-node_modules/
-
-# 依赖管理
-package-lock.json
-yarn.lock
-
 # IDE配置
 .vscode/
 .idea/
@@ -17,13 +6,17 @@ yarn.lock
 *~
 
 # 系统文件
+## mac
 **/.DS_Store
 ._*
 .Spotlight-V100
 .Trashes
+## windows
 ehthumbs.db
 Thumbs.db
 
 # 小程序相关
 project.private.config.json
 sitemap.json
+miniprogram_npm/
+node_modules/

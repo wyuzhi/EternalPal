@@ -1,2 +1,0 @@
-import{Fn,vec2}from"../tsl/TSLBase.js";import{rotate}from"./RotateNode.js";export const rotateUV=Fn((([t,o,e=vec2(.5)])=>rotate(t.sub(e),o).add(e)));export const spherizeUV=Fn((([t,o,e=vec2(.5)])=>{const r=t.sub(e),s=r.dot(r),a=s.mul(s).mul(o);return t.add(r.mul(a))}));
-//# sourceMappingURL=UVUtils.js.map

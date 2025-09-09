@@ -1,2 +1,0 @@
-import LightingModel from"../core/LightingModel.js";import{diffuseColor}from"../core/PropertyNode.js";import{float}from"../tsl/TSLBase.js";class ShadowMaskModel extends LightingModel{constructor(){super(),this.shadowNode=float(1).toVar("shadowMask")}direct({lightNode:o}){null!==o.shadowNode&&this.shadowNode.mulAssign(o.shadowNode)}finish({context:o}){diffuseColor.a.mulAssign(this.shadowNode.oneMinus()),o.outgoingLight.rgb.assign(diffuseColor.rgb)}}export default ShadowMaskModel;
-//# sourceMappingURL=ShadowMaskModel.js.map

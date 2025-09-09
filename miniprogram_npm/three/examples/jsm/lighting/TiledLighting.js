@@ -1,2 +1,0 @@
-import{Lighting}from"three/webgpu";import{tiledLights}from"../tsl/lighting/TiledLightsNode.js";export class TiledLighting extends Lighting{constructor(){super()}createNode(t=[]){return tiledLights().setLights(t)}}
-//# sourceMappingURL=TiledLighting.js.map

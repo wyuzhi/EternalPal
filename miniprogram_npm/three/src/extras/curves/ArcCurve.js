@@ -1,2 +1,0 @@
-import{EllipseCurve}from"./EllipseCurve.js";class ArcCurve extends EllipseCurve{constructor(r,e,s,u,t,c){super(r,e,s,s,u,t,c),this.isArcCurve=!0,this.type="ArcCurve"}}export{ArcCurve};
-//# sourceMappingURL=ArcCurve.js.map

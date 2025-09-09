@@ -1,2 +1,0 @@
-import{LineBasicMaterial}from"./LineBasicMaterial.js";class LineDashedMaterial extends LineBasicMaterial{constructor(e){super(),this.isLineDashedMaterial=!0,this.type="LineDashedMaterial",this.scale=1,this.dashSize=3,this.gapSize=1,this.setValues(e)}copy(e){return super.copy(e),this.scale=e.scale,this.dashSize=e.dashSize,this.gapSize=e.gapSize,this}}export{LineDashedMaterial};
-//# sourceMappingURL=LineDashedMaterial.js.map

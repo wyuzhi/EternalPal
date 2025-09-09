@@ -1,2 +1,0 @@
-import{BufferAttribute}from"./BufferAttribute.js";class InstancedBufferAttribute extends BufferAttribute{constructor(t,e,r,s=1){super(t,e,r),this.isInstancedBufferAttribute=!0,this.meshPerAttribute=s}copy(t){return super.copy(t),this.meshPerAttribute=t.meshPerAttribute,this}toJSON(){const t=super.toJSON();return t.meshPerAttribute=this.meshPerAttribute,t.isInstancedBufferAttribute=!0,t}}export{InstancedBufferAttribute};
-//# sourceMappingURL=InstancedBufferAttribute.js.map

@@ -1,1 +1,0 @@
-{"version":3,"file":"node_modules/three/src/renderers/shaders/ShaderChunk/colorspace_fragment.glsl.js","names":[],"sources":["node_modules/three/src/renderers/shaders/ShaderChunk/colorspace_fragment.glsl.js"],"sourcesContent":["export default /* glsl */`\ngl_FragColor = linearToOutputTexel( gl_FragColor );\n`;\n"],"mappings":"cAAyB","ignoreList":[]}

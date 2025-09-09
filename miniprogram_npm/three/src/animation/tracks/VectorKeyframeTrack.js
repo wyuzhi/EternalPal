@@ -1,2 +1,0 @@
-import{KeyframeTrack}from"../KeyframeTrack.js";class VectorKeyframeTrack extends KeyframeTrack{constructor(e,r,a,c){super(e,r,a,c)}}VectorKeyframeTrack.prototype.ValueTypeName="vector";export{VectorKeyframeTrack};
-//# sourceMappingURL=VectorKeyframeTrack.js.map

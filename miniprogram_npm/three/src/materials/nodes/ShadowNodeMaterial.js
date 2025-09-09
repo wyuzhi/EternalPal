@@ -1,2 +1,0 @@
-import NodeMaterial from"./NodeMaterial.js";import ShadowMaskModel from"../../nodes/functions/ShadowMaskModel.js";import{ShadowMaterial}from"../ShadowMaterial.js";const _defaultValues=new ShadowMaterial;class ShadowNodeMaterial extends NodeMaterial{static get type(){return"ShadowNodeMaterial"}constructor(a){super(),this.isShadowNodeMaterial=!0,this.lights=!0,this.transparent=!0,this.setDefaultValues(_defaultValues),this.setValues(a)}setupLightingModel(){return new ShadowMaskModel}}export default ShadowNodeMaterial;
-//# sourceMappingURL=ShadowNodeMaterial.js.map

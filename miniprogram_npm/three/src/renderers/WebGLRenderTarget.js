@@ -1,2 +1,0 @@
-import{RenderTarget}from"../core/RenderTarget.js";class WebGLRenderTarget extends RenderTarget{constructor(e=1,r=1,t={}){super(e,r,t),this.isWebGLRenderTarget=!0}}export{WebGLRenderTarget};
-//# sourceMappingURL=WebGLRenderTarget.js.map

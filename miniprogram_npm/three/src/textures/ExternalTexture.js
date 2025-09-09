@@ -1,2 +1,0 @@
-import{Texture}from"./Texture.js";class ExternalTexture extends Texture{constructor(e=null){super(),this.sourceTexture=e,this.isExternalTexture=!0}}export{ExternalTexture};
-//# sourceMappingURL=ExternalTexture.js.map

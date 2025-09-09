@@ -1,2 +1,0 @@
-import getGeometryRoughness from"./getGeometryRoughness.js";import{Fn}from"../../tsl/TSLBase.js";const getRoughness=Fn((e=>{const{roughness:s}=e,t=getGeometryRoughness();let o=s.max(.0525);return o=o.add(t),o=o.min(1),o}));export default getRoughness;
-//# sourceMappingURL=getRoughness.js.map

@@ -1,2 +1,0 @@
-class Cylindrical{constructor(t=1,s=0,r=0){this.radius=t,this.theta=s,this.y=r}set(t,s,r){return this.radius=t,this.theta=s,this.y=r,this}copy(t){return this.radius=t.radius,this.theta=t.theta,this.y=t.y,this}setFromVector3(t){return this.setFromCartesianCoords(t.x,t.y,t.z)}setFromCartesianCoords(t,s,r){return this.radius=Math.sqrt(t*t+r*r),this.theta=Math.atan2(t,r),this.y=s,this}clone(){return(new this.constructor).copy(this)}}export{Cylindrical};
-//# sourceMappingURL=Cylindrical.js.map

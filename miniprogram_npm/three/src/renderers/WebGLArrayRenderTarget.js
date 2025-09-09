@@ -1,2 +1,0 @@
-import{WebGLRenderTarget}from"./WebGLRenderTarget.js";import{DataArrayTexture}from"../textures/DataArrayTexture.js";class WebGLArrayRenderTarget extends WebGLRenderTarget{constructor(e=1,r=1,t=1,a={}){super(e,r,a),this.isWebGLArrayRenderTarget=!0,this.depth=t,this.texture=new DataArrayTexture(null,e,r,t),this._setTextureOptions(a),this.texture.isRenderTargetTexture=!0}}export{WebGLArrayRenderTarget};
-//# sourceMappingURL=WebGLArrayRenderTarget.js.map

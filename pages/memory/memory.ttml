@@ -1,0 +1,185 @@
+<view class="container">
+  <!-- 背景图片层 -->
+  <!-- <image src="/images/scenario/spring_sunny.png" mode="aspectFill" class="background-image"></image> -->
+  
+  <!-- 陪伴天数 -->
+  <!-- 测试翻页 bindlongpress="onDaysLongPress" -->
+  <view class="companion-days">
+    <view class="days-text">
+      <text class="days-prefix" wx:if="{{petName}}">{{petName}}已陪伴你 </text>
+      <text class="days-prefix" wx:else>已陪伴你 </text>
+      <view class="flip-counter">
+        <view class="flip-digit" wx:for="{{daysDigits}}" wx:key="index">
+          <view class="flip-card {{item.isAnimating ? 'flipping' : ''}}">
+            <view class="flip-card-inner">
+              <view class="flip-card-front">
+                <text class="digit">{{item.current}}</text>
+              </view>
+              <view class="flip-card-back">
+                <text class="digit">{{item.next}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <text class="days-suffix"> 天啦!</text>
+    </view>
+    <text class="days-subtitle">让逝去或缺席的陪伴得以延续</text>
+  </view>
+
+  <!-- 本月日历卡片 -->
+  <view class="card-header">
+      <text class="title">日记</text>
+      <text class="month-year">{{currentYear}}年 {{currentMonth}}月</text>
+  </view>
+  <view class="calendar-card">
+    <view class="calendar-grid">
+      <!-- 星期标题 -->
+      <view class="week-header">
+        <text class="week-day" wx:for="{{weekDays}}" wx:key="*this">{{item}}</text>
+      </view>
+      <!-- 日期网格 -->
+      <view class="days-grid">
+        <view 
+          class="day-item {{item.isToday ? 'today' : ''}} {{item.hasRecord ? 'checked' : ''}} {{item.isCurrentMonth ? '' : 'other-month'}} {{item.isPast ? 'past' : ''}} {{item.isFuture ? 'future' : ''}} {{item.anniversaryEmoji ? 'has-emoji' : ''}}"
+          wx:for="{{calendarDays}}" 
+          wx:key="day"
+          data-date="{{item.date}}"
+        >
+          <view class="day-circle">
+            <text class="day-number" wx:if="{{!item.anniversaryEmoji}}">{{item.day}}</text>
+            <text class="day-emoji" wx:if="{{item.anniversaryEmoji}}">{{item.anniversaryEmoji}}</text>
+            <view class="check-dot" wx:if="{{item.hasRecord}}"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 纪念日卡片 - 暂时注释掉 -->
+  <!--
+  <view class="card-header">
+    <text class="title">珍贵时刻</text>
+    <view class="add-btn" bindtap="onAddAnniversary">
+      <image src="/images/memory/addDate.svg" mode="aspectFill" class="add-icon"></image>
+    </view>
+  </view>
+  <view class="anniversary-card">
+    <view class="anniversary-list">
+      <view class="anniversary-item" wx:for="{{anniversaries}}" wx:key="id">
+        <view class="anniversary-icon">
+          <text class="emoji">{{item.emoji}}</text>
+        </view>
+        <view class="anniversary-info">
+          <text class="anniversary-title">{{item.title}}</text>
+          <text class="anniversary-date">{{item.date}}</text>
+        </view>
+        <view class="anniversary-days">
+          <text class="days-count">{{item.daysCount}}</text>
+          <text class="days-label">{{item.isFuture ? '天后' : '天前'}}</text>
+        </view>
+      </view>
+      
+      <view class="empty-state" wx:if="{{anniversaries.length === 0}}">
+        <text class="empty-text">还没有记录珍贵时刻</text>
+        <text class="empty-hint">点击右上角记录与灵伴的重要时光</text>
+      </view>
+    </view>
+  </view>
+  -->
+
+  <!-- 记忆记录卡片 -->
+  <view class="card-header">
+    <text class="title">陪伴记录</text>
+    <text class="record-count">共{{memoryRecords.length}}条</text>
+  </view>
+  <view class="memory-records-card">
+    <view class="records-list">
+      <view class="record-item" wx:for="{{memoryRecords}}" wx:key="id">
+        <view class="record-date">
+          <text class="month-day">{{item.monthDay}}</text>
+          <text class="year">{{item.year}}</text>
+        </view>
+        <view class="record-content">
+          <view class="record-header">
+            <text class="record-title">{{item.title}}</text>
+            <text class="record-time">{{item.time}}</text>
+          </view>
+          <text class="record-description">{{item.description}}</text>
+          <view class="record-tags" wx:if="{{item.tags && item.tags.length > 0}}">
+            <text class="tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">#{{tag}}</text>
+          </view>
+        </view>
+        <view class="record-mood">
+          <text class="mood-emoji">{{item.mood}}</text>
+        </view>
+      </view>
+      
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{memoryRecords.length === 0}}">
+        <text class="empty-text">还没有情感记忆</text>
+        <text class="empty-hint">每次与灵伴的互动都会记录温暖时光</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部安全区域 -->
+  <view class="safe-area-bottom" style="height: calc({{safeAreaBottom}}rpx + 24rpx);"></view>
+</view>
+
+<!-- 添加纪念日弹窗 - 暂时注释掉 -->
+<!--
+<view class="anniversary-modal {{showAnniversaryModal ? 'show' : ''}}" wx:if="{{showAnniversaryModal}}">
+  <view class="modal-mask" bindtap="onCloseAnniversaryModal"></view>
+  <view class="modal-content">
+    <view class="modal-header">
+      <text class="modal-title">记录珍贵时刻</text>
+      <view class="close-btn" bindtap="onCloseAnniversaryModal">
+        <text class="close-icon">×</text>
+      </view>
+    </view>
+    <view class="modal-body">
+      <view class="input-group">
+        <text class="label">时刻名称</text>
+        <input 
+          class="input" 
+          placeholder="请输入这个珍贵时刻的名称" 
+          value="{{newAnniversary.title}}"
+          bindinput="onAnniversaryTitleInput"
+        />
+      </view>
+      <view class="input-group">
+        <text class="label">选择日期</text>
+        <picker 
+          mode="date" 
+          value="{{newAnniversary.date}}" 
+          bindchange="onAnniversaryDateChange"
+          class="date-picker"
+        >
+          <view class="picker-display">
+            {{newAnniversary.date || '请选择日期'}}
+          </view>
+        </picker>
+      </view>
+      <view class="input-group">
+        <text class="label">选择表情</text>
+        <view class="emoji-list">
+          <view 
+            class="emoji-item {{newAnniversary.emoji === item ? 'selected' : ''}}" 
+            wx:for="{{emojiOptions}}" 
+            wx:key="*this"
+            bindtap="onSelectEmoji"
+            data-emoji="{{item}}"
+          >
+            <text class="emoji">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="cancel-btn" bindtap="onCloseAnniversaryModal">取消</button>
+      <button class="confirm-btn" bindtap="onSaveAnniversary">保存</button>
+    </view>
+  </view>
+</view>
+-->

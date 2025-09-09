@@ -1,1 +1,0 @@
-{"version":3,"file":"node_modules/three/src/renderers/shaders/ShaderChunk/map_pars_fragment.glsl.js","names":[],"sources":["node_modules/three/src/renderers/shaders/ShaderChunk/map_pars_fragment.glsl.js"],"sourcesContent":["export default /* glsl */`\n#ifdef USE_MAP\n\n\tuniform sampler2D map;\n\n#endif\n`;\n"],"mappings":"cAAyB","ignoreList":[]}

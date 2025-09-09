@@ -1,2 +1,0 @@
-import ChainMap from"./ChainMap.js";import RenderList from"./RenderList.js";const _chainKeys=[];class RenderLists{constructor(s){this.lighting=s,this.lists=new ChainMap}get(s,i){const t=this.lists;_chainKeys[0]=s,_chainKeys[1]=i;let e=t.get(_chainKeys);return void 0===e&&(e=new RenderList(this.lighting,s,i),t.set(_chainKeys,e)),_chainKeys.length=0,e}dispose(){this.lists=new ChainMap}}export default RenderLists;
-//# sourceMappingURL=RenderLists.js.map

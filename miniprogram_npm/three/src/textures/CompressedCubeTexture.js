@@ -1,2 +1,0 @@
-import{CubeReflectionMapping}from"../constants.js";import{CompressedTexture}from"./CompressedTexture.js";class CompressedCubeTexture extends CompressedTexture{constructor(e,s,t){super(void 0,e[0].width,e[0].height,s,t,CubeReflectionMapping),this.isCompressedCubeTexture=!0,this.isCubeTexture=!0,this.image=e}}export{CompressedCubeTexture};
-//# sourceMappingURL=CompressedCubeTexture.js.map

@@ -1,2 +1,0 @@
-import{div}from"../../math/OperatorNode.js";import{EPSILON}from"../../math/MathNode.js";import{Fn}from"../../tsl/TSLBase.js";const V_GGX_SmithCorrelated=Fn((({alpha:t,dotNL:o,dotNV:a})=>{const e=t.pow2(),m=o.mul(e.add(e.oneMinus().mul(a.pow2())).sqrt()),r=a.mul(e.add(e.oneMinus().mul(o.pow2())).sqrt());return div(.5,m.add(r).max(EPSILON))})).setLayout({name:"V_GGX_SmithCorrelated",type:"float",inputs:[{name:"alpha",type:"float"},{name:"dotNL",type:"float"},{name:"dotNV",type:"float"}]});export default V_GGX_SmithCorrelated;
-//# sourceMappingURL=V_GGX_SmithCorrelated.js.map

@@ -1,2 +1,0 @@
-import{select}from"../math/ConditionalNode.js";import{expression}from"../code/ExpressionNode.js";import{addMethodChaining}from"../tsl/TSLCore.js";export const Discard=o=>(o?select(o,expression("discard")):expression("discard")).toStack();export const Return=()=>expression("return").toStack();addMethodChaining("discard",Discard);
-//# sourceMappingURL=Discard.js.map

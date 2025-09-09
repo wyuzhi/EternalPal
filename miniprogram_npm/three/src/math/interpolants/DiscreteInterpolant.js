@@ -1,2 +1,0 @@
-import{Interpolant}from"../Interpolant.js";class DiscreteInterpolant extends Interpolant{constructor(t,e,r,n){super(t,e,r,n)}interpolate_(t){return this.copySampleValue_(t-1)}}export{DiscreteInterpolant};
-//# sourceMappingURL=DiscreteInterpolant.js.map

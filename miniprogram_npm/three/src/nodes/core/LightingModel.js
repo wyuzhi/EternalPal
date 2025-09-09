@@ -1,2 +1,0 @@
-class LightingModel{start(i){i.lightsNode.setupLights(i,i.lightsNode.getLightNodes(i)),this.indirect(i)}finish(){}direct(){}directRectArea(){}indirect(){}ambientOcclusion(){}}export default LightingModel;
-//# sourceMappingURL=LightingModel.js.map

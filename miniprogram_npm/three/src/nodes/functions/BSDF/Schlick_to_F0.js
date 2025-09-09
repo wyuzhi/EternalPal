@@ -1,2 +1,0 @@
-import{Fn,vec3}from"../../tsl/TSLBase.js";const Schlick_to_F0=Fn((({f:t,f90:e,dotVH:o})=>{const n=o.oneMinus().saturate(),c=n.mul(n),a=n.mul(c,c).clamp(0,.9999);return t.sub(vec3(e).mul(a)).div(a.oneMinus())})).setLayout({name:"Schlick_to_F0",type:"vec3",inputs:[{name:"f",type:"vec3"},{name:"f90",type:"float"},{name:"dotVH",type:"float"}]});export default Schlick_to_F0;
-//# sourceMappingURL=Schlick_to_F0.js.map

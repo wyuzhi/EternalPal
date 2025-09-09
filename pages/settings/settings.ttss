@@ -28,7 +28,7 @@
 .section {
   background-color: var(--bg-frosted);
   border-radius: var(--r-card);
-  padding: var(--p-m);
+  padding: var(--p-l);
   margin-bottom: var(--p-l);
   border: 1rpx solid var(--border-light);
   box-shadow: 0 4rpx 20rpx var(--shadow-light);

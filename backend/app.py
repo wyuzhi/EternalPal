@@ -403,6 +403,69 @@ def get_pet(pet_id):
     # 直接在根级别返回状态信息，方便前端直接获取
     return jsonify({'status': pet.status, **pet_data})
 
+# 删除宠物路由
+@app.route('/api/pets/<int:pet_id>', methods=['DELETE'])
+def delete_pet(pet_id):
+    try:
+        # 查找宠物
+        pet = Pet.query.get_or_404(pet_id)
+        
+        # 删除相关的聊天记录
+        Chat.query.filter_by(pet_id=pet_id).delete()
+        
+        # 删除宠物记录
+        db.session.delete(pet)
+        db.session.commit()
+        
+        logger.info(f"Pet {pet_id} deleted successfully")
+        return jsonify({
+            'status': 'success',
+            'message': 'Pet deleted successfully'
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error deleting pet {pet_id}: {str(e)}")
+        return jsonify({
+             'status': 'error',
+             'message': f'Failed to delete pet: {str(e)}'
+         }), 500
+
+# 删除用户所有宠物路由
+@app.route('/api/users/<int:user_id>/pets', methods=['DELETE'])
+def delete_user_pets(user_id):
+    try:
+        # 查找用户的所有宠物
+        pets = Pet.query.filter_by(user_id=user_id).all()
+        
+        if not pets:
+            return jsonify({
+                'status': 'success',
+                'message': 'No pets found for this user'
+            }), 200
+        
+        # 删除所有相关的聊天记录
+        for pet in pets:
+            Chat.query.filter_by(pet_id=pet.id).delete()
+        
+        # 删除所有宠物记录
+        Pet.query.filter_by(user_id=user_id).delete()
+        db.session.commit()
+        
+        logger.info(f"All pets for user {user_id} deleted successfully")
+        return jsonify({
+            'status': 'success',
+            'message': f'Successfully deleted {len(pets)} pets'
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error deleting pets for user {user_id}: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': f'Failed to delete pets: {str(e)}'
+        }), 500
+
 # 添加聊天记录路由
 @app.route('/api/pets/<int:pet_id>/chats', methods=['POST'])
 def add_chat(pet_id):

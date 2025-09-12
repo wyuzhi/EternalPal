@@ -119,7 +119,9 @@ Page({
     isArActive: false, // AR激活状态
     isTextChatActive: false, // 多聊激活状态
     // 测试模式
-    isMockMode: true, // 是否使用模拟模式（默认开启，方便测试）
+    isMockMode: false, // 是否使用模拟模式（默认开启，方便测试）
+    // 3D模型控制
+    modelRotationEnabled: false, // 3D模型旋转开关（默认关闭）
     // 气泡配置
     bubbleAutoHideTime: 5000, // 气泡自动消失时间/ms
     // 聊天模式状态
@@ -133,6 +135,11 @@ Page({
     userMessageAnimationClass: '', // 用户消息动画类名
     // AI回复数据
     aiReplies: [], // AI回复选项，在initQuickReplies中初始化
+    // 语音播放相关
+    enableVoiceReply: false, // 是否开启语音播放功能
+    isPlaying: false, // 是否正在播放语音
+    currentAudio: null, // 当前音频对象
+    voiceLoadingMessages: new Set(), // 正在生成语音的消息ID集合
     // 模拟聊天数据
     mockConversations: [
       { id: 1, text: "今天天气真不错呢！", isUser: false },
@@ -171,7 +178,7 @@ Page({
     
     return {
       level: level,
-      progress: Math.round(progress)
+      progress: parseFloat(progress.toFixed(2))
     };
   },
 
@@ -249,9 +256,9 @@ Page({
     
     // 先设置模拟数据
     const mockReplies = [
-      { id: 1, text: '测试3D功能', isTest: true },
-      { id: 2, text: '测试亲密度', isTest: true },
-      { id: 3, text: '切换模拟模式', isTest: true },
+      // { id: 1, text: '测试3D功能', isTest: true },
+      // { id: 2, text: '测试亲密度', isTest: true },
+      // { id: 3, text: '切换模拟模式', isTest: true },
       { id: 5, text: '哈喽，好久不见', isTest: false },
       { id: 6, text: '今天过得怎么样', isTest: false },
       { id: 7, text: '讲个笑话', isTest: false },
@@ -300,18 +307,104 @@ Page({
   initIntimacySystem: function() {
     console.log('[Companion] 初始化亲密度系统');
     
-    // TODO: 从后端获取用户的当前亲密值
-    // 这里设置一个演示用的初始值
-    const initialIntimacyPoints = 50; // 演示：设置为50点，0级50%进度
-    const intimacyInfo = this.calculateIntimacyLevel(initialIntimacyPoints);
+    const that = this;
+    const petId = this.data.petId;
     
-    this.setData({
-      intimacyPoints: initialIntimacyPoints,
-      intimacyLevel: intimacyInfo.level,
-      intimacyProgress: intimacyInfo.progress
+    if (!petId) {
+      console.log('[Companion] 宠物ID为空，使用默认亲密度值');
+      const initialIntimacyPoints = 0;
+      const intimacyInfo = this.calculateIntimacyLevel(initialIntimacyPoints);
+      
+      this.setData({
+        intimacyPoints: initialIntimacyPoints,
+        intimacyLevel: intimacyInfo.level,
+        intimacyProgress: intimacyInfo.progress
+      });
+      return;
+    }
+    
+    // 从后端获取宠物的当前亲密度
+    tt.request({
+      url: app.globalData.API_BASE_URL + '/pets/' + petId + '/intimacy',
+      method: 'GET',
+      success: function(res) {
+        console.log('[Companion] 获取亲密度结果:', res);
+        
+        if (res.data && res.data.status === 'success' && res.data.data) {
+          const intimacyPoints = res.data.data.intimacy || 0;
+          const intimacyInfo = that.calculateIntimacyLevel(intimacyPoints);
+          
+          that.setData({
+            intimacyPoints: intimacyPoints,
+            intimacyLevel: intimacyInfo.level,
+            intimacyProgress: intimacyInfo.progress
+          });
+          
+          console.log(`[Companion] 亲密度系统初始化完成: ${intimacyPoints}点, ${intimacyInfo.level}级, ${intimacyInfo.progress}%进度`);
+        } else {
+          console.log('[Companion] 获取亲密度失败，使用默认值');
+          const initialIntimacyPoints = 0;
+          const intimacyInfo = that.calculateIntimacyLevel(initialIntimacyPoints);
+          
+          that.setData({
+            intimacyPoints: initialIntimacyPoints,
+            intimacyLevel: intimacyInfo.level,
+            intimacyProgress: intimacyInfo.progress
+          });
+        }
+      },
+      fail: function(error) {
+        console.error('[Companion] 获取亲密度失败:', error);
+        // 失败时使用默认值
+        const initialIntimacyPoints = 0;
+        const intimacyInfo = that.calculateIntimacyLevel(initialIntimacyPoints);
+        
+        that.setData({
+          intimacyPoints: initialIntimacyPoints,
+          intimacyLevel: intimacyInfo.level,
+          intimacyProgress: intimacyInfo.progress
+        });
+      }
     });
+  },
+
+  // 更新宠物亲密度到后端
+  updatePetIntimacy: function(increment) {
+    const that = this;
+    const petId = this.data.petId;
     
-    console.log(`[Companion] 亲密度系统初始化完成: ${initialIntimacyPoints}点, ${intimacyInfo.level}级, ${intimacyInfo.progress}%进度`);
+    if (!petId || increment <= 0) {
+      return;
+    }
+    
+    console.log(`[Companion] 更新宠物亲密度: +${increment}`);
+    
+    tt.request({
+      url: app.globalData.API_BASE_URL + '/pets/' + petId + '/intimacy',
+      method: 'PUT',
+      data: {
+        increment: increment
+      },
+      success: function(res) {
+        console.log('[Companion] 更新亲密度结果:', res);
+        
+        if (res.data && res.data.status === 'success' && res.data.data) {
+          const newIntimacy = res.data.data.new_intimacy;
+          const actualIncrement = res.data.data.increment;
+          
+          // 更新前端显示
+          that.updateIntimacyInfo(newIntimacy);
+          
+          console.log(`[Companion] 亲密度更新成功: ${newIntimacy} (+${actualIncrement})`);
+        }
+      },
+      fail: function(error) {
+        console.error('[Companion] 更新亲密度失败:', error);
+        // 失败时仍然更新前端显示（使用本地计算）
+        const currentIntimacy = that.data.intimacyPoints;
+        that.updateIntimacyInfo(currentIntimacy + increment);
+      }
+    });
   },
 
   // 初始化欢迎消息 TODO：AI去生成开场白
@@ -395,6 +488,9 @@ Page({
     // 获取系统信息
     this.getSystemInfo();
     
+    // 初始化语音设置
+    this.initVoiceSettings();
+    
     // 初始化快捷话术
     this.initQuickReplies();
     
@@ -403,6 +499,15 @@ Page({
     
     // 初始化开场白
     this.initWelcomeMessage();
+    
+    // 从本地存储加载旋转设置
+    const savedRotationEnabled = tt.getStorageSync('modelRotationEnabled');
+    if (savedRotationEnabled !== undefined && savedRotationEnabled !== null) {
+      this.setData({
+        modelRotationEnabled: savedRotationEnabled
+      });
+      console.log('[Companion] 已加载旋转设置:', savedRotationEnabled);
+    }
     
     // 从本地存储获取用户信息
     const userInfo = tt.getStorageSync('userInfo') || {};
@@ -660,8 +765,10 @@ Page({
       console.log('[Companion] 3D模型加载成功');
       
       // 模型加载成功后启动动画循环
-      console.log('[Companion] 启动动画循环');
-      that.modelRenderer.startAnimation();
+            console.log('[Companion] 启动动画循环');
+            // 设置旋转状态
+            that.modelRenderer.setRotationEnabled(that.data.modelRotationEnabled);
+            that.modelRenderer.startAnimation();
       
       that.setData({
         modelLoaded: true,
@@ -730,6 +837,10 @@ Page({
   // 页面卸载时销毁3D渲染器
   onUnload: function() {
     console.log('[Companion] 页面卸载，清理资源');
+    
+    // 停止并清理语音播放
+    this.stopCurrentAudio();
+    
     if (this.modelRenderer) {
       console.log('[Companion] 销毁ModelRenderer实例');
       this.modelRenderer.dispose();
@@ -832,8 +943,33 @@ Page({
   onBackShow: function() {
     console.log('[Companion] 页面重新显示，继续动画');
     if (this.modelRenderer) {
+      this.modelRenderer.setRotationEnabled(this.data.modelRotationEnabled);
       this.modelRenderer.startAnimation();
     }
+  },
+  
+  // 切换3D模型旋转
+  toggleModelRotation: function() {
+    const newRotationState = !this.data.modelRotationEnabled;
+    this.setData({
+      modelRotationEnabled: newRotationState
+    });
+    
+    if (this.modelRenderer) {
+      this.modelRenderer.setRotationEnabled(newRotationState);
+    }
+    
+    // 保存设置到本地存储
+    tt.setStorageSync('modelRotationEnabled', newRotationState);
+    
+    const statusText = newRotationState ? '开启' : '关闭';
+    console.log(`[Companion] 3D模型旋转已${statusText}`);
+    
+    // tt.showToast({
+    //   title: `模型旋转已${statusText}`,
+    //   icon: 'none',
+    //   duration: 1500
+    // });
   },
     
   // 输入框内容变化
@@ -1053,7 +1189,21 @@ Page({
              
              // 处理亲密值更新
              if (aiMessage.intimacy_points !== undefined) {
+               // 使用后端返回的亲密度值直接更新显示
                that.updateIntimacyInfo(aiMessage.intimacy_points);
+               
+               // 显示亲密度增加提示
+               if (aiMessage.intimacy_increment > 0) {
+                 console.log(`[Companion] 亲密度增加: +${aiMessage.intimacy_increment}, 当前: ${aiMessage.intimacy_points}`);
+               }
+             } else {
+               // 如果AI回复没有返回亲密度，使用API更新
+               that.updatePetIntimacy(3);
+             }
+             
+             // 如果开启了语音播放，自动播放AI回复
+             if (that.data.enableVoiceReply) {
+               that.playAIReplyVoice(aiMessage.content || aiMessage.text, aiMessageId);
              }
              
              // 聊天模式下延迟执行滚动，确保DOM已经更新
@@ -1142,8 +1292,14 @@ Page({
       
       // 模拟亲密度增加
       if (mockReply.intimacyIncrement > 0) {
+        // 在模拟模式下，直接更新本地显示
         const currentIntimacy = this.data.intimacyPoints;
         this.updateIntimacyInfo(currentIntimacy + mockReply.intimacyIncrement);
+      }
+      
+      // 如果开启了语音播放，自动播放模拟AI回复
+      if (that.data.enableVoiceReply) {
+        that.playAIReplyVoice(mockReply.text, aiMessageId);
       }
       
       // 聊天模式下延迟执行滚动，确保DOM已经更新
@@ -1766,4 +1922,215 @@ Page({
       }
     }).exec();
   },
+  
+  // =========================== 语音播放相关方法 ===========================
+  
+  // 初始化语音设置
+  initVoiceSettings: function() {
+    console.log('[Companion] 初始化语音设置');
+    
+    // 从本地存储获取语音设置
+    const voiceSettings = tt.getStorageSync('voiceSettings');
+    const enableVoiceReply = voiceSettings && voiceSettings.enableVoiceReply !== undefined ? 
+                             voiceSettings.enableVoiceReply : false;
+    
+    this.setData({
+      enableVoiceReply: enableVoiceReply
+    });
+    
+    console.log('[Companion] 语音播放设置:', enableVoiceReply ? '开启' : '关闭');
+  },
+  
+  // 播放AI回复语音
+  playAIReplyVoice: function(text, messageId) {
+    console.log('[Companion] 开始播放AI回复语音:', text);
+    
+    if (!text || typeof text !== 'string') {
+      console.warn('[Companion] 无效的文本内容，跳过语音播放');
+      return;
+    }
+    
+    // 检查是否开启语音播放
+    if (!this.data.enableVoiceReply) {
+      console.log('[Companion] 语音播放功能已关闭，跳过');
+      return;
+    }
+    
+    // 停止当前正在播放的语音
+    this.stopCurrentAudio();
+    
+    // 标记正在生成语音的消息
+    this.data.voiceLoadingMessages.add(messageId);
+    this.setData({
+      voiceLoadingMessages: this.data.voiceLoadingMessages
+    });
+    
+    const that = this;
+    
+    // 调用后端文本转语音API
+    tt.request({
+      url: app.globalData.API_BASE_URL + '/tts',
+      method: 'POST',
+      data: {
+        text: text
+      },
+      success: function(res) {
+        console.log('[Companion] TTS API调用成功:', res);
+        
+        // 移除加载标记
+        that.data.voiceLoadingMessages.delete(messageId);
+        that.setData({
+          voiceLoadingMessages: that.data.voiceLoadingMessages
+        });
+        
+        if (res.data && res.data.status === 'success' && res.data.audio_url) {
+          // 播放生成的语音
+          if (res.data.is_mock) {
+            console.log('[Companion] 使用模拟音频文件');
+            // 模拟模式下显示提示，但不实际播放
+            tt.showToast({
+              title: '语音功能正在模拟中',
+              icon: 'none',
+              duration: 1000
+            });
+          } else {
+            that.playAudioFromUrl(res.data.audio_url);
+          }
+        } else {
+          console.error('[Companion] TTS API返回错误:', res.data.message || '未知错误');
+          tt.showToast({
+            title: '语音生成失败',
+            icon: 'none',
+            duration: 2000
+          });
+        }
+      },
+      fail: function(error) {
+        console.error('[Companion] TTS API调用失败:', error);
+        
+        // 移除加载标记
+        that.data.voiceLoadingMessages.delete(messageId);
+        that.setData({
+          voiceLoadingMessages: that.data.voiceLoadingMessages
+        });
+        
+        tt.showToast({
+          title: '网络错误，语音播放失败',
+          icon: 'none',
+          duration: 2000
+        });
+      }
+    });
+  },
+  
+  // 从 URL 播放音频
+  playAudioFromUrl: function(audioUrl) {
+    console.log('[Companion] 从 URL 播放音频:', audioUrl);
+    
+    if (!audioUrl) {
+      console.error('[Companion] 无效的音频URL');
+      return;
+    }
+    
+    const that = this;
+    
+    try {
+      // 创建音频对象
+      const audio = tt.createInnerAudioContext();
+      
+      audio.src = audioUrl;
+      audio.autoplay = true;
+      
+      // 设置播放事件监听
+      audio.onPlay(() => {
+        console.log('[Companion] 语音开始播放');
+        that.setData({
+          isPlaying: true,
+          currentAudio: audio
+        });
+      });
+      
+      audio.onEnded(() => {
+        console.log('[Companion] 语音播放结束');
+        that.setData({
+          isPlaying: false,
+          currentAudio: null
+        });
+        audio.destroy();
+      });
+      
+      audio.onError((error) => {
+        console.error('[Companion] 语音播放错误:', error);
+        that.setData({
+          isPlaying: false,
+          currentAudio: null
+        });
+        audio.destroy();
+        
+        tt.showToast({
+          title: '语音播放失败',
+          icon: 'none',
+          duration: 2000
+        });
+      });
+      
+      audio.onStop(() => {
+        console.log('[Companion] 语音播放停止');
+        that.setData({
+          isPlaying: false,
+          currentAudio: null
+        });
+        audio.destroy();
+      });
+      
+      // 开始播放
+      audio.play();
+      
+    } catch (error) {
+      console.error('[Companion] 创建音频对象失败:', error);
+      tt.showToast({
+        title: '语音播放器初始化失败',
+        icon: 'none',
+        duration: 2000
+      });
+    }
+  },
+  
+  // 停止当前播放的语音
+  stopCurrentAudio: function() {
+    if (this.data.currentAudio && this.data.isPlaying) {
+      console.log('[Companion] 停止当前语音播放');
+      this.data.currentAudio.stop();
+    }
+  },
+  
+  // 切换语音播放开关
+  toggleVoiceReply: function() {
+    const newVoiceState = !this.data.enableVoiceReply;
+    
+    this.setData({
+      enableVoiceReply: newVoiceState
+    });
+    
+    // 保存设置到本地存储
+    const voiceSettings = {
+      enableVoiceReply: newVoiceState
+    };
+    tt.setStorageSync('voiceSettings', voiceSettings);
+    
+    // 如果关闭语音，停止当前播放
+    if (!newVoiceState) {
+      this.stopCurrentAudio();
+    }
+    
+    const statusText = newVoiceState ? '开启' : '关闭';
+    console.log(`[Companion] 语音播放已${statusText}`);
+    
+    tt.showToast({
+      title: `宠物语音已${statusText}`,
+      icon: 'none',
+      duration: 2000
+    });
+  }
+  
 });

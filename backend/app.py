@@ -87,6 +87,7 @@ class Pet(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(20), default='pending')  # 添加状态字段
     task_id = db.Column(db.String(100), nullable=True)    # 添加任务ID字段
+    intimacy = db.Column(db.Integer, default=0)           # 亲密度字段，默认为0，无上限
 
 # 定义用户模型
 class User(db.Model):
@@ -268,7 +269,8 @@ def get_user_latest_pet(user_id):
         'preview_url': latest_pet.preview_url,
         'created_at': latest_pet.created_at.isoformat(),
         'material_url': latest_pet.material_url,
-        'texture_url': latest_pet.texture_url
+        'texture_url': latest_pet.texture_url,
+        'intimacy': latest_pet.intimacy  # 亲密度字段
     }
     
     return jsonify({'status': 'success', 'data': pet_data})
@@ -398,7 +400,8 @@ def get_pet(pet_id):
         'status': pet.status,  # 包含宠物状态信息
         'task_id': pet.task_id,  # 包含任务ID
         'material_url': pet.material_url,
-        'texture_url': pet.texture_url
+        'texture_url': pet.texture_url,
+        'intimacy': pet.intimacy  # 亲密度字段
     }
     # 直接在根级别返回状态信息，方便前端直接获取
     return jsonify({'status': pet.status, **pet_data})
@@ -601,12 +604,22 @@ def chat_with_pet(pet_id):
         ai_response = chat_with_ai(user_id, pet_profile, user_message)
         
         if isinstance(ai_response, dict):
+            # 每次聊天增加亲密度（3-8点随机）
+            intimacy_increment = random.randint(3, 8)
+            current_intimacy = pet.intimacy or 0
+            new_intimacy = current_intimacy + intimacy_increment  # 移除上限限制
+            
+            # 更新宠物亲密度
+            pet.intimacy = new_intimacy
+            
             # 格式化返回数据
             result = {
                 'id': datetime.now().timestamp(),
                 'content': ai_response.get('main_reply', '我现在有点忙，稍后再和你聊吧~'),
                 'mood_level': ai_response.get('intimacy_level', 3),
-                'text': ai_response.get('main_reply', '我现在有点忙，稍后再和你聊吧~')  # 兼容前端的text字段
+                'text': ai_response.get('main_reply', '我现在有点忙，稍后再和你聊吧~'),  # 兼容前端的text字段
+                'intimacy_points': new_intimacy,  # 返回新的亲密度值
+                'intimacy_increment': intimacy_increment  # 返回本次增加的亲密度
             }
             
             # 保存AI回复到数据库
@@ -780,9 +793,113 @@ def get_pet_task_status(pet_id):
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
-    # 创建数据库表
-    with app.app_context():
-        db.create_all()
+# 更新宠物亲密度API
+@app.route('/api/pets/<int:pet_id>/intimacy', methods=['PUT'])
+def update_pet_intimacy(pet_id):
+    """更新宠物亲密度"""
+    try:
+        data = request.json
+        intimacy_increment = data.get('increment', 0)
+        
+        # 获取宠物信息
+        pet = Pet.query.get(pet_id)
+        if not pet:
+            return jsonify({'status': 'error', 'message': '宠物不存在'}), 404
+        
+        # 更新亲密度（无上限限制）
+        old_intimacy = pet.intimacy
+        new_intimacy = old_intimacy + intimacy_increment
+        pet.intimacy = new_intimacy
+        
+        db.session.commit()
+        
+        return jsonify({
+            'status': 'success',
+            'message': '亲密度更新成功',
+            'data': {
+                'old_intimacy': old_intimacy,
+                'new_intimacy': new_intimacy,
+                'increment': new_intimacy - old_intimacy
+            }
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"更新宠物亲密度时出错: {str(e)}")
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# 获取宠物亲密度API
+@app.route('/api/pets/<int:pet_id>/intimacy', methods=['GET'])
+def get_pet_intimacy(pet_id):
+    """获取宠物亲密度"""
+    try:
+        pet = Pet.query.get(pet_id)
+        if not pet:
+            return jsonify({'status': 'error', 'message': '宠物不存在'}), 404
+        
+        return jsonify({
+            'status': 'success',
+            'data': {
+                'intimacy': pet.intimacy
+            }
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"获取宠物亲密度时出错: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# 创建数据库表
+with app.app_context():
+    db.create_all()
+
+# 文本转语音API
+@app.route('/api/tts', methods=['POST'])
+def text_to_speech():
+    """文本转语音API接口"""
+    try:
+        data = request.json
+        text = data.get('text', '')
+        
+        if not text:
+            return jsonify({'status': 'error', 'message': '文本内容不能为空'}), 400
+        
+        # 限制文本长度，避免生成过长的音频
+        if len(text) > 500:
+            return jsonify({'status': 'error', 'message': '文本内容过长，请限制在500字符以内'}), 400
+        
+        try:
+            # 使用新的TTS服务模块
+            from tts_service import generate_tts_audio
+            
+            # 生成音频
+            audio_url, filename, is_mock = generate_tts_audio(text, request.host)
+            
+            return jsonify({
+                'status': 'success',
+                'message': '语音生成成功' + ('（模拟模式）' if is_mock else ''),
+                'audio_url': audio_url,
+                'filename': filename,
+                'is_mock': is_mock
+            }), 200
+                
+        except Exception as tts_error:
+            logger.error(f"TTS生成失败: {str(tts_error)}")
+            
+            # 最后降级到模拟模式
+            return jsonify({
+                'status': 'success',
+                'message': '语音生成成功（模拟模式）',
+                'audio_url': 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav',
+                'filename': 'mock_audio.wav',
+                'is_mock': True
+            }), 200
+            
+    except Exception as e:
+        logger.error(f"文本转语音API出错: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': f'语音生成服务异常: {str(e)}'
+        }), 500
 
 # 只有在直接运行该模块时才启动应用服务器
 if __name__ == '__main__':

@@ -176,10 +176,10 @@ Page({
           that.setData({ isAuthorized: true })
           // 触发欢迎图片动画
           that.triggerWelcomeAnimation()
-          // // 用户有宠物，跳转到陪伴页面
-          // tt.navigateTo({
-          //   url: '/pages/companion/companion'
-          // })
+          // 用户有宠物，跳转到陪伴页面
+          tt.navigateTo({
+            url: '/pages/companion/companion'
+          })
         } else {
           // 用户没有宠物，停留在当前页面
           that.setData({ isAuthorized: true })

@@ -2,7 +2,7 @@ const app = getApp();
 
 Page({
   data: {
-    currentStep: 5, // 初始步骤
+    currentStep: 1, // 初始步骤
     totalSteps: 5,
     petType: '猫咪',
     petName: '',
@@ -258,7 +258,7 @@ Page({
     }
   },
 
-  // 移除3D模型加载方法
+
 
   // 选择宠物类型
   selectPetType: function(e) {
@@ -776,7 +776,7 @@ Page({
     
     // 调用删除宠物API
     tt.request({
-      url: app.globalData.API_BASE_URL + '/api/pets/' + petId,
+      url: app.globalData.API_BASE_URL + '/pets/' + petId,
       method: 'DELETE',
       success: function(res) {
         tt.hideLoading();
@@ -1027,10 +1027,12 @@ Page({
   startGenerating: function() {
     console.log('startGenerating 函数被调用')
     const that = this
+    console.log('重置进度条为0%')
     this.setData({
       currentStep: 4,
       generationProgress: 0
     })
+    console.log('进度条重置完成，当前进度:', this.data.generationProgress)
     
     // 启动生成步骤文字更新
     this.updateGenerationSteps()
@@ -1052,15 +1054,22 @@ Page({
       return
     }
 
+    // 清除之前的定时器（如果存在）
+    if (that.progressTimer) {
+      clearInterval(that.progressTimer)
+    }
+    
     // 模拟进度条更新，3分钟内只到99%
     const timer = setInterval(function() {
       let progress = that.data.generationProgress + 0.55 // 调整增长速度，3分钟(180秒)内到99%
       if (progress >= 99) {
         progress = 99 // 最多只到99%，等待轮询成功后才到100%
         clearInterval(timer) // 到达99%后停止进度条更新
+        that.progressTimer = null // 清除定时器引用
       }
+      console.log('进度条更新:', progress.toFixed(2) + '%')
       that.setData({
-        generationProgress: progress
+        generationProgress: parseFloat(progress.toFixed(2))
       })
       
       // 更新预计剩余时间
@@ -1103,10 +1112,8 @@ Page({
           user_id: userId,
         },
         success: function(res) {
-          // 清除进度条定时器
-          if (that.progressTimer) {
-            clearInterval(that.progressTimer)
-          }
+          // 不要在这里清除进度条定时器，让进度条继续运行到99%
+          // 进度条定时器会在到达99%时自动清除，或者在轮询成功时清除
           tt.hideLoading()
           console.log('宠物和3D模型生成响应:', res)
           
@@ -1123,7 +1130,6 @@ Page({
             // 202状态码表示请求已接受但处理尚未完成（3D模型生成是异步的）
             // 保存宠物ID到本地，但不立即跳转到步骤5
             that.setData({
-              generationProgress: 50, // 标记为处理中
               petId: res.data.pet_id,
               taskId: res.data.task_id,
               // 继续停留在步骤4，显示等待状态
@@ -1146,7 +1152,7 @@ Page({
               modelUrl: res.data?.model_url || res.data?.file_urls?.OBJ?.url || res.data?.file_urls?.GIF?.url || '',
               modelLoaded: true,
               generatedPetImage: '/images/pet_sample.png',
-              //currentStep: 5
+              currentStep: 5
             })
             tt.navigateTo({
               url: '/pages/companion/companion'
@@ -1166,8 +1172,24 @@ Page({
             })
           }
       },
-   
-
+      fail: function(err) {
+        // API请求失败时，清除进度条定时器并显示错误
+        if (that.progressTimer) {
+          clearInterval(that.progressTimer)
+          that.progressTimer = null
+        }
+        tt.hideLoading()
+        console.error('创建宠物失败', err)
+        tt.showToast({
+          title: '创建灵伴失败，请稍后重试',
+          icon: 'none'
+        })
+        // 重置到步骤3让用户重试
+        that.setData({
+          currentStep: 3,
+          generationProgress: 0
+        })
+      }
     })
   },
 
@@ -1189,6 +1211,8 @@ Page({
       checkCount++;
       console.log(`检查3D模型生成状态 (${checkCount}/${maxCheckCount}) - petId: ${petId}, taskId: ${taskId}`);
       
+      // 轮询过程中不再更新进度条，让startGenerating中的定时器继续工作
+      
       // 调用API检查宠物状态和模型URL
       tt.request({
         url: app.globalData.API_BASE_URL + '/pets/' + petId,
@@ -1197,6 +1221,12 @@ Page({
           if (res.data && res.data.status === 'completed') {
             // 3D模型生成完成
             clearInterval(checkInterval);
+            
+            // 清除进度条定时器
+            if (that.progressTimer) {
+              clearInterval(that.progressTimer)
+              that.progressTimer = null
+            }
             
             // 先将进度条设为100%
             that.setData({
@@ -1220,6 +1250,12 @@ Page({
             // 3D模型生成失败
             clearInterval(checkInterval);
             
+            // 清除进度条定时器
+            if (that.progressTimer) {
+              clearInterval(that.progressTimer)
+              that.progressTimer = null
+            }
+            
             that.setData({
               generationProgress: 0,
               currentStep: 4
@@ -1239,6 +1275,12 @@ Page({
       // 如果达到最大检查次数，停止轮询并提示用户
       if (checkCount >= maxCheckCount) {
         clearInterval(checkInterval);
+        
+        // 清除进度条定时器
+        if (that.progressTimer) {
+          clearInterval(that.progressTimer)
+          that.progressTimer = null
+        }
         
         that.setData({
           generationProgress: 0,

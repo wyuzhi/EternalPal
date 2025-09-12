@@ -767,84 +767,109 @@ def generate_3d_model(image_url=None, prompt=None, pet_id=None):
         # 创建3D客户端
         client = Hunyuan3DClient()
         
-        # 尝试使用图像生成3D模型（如果提供了图像）
-        if image_url:
-            try:
-                # 首先使用豆包生成新图片
-                logger.info(f"开始使用豆包生成新图片，原始图片URL: {image_url}")
-                
-                # 从数据库获取宠物信息，用于生成更准确的提示词
-                pet_prompt = """
-这是一只可爱的宠物，生成ip形象设计图。让宠物处于站立姿势、精准复刻特征，背景为纯白色，无杂色。
-毛发还原毛色，完全还原毛发走势和质感，胡须保色泽韧性。
-五官复刻眼球颜色、瞳孔形状，眼周毛走向，鼻子质感，嘴唇弧度；耳朵还原大小、弧度及内侧绒毛。
-肢体按原图比例：颈、躯干、四肢骨骼，脚掌肉垫，尾巴形态。站姿符合习性，自然协调。
-3D 渲染达高精度，毛发用 PBR 材质，显光影细节；三点布光，明暗分明。形象保留原生特征，强化细节、增强亲和力。
-"""
-                
-                # 如果有宠物ID，获取宠物信息来丰富提示词
-                if pet_id:
-                    try:
-                        if db and Pet:
-                            pet = Pet.query.get(pet_id)
-                            if pet:
-                                # 构建更详细的宠物描述提示词
-                                pet_desc_parts = []
-                                if pet.name:
-                                    pet_desc_parts.append(f"名叫{pet.name}")
-                                if pet.type:
-                                    pet_desc_parts.append(f"是一只{pet.type}")
-                                if pet.gender:
-                                    pet_desc_parts.append(f"，性别是{pet.gender}")
-                                if pet.personality:
-                                    pet_desc_parts.append(f"，性格{pet.personality}")
-                                if pet.hobby:
-                                    pet_desc_parts.append(f"，喜欢{pet.hobby}")
-                                
-                                if pet_desc_parts:
-                                    pet_prompt = f"这是一只{' '.join(pet_desc_parts)}的宠物，" + pet_prompt
-                    except Exception as db_error:
-                        logger.error(f"获取宠物信息失败: {str(db_error)}")
-                        # 继续使用默认提示词
-                
-                # 调用豆包生成新图片
-                new_image_url = generate_image_with_doubao(
-                    prompt=pet_prompt,
-                    image_input=image_url
-                )
-                
-                logger.info(f"通过豆包生成新图片成功，新图片URL: {new_image_url}")
-                
-                # 使用新生成的图片URL来生成3D模型
-                logger.info(f"尝试通过新生成的图片生成3D模型")
-                result = client.generate_from_image(new_image_url)
-                if result:
-                    logger.info(f"通过新生成的图片生成3D模型成功，任务ID: {result.get('job_id', '未知')}")
-                    return process_3d_model_result(result, pet_id)
-            except Exception as e:
-                logger.error(f"通过新生成的图片生成3D模型失败: {str(e)}")
-                # 如果新图片生成或3D模型生成失败，回退到使用原始图片
-                logger.info("回退到使用原始图片生成3D模型")
-                try:
-                    result = client.generate_from_image(image_url)
-                    if result:
-                        logger.info(f"通过原始图片生成3D模型成功，任务ID: {result.get('job_id', '未知')}")
-                        return process_3d_model_result(result, pet_id)
-                except Exception as fallback_error:
-                    logger.error(f"通过原始图片生成3D模型也失败: {str(fallback_error)}")
-                    # 如果原始图片生成也失败且提供了提示词，则尝试通过提示词生成
-                    if prompt:
-                        logger.info("回退到通过提示词生成3D模型")
-                    else:
-                        raise Exception("图像生成失败且未提供提示词")
+        # 统一先生成2D图片，再用2D图片生成3D模型
+        generated_2d_image_url = None
         
-        # 如果没有提供图像或图像生成失败，使用提示词生成
-        if prompt:
-            logger.info(f"通过提示词生成3D模型")
-            result = client.generate_from_text(prompt)
-            if result:
-                logger.info(f"通过提示词生成3D模型成功，任务ID: {result.get('job_id', '未知')}")
-                return process_3d_model_result(result, pet_id)
+        # 构建系统提示词
+        system_prompt = "Generate IP design from photo: standing pose, accurate colors, white background, detailed features. User Description:"
+        system_prompt1 = "Generate animal IP design: standing pose, accurate features, white background, detailed texture. User Description:"
+        # 获取宠物详细描述
+        pet_description = ""
+        if pet_id:
+            try:
+                if db and Pet:
+                    pet = Pet.query.get(pet_id)
+                    if pet:
+                        # 构建详细的宠物描述
+                        desc_parts = []
+                        if pet.name:
+                            desc_parts.append(f"名叫{pet.name}")
+                        if pet.type:
+                            desc_parts.append(f"是一只{pet.type}")
+                        if pet.gender:
+                            desc_parts.append(f"性别{pet.gender}")
+                        if pet.personality:
+                            desc_parts.append(f"性格{pet.personality}")
+                        if pet.hobby:
+                            desc_parts.append(f"喜欢{pet.hobby}")
+                        if pet.story:
+                            desc_parts.append(f"背景故事：{pet.story}")
+                        
+                        if desc_parts:
+                            pet_description = "，".join(desc_parts)
+            except Exception as db_error:
+                logger.error(f"获取宠物信息失败: {str(db_error)}")
+        
+        # 如果没有从数据库获取到描述，使用传入的prompt
+        if not pet_description and prompt:
+            pet_description = prompt
+        
+        # 组合最终的提示词
+        final_prompt = system_prompt
+        if pet_description:
+            final_prompt += f"\n\n宠物描述：{pet_description}"
+        
+        try:
+            # 导入并调用ge_router的generate_image函数
+            from ge_router import generate_image
+            
+            logger.info(f"开始使用ge_router生成2D图片")
+            logger.info(f"使用的提示词: {final_prompt[:200]}...")
+            
+            # 调用ge_router生成2D图片
+            if image_url:
+                final_prompt = system_prompt + pet_description
+                # 如果有参考图片，使用图片+文本模式
+                logger.info(f"图文生2d图提示词:{final_prompt}image_url:{image_url}")
+                image_bytes = generate_image(
+                    prompt_text=final_prompt,
+                    image_url=image_url
+                )
+            else:
+                # 纯文本生成模式
+                final_prompt = system_prompt1 + pet_description
+                logger.info(f"文本生2d图提示词:{final_prompt}")
+                image_bytes = generate_image(
+                    prompt_text=final_prompt
+                )
+            
+            # 保存生成的2D图片
+            import uuid
+            import time
+            timestamp = int(time.time())
+            image_filename = f"generated_2d_{timestamp}_{uuid.uuid4().hex[:8]}.png"
+            image_path = os.path.join(IMAGE_STORAGE_PATH, image_filename)
+            
+            with open(image_path, 'wb') as f:
+                f.write(image_bytes)
+            
+            # 构建图片URL
+            generated_2d_image_url = f"{APP_URL}/images/{image_filename}"
+            logger.info(f"2D图片生成成功，保存路径: {image_path}")
+            logger.info(f"2D图片URL: {generated_2d_image_url}")
+            
+        except Exception as e:
+            logger.error(f"使用ge_router生成2D图片失败: {str(e)}")
+            # 如果ge_router生成失败，回退到原有逻辑
+            if image_url:
+                logger.info("回退到使用原始图片")
+                generated_2d_image_url = image_url
+            else:
+                raise Exception(f"2D图片生成失败且无原始图片可用: {str(e)}")
+        
+        使用生成的2D图片来生成3D模型
+        if generated_2d_image_url:
+            logger.info(f"开始使用生成的2D图片生成3D模型: {generated_2d_image_url}")
+            try:
+                result = client.generate_from_image(generated_2d_image_url)
+                if result:
+                    logger.info(f"3D模型生成成功，任务ID: {result.get('job_id', '未知')}")
+                    return process_3d_model_result(result, pet_id)
+                else:
+                    raise Exception("3D模型生成返回空结果")
+            except Exception as e:
+                logger.error(f"使用2D图片生成3D模型失败: {str(e)}")
+                raise Exception(f"3D模型生成失败: {str(e)}")
         
         # 如果都失败了
         logger.error("3D模型生成失败，没有可用的生成方式")

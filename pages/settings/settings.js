@@ -14,6 +14,9 @@ Page({
       // 隐私设置
       enableDataCollection: true,
       
+      // 语音设置
+      enableVoiceReply: false, // 宠物语音回复功能
+      
       // 其他设置
     }
   },
@@ -26,16 +29,42 @@ Page({
   // 加载用户设置
   loadSettings: function() {
     const savedSettings = tt.getStorageSync('userSettings');
+    const voiceSettings = tt.getStorageSync('voiceSettings');
+    
+    // 合并设置
+    let mergedSettings = { ...this.data.settings };
+    
     if (savedSettings) {
-      this.setData({
-        settings: { ...this.data.settings, ...savedSettings }
-      });
+      mergedSettings = { ...mergedSettings, ...savedSettings };
     }
+    
+    if (voiceSettings) {
+      mergedSettings = { ...mergedSettings, ...voiceSettings };
+    }
+    
+    this.setData({
+      settings: mergedSettings
+    });
   },
 
   // 保存设置
   saveSettings: function() {
-    tt.setStorageSync('userSettings', this.data.settings);
+    // 分别保存不同类型的设置
+    const userSettings = {
+      enableNotifications: this.data.settings.enableNotifications,
+      enableSound: this.data.settings.enableSound,
+      enableVibration: this.data.settings.enableVibration,
+      enableLocation: this.data.settings.enableLocation,
+      enableDataCollection: this.data.settings.enableDataCollection
+    };
+    
+    const voiceSettings = {
+      enableVoiceReply: this.data.settings.enableVoiceReply
+    };
+    
+    tt.setStorageSync('userSettings', userSettings);
+    tt.setStorageSync('voiceSettings', voiceSettings);
+    
     tt.showToast({
       title: '设置已保存',
       icon: 'success'
@@ -229,5 +258,28 @@ Page({
       content: '使用本应用即表示您同意遵守相关条款和条件。',
       showCancel: false
     });
+  },
+  
+  // 切换语音回复设置
+  onVoiceReplyToggle: function(e) {
+    const enabled = e.detail.value;
+    this.setData({
+      'settings.enableVoiceReply': enabled
+    });
+    
+    // 立即保存语音设置
+    const voiceSettings = {
+      enableVoiceReply: enabled
+    };
+    tt.setStorageSync('voiceSettings', voiceSettings);
+    
+    const statusText = enabled ? '开启' : '关闭';
+    tt.showToast({
+      title: `宠物语音回复已${statusText}`,
+      icon: 'none',
+      duration: 2000
+    });
+    
+    console.log('[Settings] 语音回复设置已更新:', enabled);
   }
 });

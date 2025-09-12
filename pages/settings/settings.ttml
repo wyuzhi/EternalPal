@@ -26,6 +26,14 @@
         </view>
         <switch checked="{{settings.enableVibration}}" bindchange="onVibrationToggle" color="var(--primary-color)"></switch>
         </view>
+        
+        <view class="setting-item">
+        <view class="setting-info">
+            <text class="setting-label">宠物语音回复</text>
+            <text class="setting-desc">自动播放宠物回复的语音</text>
+        </view>
+        <switch checked="{{settings.enableVoiceReply}}" bindchange="onVoiceReplyToggle" color="var(--primary-color)"></switch>
+        </view>
     </view>
 
 

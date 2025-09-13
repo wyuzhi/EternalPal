@@ -3,11 +3,7 @@
 .container {
   min-height: 100vh;
   
-  background: linear-gradient(180deg, 
-    #ebf5ff 6%, 
-    #e7f6c7 40%, 
-    #f7f9df 76%, 
-    #fffbeb 100%);
+  background: var(--bg-gradient);
 
   position: relative;
   padding: var(--p-l);
@@ -133,7 +129,7 @@
 /* 通用卡片样式 */
 .calendar-card,
 .anniversary-card,
-.memory-records-card {
+.record-item {
   background: var(--bg-frosted);
   backdrop-filter: blur(10rpx);
   border-radius: var(--r-card);
@@ -142,7 +138,9 @@
   overflow: hidden;
   box-shadow: 0 4rpx 20rpx var(--shadow-light);
 }
-
+.calendar-card{
+  background: #ffebd0!important;
+}
 .memory-records-card {
   margin-bottom: 0;
 }
@@ -299,11 +297,16 @@
   border: 4rpx solid var(--primary-deep);
 }
 
-/* .day-item.checked.past .day-circle {
-  border: 4rpx solid var(--primary-dark);
-} */
+.day-item.checked.past .day-circle {
+  background: var(--primary-color);
+}
+.day-item.checked.past .day-number {
+  color: white;
+  font-weight: bold;
+}
 
-.check-dot {
+
+/* .check-dot {
   position: absolute;
   bottom: -12rpx;
   left: 50%;
@@ -313,7 +316,7 @@
   background: var(--success-color);
   border-radius: 50%;
   z-index: 3;
-}
+} */
 
 /* 纪念日卡片 */
 .add-btn {
@@ -404,15 +407,13 @@
   color: var(--text-secondary);
 }
 
-.records-list {
-  padding: var(--p-card);
-}
+/* .records-list {
+} */
 
 .record-item {
   display: flex;
   align-items: flex-start;
-  padding: var(--p-m) 0;
-  border-bottom: 1rpx solid var(--border-frosted);
+  padding: var(--p-card);
 }
 
 .record-item:last-child {

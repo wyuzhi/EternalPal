@@ -24,12 +24,12 @@
       </view>
       <text class="days-suffix"> 天啦!</text>
     </view>
-    <text class="days-subtitle">让逝去或缺席的陪伴得以延续</text>
+    <text class="days-subtitle">一起的日子，每天都算数</text>
   </view>
 
   <!-- 本月日历卡片 -->
   <view class="card-header">
-      <text class="title">日记</text>
+      <text class="title">{{petName ? petName + '的日历' : '日历'}}</text>
       <text class="month-year">{{currentYear}}年 {{currentMonth}}月</text>
   </view>
   <view class="calendar-card">
@@ -49,7 +49,7 @@
           <view class="day-circle">
             <text class="day-number" wx:if="{{!item.anniversaryEmoji}}">{{item.day}}</text>
             <text class="day-emoji" wx:if="{{item.anniversaryEmoji}}">{{item.anniversaryEmoji}}</text>
-            <view class="check-dot" wx:if="{{item.hasRecord}}"></view>
+            <!-- <view class="check-dot" wx:if="{{item.hasRecord}}"></view> -->
           </view>
         </view>
       </view>
@@ -90,7 +90,7 @@
 
   <!-- 记忆记录卡片 -->
   <view class="card-header">
-    <text class="title">陪伴记录</text>
+    <text class="title">日记</text>
     <text class="record-count">共{{memoryRecords.length}}条</text>
   </view>
   <view class="memory-records-card">

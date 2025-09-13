@@ -33,15 +33,17 @@
     <!-- 亲密度信息 -->
     <view class="intimacy-info">
       <view class="intimacy-header">
-        <image src="/images/mainPage/heart.svg" mode="aspectFit" class="heart-icon"></image>
-        <text class="intimacy-title">亲密度</text>
-        <text class="intimacy-level">Lv.{{intimacyLevel}}</text>
+        <view class="intimacy-left">
+          <image src="/images/mainPage/heart.svg" mode="aspectFit" class="heart-icon"></image>
+          <text class="intimacy-title">亲密度</text>
+          <text class="intimacy-level">Lv.{{intimacyLevel}}</text>
+        </view>
+        <text class="intimacy-points">{{intimacyPoints}}/{{(intimacyLevel + 1) * 100}}</text>
       </view>
       <view class="intimacy-progress">
         <view class="progress-bar">
           <view class="progress" style="width: {{intimacyProgress}}%;"></view>
         </view>
-        <text class="intimacy-points">{{intimacyPoints}}/{{(intimacyLevel + 1) * 100}}</text>
       </view>
     </view>
   </view>

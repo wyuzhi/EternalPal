@@ -52,7 +52,7 @@
           <view class="form-label">
             <text>我的大名</text>
           </view>
-          <input class="form-input" placeholder="请输入宠物名称" value="{{petName}}" bindinput="inputPetName" maxlength="20"/>
+          <input class="form-input" placeholder="输入我将来的名字" value="{{petName}}" bindinput="inputPetName" maxlength="20"/>
         </view>
 
         <!-- 性别和生日 -->
@@ -126,20 +126,33 @@
       </view>
     </view>
 
-    <!-- 步骤2: 我们是怎么认识的 -->
+    <!-- 步骤2: 用户故事 -->
     <view wx:if="{{currentStep === 2}}" class="step2-container">
+      <!-- 用户信息卡片 -->
+      <view class="info-card">
+        <view class="card-header">
+          <text class="card-title">你叫什么呀</text>
+        </view>
+        <input class="form-input" placeholder="原来这就是你的名字" value="{{userName}}" bindinput="inputUserName" maxlength="20"/>
+      </view>
+      <view class="info-card">
+        <view class="card-header">
+          <text class="card-title">我对你的称呼</text>
+        </view>
+        <input class="form-input" placeholder="以后我就这样叫你了哦！" value="{{userRelation}}" bindinput="inputUserRelation" maxlength="20"/>
+      </view>
 
       <!-- 我们的故事卡片 -->
       <view class="info-card">
         <view class="card-header">
-          <text class="card-title">我们是怎么认识的</text>
+          <text class="card-title">我们的故事</text>
         </view>
         
         <view class="form-group">
           <view class="input-container">
             <textarea 
               class="form-input-supplement story-textarea" 
-              placeholder="选填：讲讲我们之间的故事，暂时想不起来也没关系，我们慢慢再回忆~" 
+              placeholder="选填：讲讲我们之间的故事，暂时没有也没关系，我们以后还会有更多故事~" 
               value="{{petStory}}" 
               bindinput="inputPetStory"
               maxlength="300"
@@ -191,7 +204,7 @@
           <view class="input-container">
             <textarea 
               class="form-input-supplement"
-              placeholder="没关系，请帮我回忆一下长什么样？有什么特征？" 
+              placeholder="我长什么样？有什么特征？" 
               value="{{petDescription}}" 
               bindinput="inputPetDescription"
               maxlength="100"
@@ -210,14 +223,7 @@
       <!-- 占位图 -->
       <view class="placeholder-container">
         <view class="model-container">
-          <view class="spinner">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </view>
+          <loader size="200rpx" color="#333" speed="1.8s"></loader>
         </view>
       </view>
       <!-- 生成步骤提示 -->

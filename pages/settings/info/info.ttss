@@ -5,11 +5,7 @@
   /* background-color: var(--bg-primary); */
   min-height: 100vh;
   padding: var(--p-l);
-  background: linear-gradient(180deg, 
-    #ebf5ff 6%, 
-    #e7f6c7 40%, 
-    #f7f9df 76%, 
-    #fffbeb 100%);
+  background: var(--bg-gradient);
 }
 
 /* 应用信息头部 */

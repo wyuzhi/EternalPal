@@ -13,7 +13,7 @@
   </view>
 
   <!-- 应用简介 -->
-    <view class="section-title">应用简介</view>
+  <view class="section-title">关于我们</view>
   <view class="section">
     <view class="description-card">
       <text class="app-description">{{appInfo.description}}</text>
@@ -24,19 +24,19 @@
   <view class="section-title">核心功能</view>
   
     <view class="bento-grid">
-      <view wx:for="{{appInfo.features}}" wx:key="*this" class="bento-item {{index % 3 === 0 ? 'large' : 'small'}}">
+      <view wx:for="{{appInfo.features}}" wx:key="name" class="bento-item {{index % 3 === 0 ? 'large' : 'small'}}">
         <view class="bento-content">
           <view class="bento-icon">
-            <text class="icon-text">{{item.charAt(0)}}</text>
+            <image src="{{item.backgroundImage}}" mode="aspectFit" class="icon-image"></image>
           </view>
-          <text class="bento-title">{{item}}</text>
+          <text class="bento-title">{{item.name}}</text>
         </view>
       </view>
     </view>
   
 
   <!-- 开发时间线 -->
-  <view class="section-title">开发时间线</view>
+  <view class="section-title">更新日志</view>
   <view class="section">
     <view class="timeline-container">
       <view wx:for="{{timeline}}" wx:key="date" class="timeline-item {{item.status}}">

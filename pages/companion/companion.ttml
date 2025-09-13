@@ -117,22 +117,33 @@
   <view class="chat-flow" style="bottom: {{keyboardHeight > 0 ? (keyboardHeight + 8) + 'px' : '0px'}}; padding-bottom: {{keyboardHeight > 0 ? '0rpx' : 'calc(' + safeAreaBottom + 'rpx + 24rpx)'}};">
     
     <!-- 聊天历史区域（聊天模式） -->
-    <view class="chat-history-display" tt:if="{{chatMode}}">
-      <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollToMessageId}}" scroll-with-animation>
-        <block tt:for="{{messages}}" tt:key="id">
-          <view id="message-{{item.validId}}" class="message-container {{item.isUser ? 'user-message' : 'ai-message'}}">
-            
-            <!-- TODO：一定时间之后的聊天记录才显示时间戳 -->
-            <!-- <view class="message-time">
-              {{item.timestamp ? new Date(item.timestamp).toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) : ''}}
-            </view> -->
-            <view class="message-bubble">
-              <text>{{item.text}}</text>
+    <!-- <view class="chat-history-wrapper" wx:if="{{chatMode}}"> -->
+      <view class="chat-history-display" wx:if="{{chatMode}}">
+        <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollToMessageId}}" scroll-with-animation>
+          <!-- 顶部占位元素 -->
+          <!-- <view class="message-spacer-top"></view> -->
+          
+          <block wx:for="{{messages}}" wx:key="id">
+            <!-- 时间分隔符 -->
+            <view class="time-separator" wx:if="{{item.isSeparator}}">
+              <view class="time-separator-line"></view>
+              <text class="time-separator-text">{{item.formattedTimestamp}}</text>
+              <view class="time-separator-line"></view>
             </view>
-          </view>
-        </block>
-      </scroll-view>
-    </view>
+            
+            <!-- 消息气泡 -->
+            <view id="message-{{item.validId}}" class="message-container {{item.isUser ? 'user-message' : 'ai-message'}}" wx:if="{{!item.isSeparator}}">
+              <view class="message-bubble">
+                <text>{{item.text}}</text>
+              </view>
+            </view>
+          </block>
+          
+          <!-- 底部占位元素 -->
+          <view class="message-spacer-bottom"></view>
+        </scroll-view>
+      </view>
+    <!-- </view> -->
     
     <view class="send-container">
       <!-- 快捷话术区域 -->
@@ -156,9 +167,9 @@
       
       <!-- 功能区 -->
       <view class="function-area {{!showUIElements ? 'hide' : ''}}">
-        <view class="function-item {{isVideoActive ? 'active' : ''}}" bindtap="onVideoTap">
+        <!-- <view class="function-item {{isVideoActive ? 'active' : ''}}" bindtap="onVideoTap">
           <image src="/images/mainPage/video.svg" class="function-icon"></image>
-        </view>
+        </view> -->
         <view class="function-item" bindtap="onMicTap">
           <image src="/images/mainPage/{{isMicOn ? 'mic' : 'micOff'}}.svg" class="function-icon"></image>
         </view>

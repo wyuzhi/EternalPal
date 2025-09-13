@@ -30,8 +30,11 @@ Page({
             validId: that.getValidScrollId(msg.id)
           }));
           
+          // 添加时间分隔符
+          const messagesWithSeparators = that.addTimeSeparators(messagesWithValidIds);
+          
           that.setData({
-            messages: messagesWithValidIds
+            messages: messagesWithSeparators
           });
           
           // 延迟执行滚动，确保DOM已经更新
@@ -74,6 +77,96 @@ Page({
     validId = validId + '_' + timestamp;
     
     return validId;
+  },
+
+  // 格式化时间戳显示
+  formatTimestamp: function(timestamp) {
+    if (!timestamp) return '';
+    
+    const now = new Date();
+    const messageDate = new Date(timestamp);
+    
+    // 获取今天的开始时间（00:00:00）
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+    const dayBeforeYesterday = new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000);
+    
+    // 获取消息的日期（不包含时间）
+    const messageDay = new Date(messageDate.getFullYear(), messageDate.getMonth(), messageDate.getDate());
+    
+    if (messageDay.getTime() === today.getTime()) {
+      // 今天：显示小时分钟
+      return messageDate.toLocaleTimeString('zh-CN', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: false 
+      });
+    } else if (messageDay.getTime() === yesterday.getTime()) {
+      // 昨天：显示 "昨天 mm-dd"
+      const month = String(messageDate.getMonth() + 1).padStart(2, '0');
+      const day = String(messageDate.getDate()).padStart(2, '0');
+      return `昨天 ${month}-${day}`;
+    } else if (messageDay.getTime() === dayBeforeYesterday.getTime()) {
+      // 前天：显示 "前天 mm-dd"
+      const month = String(messageDate.getMonth() + 1).padStart(2, '0');
+      const day = String(messageDate.getDate()).padStart(2, '0');
+      return `前天 ${month}-${day}`;
+    } else {
+      // 前天之前：显示 "yyyy-mm-dd"
+      const year = messageDate.getFullYear();
+      const month = String(messageDate.getMonth() + 1).padStart(2, '0');
+      const day = String(messageDate.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+  },
+
+  // 判断是否需要显示时间戳
+  shouldShowTimestamp: function(currentMessage, previousMessage) {
+    if (!currentMessage || !currentMessage.timestamp) return false;
+    if (!previousMessage || !previousMessage.timestamp) return true;
+    
+    const currentTime = new Date(currentMessage.timestamp);
+    const previousTime = new Date(previousMessage.timestamp);
+    
+    // 如果时间差超过5分钟，显示时间戳
+    const timeDiff = currentTime.getTime() - previousTime.getTime();
+    const fiveMinutes = 5 * 60 * 1000; // 5分钟的毫秒数
+    
+    return timeDiff > fiveMinutes;
+  },
+
+  // 为消息数组添加时间分隔符
+  addTimeSeparators: function(messages) {
+    if (!messages || messages.length === 0) return [];
+    
+    // 首先过滤出真正的消息（不是分隔符）
+    const realMessages = messages.filter(msg => !msg.isSeparator);
+    
+    const result = [];
+    
+    for (let i = 0; i < realMessages.length; i++) {
+      const currentMessage = realMessages[i];
+      const previousMessage = i > 0 ? realMessages[i - 1] : null;
+      
+      // 如果需要显示时间戳，先添加时间分隔符
+      if (this.shouldShowTimestamp(currentMessage, previousMessage)) {
+        result.push({
+          id: `time-separator-${currentMessage.timestamp}`,
+          type: 'time-separator',
+          timestamp: currentMessage.timestamp,
+          formattedTimestamp: this.formatTimestamp(currentMessage.timestamp),
+          isSeparator: true
+        });
+      }
+      
+      // 添加当前消息
+      result.push({
+        ...currentMessage,
+        isSeparator: false
+      });
+    }
+    
+    return result;
   },
   data: {
     petName: '',
@@ -1112,16 +1205,22 @@ Page({
     
     // 添加用户消息到历史记录
     const userId = Date.now();
-    const newMessages = this.data.messages.concat({
+    const currentTimestamp = new Date().getTime();
+    
+    const newUserMessage = {
       id: userId,
       validId: this.getValidScrollId(userId),
       text: message,
       isUser: true,
-      timestamp: new Date().getTime()
-    });
+      timestamp: currentTimestamp
+    };
+    
+    // 将新消息添加到现有消息数组，然后重新添加时间分隔符
+    const updatedMessages = this.data.messages.concat(newUserMessage);
+    const messagesWithSeparators = this.addTimeSeparators(updatedMessages);
     
     this.setData({
-      messages: newMessages
+      messages: messagesWithSeparators
     });
     
     // 用户消息显示后立即滚动到最新消息
@@ -1175,16 +1274,22 @@ Page({
              
              // 更新消息历史记录
              const aiMessageId = aiMessage.id || Date.now() + 1;
-             const updatedMessages = that.data.messages.concat({
+             const aiTimestamp = new Date().getTime();
+             
+             const newAiMessage = {
                id: aiMessageId,
                validId: that.getValidScrollId(aiMessageId),
                text: aiMessage.content || aiMessage.text,
                isUser: false,
-               timestamp: new Date().getTime()
-             });
+               timestamp: aiTimestamp
+             };
+             
+             // 将新消息添加到现有消息数组，然后重新添加时间分隔符
+             const updatedMessages = that.data.messages.concat(newAiMessage);
+             const messagesWithSeparators = that.addTimeSeparators(updatedMessages);
              
              that.setData({
-               messages: updatedMessages
+               messages: messagesWithSeparators
              });
              
              // 处理亲密值更新
@@ -1278,16 +1383,22 @@ Page({
       
       // 更新消息历史记录
       const aiMessageId = Date.now() + 1;
-      const updatedMessages = this.data.messages.concat({
+      const aiTimestamp = new Date().getTime();
+      
+      const newAiMessage = {
         id: aiMessageId,
         validId: this.getValidScrollId(aiMessageId),
         text: mockReply.text,
         isUser: false,
-        timestamp: new Date().getTime()
-      });
+        timestamp: aiTimestamp
+      };
+      
+      // 将新消息添加到现有消息数组，然后重新添加时间分隔符
+      const updatedMessages = this.data.messages.concat(newAiMessage);
+      const messagesWithSeparators = this.addTimeSeparators(updatedMessages);
       
       this.setData({
-        messages: updatedMessages
+        messages: messagesWithSeparators
       });
       
       // 模拟亲密度增加

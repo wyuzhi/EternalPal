@@ -1,0 +1,13 @@
+{
+    "Status": "DONE",
+    "ErrorCode": "",
+    "ErrorMessage": "",
+    "ResultFile3Ds": [
+        {
+            "Type": "OBJ",
+            "Url": "https://hunyuan-prod-1258344699.cos.ap-guangzhou.tencentcos.cn/3d/output/1314247608/bf6528b8-07e9-4d6e-95f3-c23bfee98bb4_0.zip?q-sign-algorithm=sha1&q-ak=AKIDpRovliU1IJ5ctufBSVIq8AwTlnZ5MN8d&q-sign-time=1756568765%3B1756655165&q-key-time=1756568765%3B1756655165&q-header-list=host&q-url-param-list=&q-signature=f662f549765cc1e5c6f50ae387ab1cf3e9281397",
+            "PreviewImageUrl": "https://hunyuan-prod-1258344699.cos.ap-guangzhou.tencentcos.cn/%2F3d/output/1314247608/preview_bf6528b8-07e9-4d6e-95f3-c23bfee98bb4_0.png?q-sign-algorithm=sha1&q-ak=AKIDpRovliU1IJ5ctufBSVIq8AwTlnZ5MN8d&q-sign-time=1756568765%3B1756655165&q-key-time=1756568765%3B1756655165&q-header-list=host&q-url-param-list=&q-signature=6e9d36867a5d4a4d44614603628cb6fd0a8898be"
+        }
+    ],
+    "RequestId": "bc491c12-1085-4f2b-a4bc-bdaf90a17169"
+}

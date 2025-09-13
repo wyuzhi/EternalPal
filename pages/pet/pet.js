@@ -70,10 +70,11 @@ Page({
     isDisliked: false, // 是否不喜欢
     likeBtnAnimating: false, // 点赞状态
     dislikeBtnAnimating: false, // 点踩状态
-    modelLoaded: false, // 3D模型是否已加载
-    modelUrl: '', // 3D模型URL
+    petId: null, // 宠物ID
+    previewUrl: '', // 宠物预览图片URL
     supplementPersonality: '', // 补充性格描述
     supplementHobby: '', // 补充爱好描述
+    showRegenerateModal: false, // 是否显示重新生成弹窗
   },
   
   // 从数据库查询指定用户的最新宠物信息
@@ -99,8 +100,7 @@ Page({
           that.setData({
             generationProgress: 100,
             petId: latestPet.id,
-            modelUrl: latestPet.model_url || '',
-            modelLoaded: true,
+            previewUrl: latestPet.preview_url || '',
             generatedPetImage: latestPet.generated_image || '/images/pet_sample.png',
             currentStep: 5
           });
@@ -138,10 +138,8 @@ Page({
     };
     
     // 构建默认的模型URL
-    const defaultModelUrl = '/models/' + (petInfo.petType === '狗狗' ? 'dog' : 'cat') + '.glb';
-    
-    // 直接创建宠物记录并跳转到步骤5
-    that.createPetWithGeneratedModel(petInfo, defaultModelUrl);
+    // 创建宠物记录并跳转到步骤5
+      that.createPetWithGeneratedModel(petInfo, '');
   },
 
   
@@ -242,21 +240,16 @@ Page({
   },
 
   onReady: function() {
-    // 页面渲染完成后，如果当前是步骤5，则加载3D模型
-    if (this.data.currentStep === 5) {
-      this.load3DModel()
-    } else if (this.data.currentStep === 4) {
-      // 如果当前是步骤4，则创建粒子效果
+    // 页面渲染完成后，如果当前是步骤4，则创建粒子效果
+    if (this.data.currentStep === 4) {
       this.createParticleEffect()
     }
   },
 
-  // 监听步骤变化，当进入步骤5时加载3D模型，进入步骤4时创建粒子效果
+  // 监听步骤变化，当进入步骤4时创建粒子效果
   observers: {
     'currentStep': function(newStep) {
-      if (newStep === 5 && !this.data.modelLoaded) {
-        this.load3DModel()
-      } else if (newStep === 4) {
+      if (newStep === 4) {
         this.createParticleEffect()
       } else {
         // 离开步骤4时，清理粒子效果
@@ -265,27 +258,7 @@ Page({
     }
   },
 
-  // 加载3D模型
-  load3DModel: function() {
-    // 模拟加载3D模型
-    this.setData({
-      modelUrl: '/models/' + this.data.petType + '.glb', // 假设的模型路径
-      modelLoaded: true
-    })
 
-    // 在实际应用中，这里会初始化3D引擎并加载模型
-    // 例如使用Three.js、Babylon.js等
-    console.log('开始加载3D模型:', this.data.modelUrl)
-
-    // 这里只是模拟，实际项目中需要根据使用的3D引擎进行相应的实现
-    const modelContainer = tt.createSelectorQuery().select('#modelContainer')
-    modelContainer.boundingClientRect((rect) => {
-      if (rect) {
-        console.log('3D模型容器尺寸:', rect.width, 'x', rect.height)
-        // 在这里初始化3D引擎并加载模型到容器中
-      }
-    }).exec()
-  },
 
   // 选择宠物类型
   selectPetType: function(e) {
@@ -766,35 +739,101 @@ Page({
 
   // 不满意，重新生成
   unsatisfied: function() {
+    this.setData({
+      showRegenerateModal: true
+    });
+  },
+
+  // 关闭重新生成弹窗
+  closeRegenerateModal: function() {
+    this.setData({
+      showRegenerateModal: false
+    });
+  },
+
+  // 确认重新生成
+  confirmRegenerate: function() {
+    this.setData({
+      showRegenerateModal: false
+    });
+    this.deletePetAndRegenerate();
+  },
+
+  // 删除宠物并重新生成
+  deletePetAndRegenerate: function() {
     const that = this;
+    const petId = that.data.petId;
     
-    // 先弹出确认弹窗
-    tt.showModal({
-      title: '重新生成',
-      content: '确定要重新生成灵伴吗？',
-      confirmText: '重新生成',
-      cancelText: '取消',
+    if (!petId) {
+      // 如果没有petId，直接重新生成
+      that.resetToStep1();
+      return;
+    }
+    
+    tt.showLoading({
+      title: '正在删除...',
+    });
+    
+    // 调用删除宠物API
+    tt.request({
+      url: app.globalData.API_BASE_URL + '/pets/' + petId,
+      method: 'DELETE',
       success: function(res) {
-        if (res.confirm) {
-          // 用户确认，开始重新生成
-          that.setData({
-            currentStep: 4,
-            generationProgress: 0,
-            isLiked: false,
-            isDisliked: false,
-            likeBtnAnimating: false,
-            dislikeBtnAnimating: false
-          });
-          that.startGenerating();
+        tt.hideLoading();
+        console.log('删除宠物成功:', res);
+        
+        if (res.data && res.data.status === 'success') {
+          // 删除成功，重置到步骤4并开始重新生成
+          that.resetToStep1();
           
           tt.showToast({
             title: '开始重新生成',
             icon: 'success'
           });
+        } else {
+          tt.showToast({
+            title: '删除失败，请重试',
+            icon: 'none'
+          });
         }
-        // 如果用户取消，不做任何操作
+      },
+      fail: function(error) {
+        tt.hideLoading();
+        console.error('删除宠物失败:', error);
+        
+        tt.showToast({
+          title: '删除失败，请重试',
+          icon: 'none'
+        });
       }
     });
+  },
+
+  // 重置到步骤1让用户重新填写宠物信息
+  resetToStep1: function() {
+    this.setData({
+      currentStep: 1,
+      generationProgress: 0,
+      isLiked: false,
+      isDisliked: false,
+      likeBtnAnimating: false,
+      dislikeBtnAnimating: false,
+      petId: '', // 清空petId
+      previewUrl: '',
+      // 清空用户填写的宠物信息，让用户重新填写
+      petName: '',
+      petGender: 'male',
+      petBirthday: '',
+      selectedPersonalities: [],
+      selectedHobbies: [],
+      petStory: '',
+      petPhotos: [],
+      petDescription: '',
+      supplementPersonality: '',
+      supplementHobby: ''
+    });
+    // 不再自动开始生成，让用户重新填写信息
+    // this.startGenerating();
   },
 
   // 切换喜欢状态（保留以兼容旧代码）
@@ -920,7 +959,7 @@ Page({
  
   
   // 使用生成的模型创建宠物记录
-  createPetWithGeneratedModel: function(taskInfo, modelUrl) {
+  createPetWithGeneratedModel: function(taskInfo, unusedParam) {
     const that = this
     
     tt.showLoading({
@@ -942,7 +981,7 @@ Page({
         hobby: that.data.selectedHobbies.join(','),
         story: that.data.petDescription,
         generated_image: that.data.petPhotos && that.data.petPhotos.length > 0 ? that.data.petPhotos[0] : '',
-        model_url: modelUrl,
+        // 移除model_url字段
         user_id: taskInfo.userId
         // TODO: 初始化反馈相关字段
         // total_likes: 0,
@@ -957,8 +996,7 @@ Page({
           that.setData({
             generationProgress: 100,
             petId: res.data?.pet_id || 'unknown',
-            modelUrl: modelUrl,
-            modelLoaded: true,
+            // 移除3D模型相关字段
             generatedPetImage: '/images/pet_sample.png',
             currentStep: 5
           })
@@ -989,10 +1027,12 @@ Page({
   startGenerating: function() {
     console.log('startGenerating 函数被调用')
     const that = this
+    console.log('重置进度条为0%')
     this.setData({
       currentStep: 4,
       generationProgress: 0
     })
+    console.log('进度条重置完成，当前进度:', this.data.generationProgress)
     
     // 启动生成步骤文字更新
     this.updateGenerationSteps()
@@ -1014,14 +1054,22 @@ Page({
       return
     }
 
-    // 模拟进度条更新 toDo: 接上真实的生成进度
+    // 清除之前的定时器（如果存在）
+    if (that.progressTimer) {
+      clearInterval(that.progressTimer)
+    }
+    
+    // 模拟进度条更新，3分钟内只到99%
     const timer = setInterval(function() {
-      let progress = that.data.generationProgress + 2
-      if (progress >= 100) {
-        progress = 100
+      let progress = that.data.generationProgress + 0.55 // 调整增长速度，3分钟(180秒)内到99%
+      if (progress >= 99) {
+        progress = 99 // 最多只到99%，等待轮询成功后才到100%
+        clearInterval(timer) // 到达99%后停止进度条更新
+        that.progressTimer = null // 清除定时器引用
       }
+      console.log('进度条更新:', progress.toFixed(2) + '%')
       that.setData({
-        generationProgress: progress
+        generationProgress: parseFloat(progress.toFixed(2))
       })
       
       // 更新预计剩余时间
@@ -1039,23 +1087,12 @@ Page({
       that.setData({
         estimatedTimeRemaining: remainingTime
       })
-    }, 500)
+    }, 1000) // 改为每秒更新一次
 
  
     
-    // 设置3分钟(180秒)后自动跳转至步骤5
-    const autoRedirectTimer = setTimeout(function() {
-      console.log('3分钟自动计时结束，尝试从数据库查询宠物信息并跳转到步骤5')
-      
-      // 清除进度条计时器
-      clearInterval(timer)
-      
-      // 从数据库查询最新的宠物信息和模型URL
-      that.queryLatestPetFromDatabase(userId)
-      tt.navigateTo({
-        url: '/pages/companion/companion'
-      })
-    }, 180000) // 180000毫秒 = 3分钟
+    // 保存定时器引用，用于后续清理
+    that.progressTimer = timer
     
     // 调用新的集成API，先创建3D模型再保存宠物
     // 增加超时时间到10分钟，因为3D模型生成可能需要较长时间
@@ -1075,9 +1112,8 @@ Page({
           user_id: userId,
         },
         success: function(res) {
-          clearInterval(timer)
-          // 清除5分钟自动跳转计时器
-          clearTimeout(autoRedirectTimer)
+          // 不要在这里清除进度条定时器，让进度条继续运行到99%
+          // 进度条定时器会在到达99%时自动清除，或者在轮询成功时清除
           tt.hideLoading()
           console.log('宠物和3D模型生成响应:', res)
           
@@ -1094,7 +1130,6 @@ Page({
             // 202状态码表示请求已接受但处理尚未完成（3D模型生成是异步的）
             // 保存宠物ID到本地，但不立即跳转到步骤5
             that.setData({
-              generationProgress: 50, // 标记为处理中
               petId: res.data.pet_id,
               taskId: res.data.task_id,
               // 继续停留在步骤4，显示等待状态
@@ -1117,7 +1152,7 @@ Page({
               modelUrl: res.data?.model_url || res.data?.file_urls?.OBJ?.url || res.data?.file_urls?.GIF?.url || '',
               modelLoaded: true,
               generatedPetImage: '/images/pet_sample.png',
-              //currentStep: 5
+              currentStep: 5
             })
             tt.navigateTo({
               url: '/pages/companion/companion'
@@ -1137,8 +1172,24 @@ Page({
             })
           }
       },
-   
-
+      fail: function(err) {
+        // API请求失败时，清除进度条定时器并显示错误
+        if (that.progressTimer) {
+          clearInterval(that.progressTimer)
+          that.progressTimer = null
+        }
+        tt.hideLoading()
+        console.error('创建宠物失败', err)
+        tt.showToast({
+          title: '创建灵伴失败，请稍后重试',
+          icon: 'none'
+        })
+        // 重置到步骤3让用户重试
+        that.setData({
+          currentStep: 3,
+          generationProgress: 0
+        })
+      }
     })
   },
 
@@ -1160,6 +1211,8 @@ Page({
       checkCount++;
       console.log(`检查3D模型生成状态 (${checkCount}/${maxCheckCount}) - petId: ${petId}, taskId: ${taskId}`);
       
+      // 轮询过程中不再更新进度条，让startGenerating中的定时器继续工作
+      
       // 调用API检查宠物状态和模型URL
       tt.request({
         url: app.globalData.API_BASE_URL + '/pets/' + petId,
@@ -1169,16 +1222,25 @@ Page({
             // 3D模型生成完成
             clearInterval(checkInterval);
             
+            // 清除进度条定时器
+            if (that.progressTimer) {
+              clearInterval(that.progressTimer)
+              that.progressTimer = null
+            }
+            
+            // 先将进度条设为100%
             that.setData({
               generationProgress: 100,
-              modelUrl: res.data.model_url || res.data.file_urls?.OBJ?.url || res.data.file_urls?.GIF?.url || '',
-              modelLoaded: true,
+              previewUrl: res.data.preview_url || '',
               generatedPetImage: res.data.generated_image || '/images/pet_sample.png',
-              //currentStep: 5
             })
-            tt.navigateTo({
-              url: '/pages/companion/companion'
-            })
+            
+            // 延迟一下让用户看到100%的进度条，然后跳转
+            setTimeout(() => {
+              that.setData({
+                currentStep: 5
+              })
+            }, 1000)
             
             tt.showToast({
               title: '3D模型生成成功！',
@@ -1187,6 +1249,12 @@ Page({
           } else if (res.data && res.data.status === 'failed') {
             // 3D模型生成失败
             clearInterval(checkInterval);
+            
+            // 清除进度条定时器
+            if (that.progressTimer) {
+              clearInterval(that.progressTimer)
+              that.progressTimer = null
+            }
             
             that.setData({
               generationProgress: 0,
@@ -1207,6 +1275,12 @@ Page({
       // 如果达到最大检查次数，停止轮询并提示用户
       if (checkCount >= maxCheckCount) {
         clearInterval(checkInterval);
+        
+        // 清除进度条定时器
+        if (that.progressTimer) {
+          clearInterval(that.progressTimer)
+          that.progressTimer = null
+        }
         
         that.setData({
           generationProgress: 0,
@@ -1267,6 +1341,10 @@ Page({
     // 清除所有定时器
     if (this.checkInterval) {
       clearInterval(this.checkInterval)
+    }
+    
+    if (this.progressTimer) {
+      clearInterval(this.progressTimer)
     }
     
     if (this.stepsInterval) {

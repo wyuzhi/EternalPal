@@ -22,6 +22,7 @@ class ModelRenderer {
     // 动画相关
     this.clock = null;
     this.animationEnabled = true;
+    this.rotationEnabled = false; // 默认禁用旋转
     this.animationIntensity = 1.0; // 0-2 建议
     this.baseModelY = 0;
     this.baseModelScale = 1;
@@ -42,8 +43,9 @@ class ModelRenderer {
               const isPOT = (n) => (n & (n - 1)) === 0;
               const pot = isPOT(img.width) && isPOT(img.height);
               tex.flipY = this.textureFlipY ? true : false;
-              tex.generateMipmaps = !!pot;
-              tex.minFilter = pot ? this.THREE.LinearMipmapLinearFilter : this.THREE.LinearFilter;
+              // 优化：禁用mipmap生成以提高加载速度
+              tex.generateMipmaps = false;
+              tex.minFilter = this.THREE.LinearFilter;
               tex.magFilter = this.THREE.LinearFilter;
               // 使用边缘夹取，避免UV超出时出现平铺花纹
               tex.wrapS = this.THREE.ClampToEdgeWrapping;
@@ -53,9 +55,10 @@ class ModelRenderer {
               } else if (this.THREE.sRGBEncoding) {
                 tex.encoding = this.THREE.sRGBEncoding;
               }
+              // 优化：降低各向异性过滤以提高性能
               const caps = this.renderer && this.renderer.capabilities;
               if (caps && caps.getMaxAnisotropy) {
-                tex.anisotropy = Math.min(8, caps.getMaxAnisotropy());
+                tex.anisotropy = Math.min(2, caps.getMaxAnisotropy());
               }
               tex.needsUpdate = true;
               resolve(tex);
@@ -275,9 +278,10 @@ class ModelRenderer {
         const center = box.getCenter(new this.THREE.Vector3());
         const size = box.getSize(new this.THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 3.8 / maxDim; // 再放大一些
+        const scale = 4.2 / maxDim; // 进一步放大模型
         object.scale.setScalar(scale);
         object.position.sub(center.multiplyScalar(scale));
+        object.position.y += 0.3; // 向上移动模型
         this.camera.position.set(0, 1, 4);
         this.camera.lookAt(0, 0, 0);
 
@@ -338,8 +342,10 @@ class ModelRenderer {
         const t = (this._idleT || 0) + delta;
         this._idleT = t;
         const intensity = this.animationIntensity;
-        // 缓慢自转（可读性强）
-        this.model.rotation.y += 0.3 * delta * intensity;
+        // 缓慢自转（可读性强）- 可控制开关
+        if (this.rotationEnabled) {
+          this.model.rotation.y += 0.3 * delta * intensity;
+        }
         // 上下浮动
         const bob = Math.sin(t * 2.0) * 0.06 * intensity; // 约6%单位
         this.model.position.y = this.baseModelY + bob;
@@ -351,15 +357,14 @@ class ModelRenderer {
       
       // 无测试立方体
       
-      // 每120帧输出一次调试信息，降低日志干扰
-      if (frameCount % 120 === 0) {
+      // 优化：减少日志输出频率，每300帧输出一次
+      if (frameCount % 300 === 0) {
         console.log('[ModelRenderer] 渲染帧:', frameCount, '场景对象数:', this.scene.children.length);
         if (this.model) {
           console.log('[ModelRenderer] 模型旋转:', this.model.rotation.y, '位置:', this.model.position, '缩放:', this.model.scale);
           console.log('[ModelRenderer] 模型可见性:', this.model.visible, '子对象数:', this.model.children.length);
         }
-        // 无测试立方体日志
-        console.log('[ModelRenderer] 相机位置:', this.camera.position, '目标:', this.camera.getWorldDirection(new this.THREE.Vector3()));
+        console.log('[ModelRenderer] 相机位置:', this.camera.position);
       }
       
       // 渲染到当前渲染缓冲
@@ -424,6 +429,18 @@ class ModelRenderer {
     } else {
       console.log('[ModelRenderer] 没有模型可以重置');
     }
+  }
+
+  // 设置旋转开关
+  setRotationEnabled(enabled) {
+    this.rotationEnabled = enabled;
+    console.log('[ModelRenderer] 旋转功能', enabled ? '已开启' : '已关闭');
+  }
+  
+  // 设置动画强度
+  setAnimationIntensity(intensity) {
+    this.animationIntensity = Math.max(0, Math.min(2, intensity));
+    console.log('[ModelRenderer] 动画强度设置为:', this.animationIntensity);
   }
 
   dispose() {

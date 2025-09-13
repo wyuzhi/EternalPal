@@ -254,15 +254,8 @@
       <!-- 占位图容器 -->
       <view class="placeholder-container">
         <view class="model-container step5-model-display">
-          <!-- 3D模型展示区域 -->
-          <view class="model-3d-wrapper" wx:if="{{modelUrl}}">
-            <!-- 这里假设使用小程序的3D渲染能力，具体实现需要根据实际框架调整 -->
-            <!-- 显示3D模型图片预览 -->
-            <image src="{{modelUrl}}" mode="aspectFit" class="model-image"></image>
-            <!-- <text class="model-3d-label">3D模型</text> -->
-          </view>
-          <!-- 当3D模型不可用时显示普通图片 -->
-          <image src="{{generatedPetImage}}" mode="aspectFit" class="model-image" wx:else></image>
+          <!-- 宠物预览图片展示区域 -->
+          <image src="{{previewUrl || generatedPetImage}}" mode="aspectFit" class="model-image"></image>
         </view>
       </view>
       
@@ -281,6 +274,30 @@
         <text class="unsatisfied-text" bindtap="unsatisfied" wx:if="{{isDisliked}}">对结果不满意</text>
       </view>
       
+    </view>
+  </view>
+
+  <!-- 重新生成确认弹窗 -->
+  <view class="regenerate-modal-overlay" wx:if="{{showRegenerateModal}}" bindtap="closeRegenerateModal">
+    <view class="regenerate-modal" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">重新生成灵伴</text>
+        <view class="modal-close" bindtap="closeRegenerateModal">
+          <image src="/images/guide/close.svg" class="close-icon"></image>
+        </view>
+      </view>
+      <view class="modal-content">
+        <text class="modal-text">当前的灵伴将被删除，确定要重新生成吗？</text>
+        <text class="modal-subtitle">重新生成后，您将回到第一步重新设置灵伴信息</text>
+      </view>
+      <view class="modal-actions">
+        <button class="modal-btn cancel-btn" bindtap="closeRegenerateModal">
+          <text class="btn-text">取消</text>
+        </button>
+        <button class="modal-btn confirm-btn" bindtap="confirmRegenerate">
+          <text class="btn-text">重新生成</text>
+        </button>
+      </view>
     </view>
   </view>
 

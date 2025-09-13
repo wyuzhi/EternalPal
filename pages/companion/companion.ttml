@@ -27,7 +27,7 @@
         </view>
       </view>
       <!-- 亲密度 -->
-      <view class="intimacy {{intimacyModuleClass}}" wx:if="{{showIntimacyModule}}">
+      <view class="intimacy {{intimacyModuleClass}}" tt:if="{{showIntimacyModule}}">
         <view class="heart-container">
           <image src="/images/mainPage/heart.svg" mode="aspectFit" class="heart-icon"></image>
           <text class="intimacy-level">{{intimacyLevel}}</text>
@@ -37,7 +37,7 @@
             <view class="progress" style="width: {{intimacyProgress}}%;"></view>
           </view>
           <!-- 亲密值增加提示 -->
-          <view class="intimacy-increment {{intimacyIncrementClass}}" wx:if="{{showIntimacyIncrement}}">+{{intimacyIncrement}}</view>
+          <view class="intimacy-increment {{intimacyIncrementClass}}" tt:if="{{showIntimacyIncrement}}">+{{intimacyIncrement}}</view>
         </view>
       </view>
     </view>
@@ -47,10 +47,10 @@
   </view>
 
   <!-- 菜单遮罩层 -->
-  <view class="menu-mask" wx:if="{{showFloatMenu}}" bindtap="onMenuMaskTap"></view>
+  <view class="menu-mask" tt:if="{{showFloatMenu}}" bindtap="onMenuMaskTap"></view>
   
   <!-- 浮动功能菜单 -->
-  <view class="float-menu {{menuAnimationClass}}" wx:if="{{showFloatMenu}}">
+  <view class="float-menu {{menuAnimationClass}}" tt:if="{{showFloatMenu}}">
     <button class="menu-item" bindtap="onMenuItemTap" data-action="info">
       <image src="/images/mainPage/list/animalFile.svg" class="menu-item-icon" mode="aspectFit"></image>
       <text>档案</text>
@@ -68,9 +68,9 @@
   
 
   <!-- 宠物展示区（宠物模式） -->
-  <view class="model-display" wx:if="{{!chatMode}}">
+  <view class="model-display" tt:if="{{!chatMode}}">
     <!-- 当前对话气泡 - 显示在模型上方 -->
-    <view class="current-chat-bubble {{bubbleAnimationClass}}" wx:if="{{currentMessage}}">
+    <view class="current-chat-bubble {{bubbleAnimationClass}}" tt:if="{{currentMessage}}">
       <view class="bubble-content">
         <text>{{currentMessage}}</text>
       </view>
@@ -87,27 +87,27 @@
           bindtouchmove="handleCanvasTouchMove"
           bindtouchend="handleCanvasTouchEnd"
           bindtap="handleCanvasDoubleTap"
-          wx:if="{{!isImageMode}}">
+          tt:if="{{!isImageMode}}">
         </canvas>
         <!-- 如果3D模型加载失败，则显示图片 -->
-        <view wx:if="{{isImageMode}}" class="is-image-mode-container">
+        <view tt:if="{{isImageMode}}" class="is-image-mode-container">
           <!-- 直接显示preview_url图片 -->
           <image src="{{preview_url}}" mode="aspectFit" class="pet-image"></image>
           <!-- 如果preview_url为空，则显示占位符 -->
-          <view wx:if="{{!preview_url}}" class="model-placeholder">
+          <view tt:if="{{!preview_url}}" class="model-placeholder">
             <loader size="50px" color="#333" speed="0.8s"></loader>
           </view>
         </view>
         <!-- 加载提示 -->
-        <view wx:if="{{!modelLoaded}}" class="loading-overlay">
+        <view tt:if="{{!modelLoaded}}" class="loading-overlay">
           <loader size="50px" color="#333" speed="0.8s"></loader>
-          <progress wx:if="{{loadingProgress > 0 && loadingProgress < 100}}" percent="{{loadingProgress}}" stroke-width="4" activeColor="#07c160" backgroundColor="#EBEBEB" class="loading-progress"></progress>
+          <progress tt:if="{{loadingProgress > 0 && loadingProgress < 100}}" percent="{{loadingProgress}}" stroke-width="4" activeColor="#07c160" backgroundColor="#EBEBEB" class="loading-progress"></progress>
         </view>
     </view>
   </view>
 
   <!-- 用户消息显示区域 -->
-  <view class="user-message-display {{userMessageAnimationClass}}" wx:if="{{userMessage}}">
+  <view class="user-message-display {{userMessageAnimationClass}}" tt:if="{{userMessage}}">
     <view class="user-message-bubble">
       <text>{{userMessage}}</text>
     </view>
@@ -151,8 +151,8 @@
         <scroll-view class="quick-replies-scroll" scroll-x="true" show-scrollbar="false" enhanced="true" bounces="false">
           <view class="quick-replies">
             <button 
-              wx:for="{{quickReplies}}" 
-              wx:key="id" 
+              tt:for="{{quickReplies}}" 
+              tt:key="id" 
               class="quick-reply {{item.isTest ? 'test-button' : ''}}" 
               bindtap="useQuickReply" 
               data-text="{{item.text}}"
@@ -178,6 +178,9 @@
         </view>
         <view class="function-item {{isArActive ? 'active' : ''}}" bindtap="onArTap">
           <image src="/images/mainPage/ar.svg" class="function-icon"></image>
+        </view>
+        <view class="function-item {{modelRotationEnabled ? 'active' : ''}}" bindtap="toggleModelRotation" tt:if="{{!isImageMode}}">
+          <image src="/images/mainPage/{{modelRotationEnabled ? 'rotate' : 'rotateOff'}}.svg" class="function-icon"></image>
         </view>
         <view class="function-item" bindtap="onTextChatTap">
           <image src="/images/mainPage/{{isTextChatActive ? 'petChat' : 'textChat'}}.svg" class="function-icon"></image>

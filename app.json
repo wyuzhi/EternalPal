@@ -1,12 +1,15 @@
 {
     "pages": [
+        "pages/choice/choice",
         "pages/guide/guide",
         "pages/pet/pet",
+        "pages/systemPet/systemPet",
         "pages/companion/companion",
         "pages/petProfile/petProfile",
         "pages/settings/settings",
         "pages/settings/info/info",
-        "pages/memory/memory"
+        "pages/memory/memory",
+        "pages/systemPet/systemPet"
     ],
     "window": {
         "backgroundTextStyle": "light",

@@ -1,0 +1,351 @@
+/* 系统宠物页面样式 */
+.system-pet-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding-bottom: 40rpx;
+}
+
+/* 顶部导航栏 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10rpx);
+}
+
+.back-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.back-icon {
+  font-size: 40rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+}
+
+.placeholder {
+  width: 60rpx;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400rpx;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 宠物容器 */
+.pets-container {
+  padding: 30rpx;
+}
+
+.pets-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30rpx;
+}
+
+/* 宠物卡片 */
+.pet-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.pet-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 5rpx 15rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 宠物图片容器 */
+.pet-image-container {
+  position: relative;
+  width: 100%;
+  height: 200rpx;
+}
+
+.pet-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 20rpx 20rpx 0 0;
+}
+
+.pet-status {
+  position: absolute;
+  top: 10rpx;
+  right: 10rpx;
+  background: rgba(255, 107, 107, 0.9);
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.status-text {
+  font-size: 20rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 宠物信息 */
+.pet-info {
+  padding: 20rpx;
+}
+
+.pet-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15rpx;
+  text-align: center;
+}
+
+.pet-details {
+  space-y: 8rpx;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 8rpx;
+  font-size: 22rpx;
+}
+
+.detail-label {
+  color: #666;
+  min-width: 60rpx;
+  font-weight: 500;
+}
+
+.detail-value {
+  color: #333;
+  flex: 1;
+  word-break: break-all;
+}
+
+/* 选择按钮 */
+.select-btn {
+  margin: 0 20rpx 20rpx;
+  padding: 15rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15rpx;
+  text-align: center;
+}
+
+.select-text {
+  font-size: 24rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.empty-desc {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 600rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  margin: 0 30rpx;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-close {
+  width: 50rpx;
+  height: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f5f5f5;
+}
+
+.close-icon {
+  font-size: 30rpx;
+  color: #666;
+}
+
+.modal-body {
+  padding: 30rpx;
+}
+
+/* 领养宠物信息 */
+.adopt-pet-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.adopt-pet-image {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 15rpx;
+  margin-right: 20rpx;
+}
+
+.adopt-pet-details {
+  flex: 1;
+}
+
+.adopt-pet-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.adopt-pet-traits {
+  display: flex;
+  flex-direction: column;
+  gap: 5rpx;
+}
+
+.adopt-pet-traits text {
+  font-size: 22rpx;
+  color: #666;
+}
+
+/* 领养消息 */
+.adopt-message {
+  text-align: center;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 15rpx;
+}
+
+.message-text {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 10rpx;
+}
+
+.message-desc {
+  display: block;
+  font-size: 22rpx;
+  color: #666;
+}
+
+.modal-footer {
+  display: flex;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 30rpx;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-btn {
+  background: #f8f9fa;
+  border-right: 1rpx solid #f0f0f0;
+}
+
+.cancel-btn:active {
+  background: #e9ecef;
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.confirm-btn:active {
+  opacity: 0.8;
+}
+
+.cancel-btn .btn-text {
+  color: #666;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.confirm-btn .btn-text {
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+/* 响应式适配 */
+@media (max-width: 400px) {
+  .pets-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    width: 90%;
+  }
+}

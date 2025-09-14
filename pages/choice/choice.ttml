@@ -1,0 +1,44 @@
+<view class="choice-container">
+  <!-- 标题 -->
+  <view class="title-section">
+    <text class="main-title">何去何从</text>
+  </view>
+
+  <!-- 按钮区域 -->
+  <view class="buttons-section">
+    <!-- 自定义按钮 -->
+    <view class="choice-button custom-button" bindtap="onCustomClick">
+      <text class="button-text">自定义</text>
+      <text class="button-desc">创造独一无二的专属宠物</text>
+    </view>
+
+    <!-- 盲盒按钮 -->
+    <view class="choice-button blindbox-button" bindtap="onBlindBoxClick">
+      <text class="button-text">盲盒</text>
+      <text class="button-desc">随机获得神秘宠物伙伴</text>
+    </view>
+
+    <!-- 领养按钮 -->
+    <view class="choice-button adopt-button" bindtap="onAdoptClick">
+      <text class="button-text">领养</text>
+      <text class="button-desc">从系统宠物中选择心仪的</text>
+    </view>
+  </view>
+
+  <!-- 盲盒弹窗 -->
+  <view class="modal-overlay" tt:if="{{showBlindBoxModal}}" bindtap="closeBlindBoxModal">
+    <view class="modal-content" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">赛博宠物来咯</text>
+      </view>
+      <view class="modal-body">
+        <text class="modal-message">敬请期待！神秘的赛博宠物即将到来～</text>
+      </view>
+      <view class="modal-footer">
+        <view class="modal-button" bindtap="closeBlindBoxModal">
+          <text class="modal-button-text">知道了</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

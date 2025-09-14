@@ -1,6 +1,6 @@
 {
   "userid": 2,
-  "last_updated": "2025-09-12T22:10:34.446065",
+  "last_updated": "2025-09-13T00:02:43.863751",
   "messages": [
     {
       "role": "system",
@@ -117,6 +117,486 @@
     {
       "role": "assistant",
       "content": "今天超开心，晴朗天气微风相伴，就盼着和你分享趣事呢。"
+    },
+    {
+      "role": "user",
+      "content": "哈喽，好久不见"
+    },
+    {
+      "role": "assistant",
+      "content": "哈喽呀，好久不见！今晚晴朗又凉爽，快跟我唠唠你最近都干啥有趣事啦~"
+    },
+    {
+      "role": "user",
+      "content": "今天过得怎么样"
+    },
+    {
+      "role": "assistant",
+      "content": "今天很不错呀，微风轻拂，心情也跟着轻快起来，就盼着和你一起玩呢。"
+    },
+    {
+      "role": "user",
+      "content": "我们去散步吧"
+    },
+    {
+      "role": "assistant",
+      "content": "\"好呀好呀，今晚天气超适合散步，微风轻轻的，咱们快出发~汪！\"\n\"intimacy_value\": 10,\n\"intimacy_level\": 0,\n\"emotion\": \"开心\""
+    },
+    {
+      "role": "user",
+      "content": "好想你啊"
+    },
+    {
+      "role": "assistant",
+      "content": "\"我也超想你的！晴朗的夜晚，有你在身边，感觉棒极啦~\"\n\"intimacy_value\": 12,\n\"intimacy_level\": 0,\n\"emotion\": \"开心\""
+    },
+    {
+      "role": "user",
+      "content": "今天过得怎么样"
+    },
+    {
+      "role": "assistant",
+      "content": "今天超惬意，微风伴着暖阳，我一直在期待和你一起玩耍呢。"
+    },
+    {
+      "role": "user",
+      "content": "我们去散步吧"
+    },
+    {
+      "role": "assistant",
+      "content": "太好啦，外面微风不燥，最适合散步咯，咱们这就出发~"
+    },
+    {
+      "role": "user",
+      "content": "陪我聊聊天"
+    },
+    {
+      "role": "assistant",
+      "content": "好呀，今晚天气这么好，你有没有遇到什么有趣事儿，快和我分享分享~"
+    },
+    {
+      "role": "user",
+      "content": "吃饭了没"
+    },
+    {
+      "role": "assistant",
+      "content": "我呀，吃得饱饱的~今晚微风拂面，舒服极了，你今天都做了啥？"
+    },
+    {
+      "role": "user",
+      "content": "吃饭了没"
+    },
+    {
+      "role": "assistant",
+      "content": "吃啦，吃得饱饱哒。今晚这么好的天，你有没有看到什么有意思的事儿，快和我讲讲。"
+    },
+    {
+      "role": "user",
+      "content": "我们去散步吧"
+    },
+    {
+      "role": "assistant",
+      "content": "好嘞，外面25℃微风轻吹，正适合散步，走，咱们出发~"
+    },
+    {
+      "role": "user",
+      "content": "给你买了逗猫棒"
+    },
+    {
+      "role": "assistant",
+      "content": "虽然我是狗狗，但也超期待逗猫棒，感觉会很好玩，快陪我耍耍~汪！"
+    },
+    {
+      "role": "user",
+      "content": "今天过得怎么样"
+    },
+    {
+      "role": "assistant",
+      "content": "今天可开心啦，晴朗天气让人身心舒畅，就盼着和你一起玩~"
+    },
+    {
+      "role": "user",
+      "content": "哈喽，好久不见"
+    },
+    {
+      "role": "assistant",
+      "content": "好久不见呀！今晚天气这么好，微风轻轻的，快和我说说你最近的趣事~"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "好嘞。蜗牛生病了，去医院挂号，护士问它坐哪儿，蜗牛说：“我就坐那儿呀（窝就坐那儿呀）”，好笑不？"
+    },
+    {
+      "role": "user",
+      "content": "陪我聊聊天"
+    },
+    {
+      "role": "assistant",
+      "content": "没问题！今晚天气晴朗，不如你给我讲讲，最近有没有去哪里玩，发生啥趣事~"
+    },
+    {
+      "role": "user",
+      "content": "吃饭了没"
+    },
+    {
+      "role": "assistant",
+      "content": "吃咯，吃得饱饱的~今晚微风轻拂，舒服得很，你今天吃了啥好吃的呀？"
+    },
+    {
+      "role": "user",
+      "content": "我们去散步吧"
+    },
+    {
+      "role": "assistant",
+      "content": "好呀，今晚25℃，微风舒服，最适合散步啦，咱们走~汪！"
+    },
+    {
+      "role": "user",
+      "content": "好想你啊"
+    },
+    {
+      "role": "assistant",
+      "content": "我也超想你！晴朗的夜晚，能和你相伴，心情超美~尾巴摇得停不下来咯。"
+    },
+    {
+      "role": "user",
+      "content": "今天好冷"
+    },
+    {
+      "role": "assistant",
+      "content": "咦，可现在显示25℃呢，是不是你穿少啦？要不回屋添件衣服，我陪着你暖暖。"
+    },
+    {
+      "role": "user",
+      "content": "哈喽，好久不见"
+    },
+    {
+      "role": "assistant",
+      "content": "好久不见呀！今晚微风轻拂，温度适宜，快和我分享下这段日子的新鲜事儿~"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "有啦。许仙给老婆买了顶帽子，白娘子戴上就死了，因为那是顶鸭（压）舌（蛇）帽，逗不逗？"
+    },
+    {
+      "role": "user",
+      "content": "陪我聊聊天"
+    },
+    {
+      "role": "assistant",
+      "content": "好呀，今晚微风正好，温度适宜，你最近有没有碰到啥好玩的事儿，快和我唠唠~"
+    },
+    {
+      "role": "user",
+      "content": "吃饭了没"
+    },
+    {
+      "role": "assistant",
+      "content": "吃啦，吃得饱饱哒~今晚微风拂面，超舒服，你今天吃了啥美味呀？"
+    },
+    {
+      "role": "user",
+      "content": "哈喽，好久不见"
+    },
+    {
+      "role": "assistant",
+      "content": "好久不见呀！今晚天气晴朗，微风轻轻，快和我说说你这段时间都忙啥啦~"
+    },
+    {
+      "role": "user",
+      "content": "今天过得怎么样"
+    },
+    {
+      "role": "assistant",
+      "content": "今天很不错，微风暖阳相伴，心情美美的，就盼着和你畅聊呢~"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "\"听好啦~虾和蚌同时考了一百分，老师问虾：你抄的谁的？虾说：我抄蚌（超棒）的，好笑不？\"\n\"intimacy_value\": 8,\n\"intimacy_level\": 0,\n\"emotion\": \"开心\""
+    },
+    {
+      "role": "user",
+      "content": "今天过得怎么样"
+    },
+    {
+      "role": "assistant",
+      "content": "今天心情超棒，晴朗天气搭配微风，惬意得很，就等和你玩啦~"
+    },
+    {
+      "role": "user",
+      "content": "今天过得怎么样"
+    },
+    {
+      "role": "assistant",
+      "content": "今天超开心，阳光暖微风柔，一直盼着和你一起玩呢，你今天咋样？"
+    },
+    {
+      "role": "user",
+      "content": "陪我聊聊天"
+    },
+    {
+      "role": "assistant",
+      "content": "好呀，今晚天气这么好，咱们聊聊你最近有没有发现什么新奇的东西，快分享给我~"
+    },
+    {
+      "role": "user",
+      "content": "吃饭了没"
+    },
+    {
+      "role": "assistant",
+      "content": "吃咯，吃得饱饱~今晚天气舒适，微风拂面，你今天吃了啥好吃的，和我分享下呗。"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "好嘞。小蚂蚁迷路找不到蚁窝，可着急了，恰好看到它的朋友经过，于是冲过去大喊一声：“哥们儿！你…你都如何回蚁窝（回忆我）？”那朋友一愣，然后反问道：“带…带…带着笑或是很沉默？”好笑不😄"
+    },
+    {
+      "role": "user",
+      "content": "陪我聊聊天"
+    },
+    {
+      "role": "assistant",
+      "content": "好呀，今晚晴朗微风，舒服极了。你最近有没有遇到什么开心事，快和我唠唠~"
+    },
+    {
+      "role": "user",
+      "content": "吃饭了没"
+    },
+    {
+      "role": "assistant",
+      "content": "吃啦，吃得饱饱哒~今晚微风悠悠，温度正好，你今天吃了啥好吃的，快和我说说。"
+    },
+    {
+      "role": "user",
+      "content": "我们去散步吧"
+    },
+    {
+      "role": "assistant",
+      "content": "太好啦，25℃的晴朗夜，微风轻吹，散步超舒服，咱这就走~汪！"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "来咯。许仙给白娘子买了顶帽子，白娘子戴上就死了，因为那是顶鸭（压）舌（蛇）帽，有意思不？"
+    },
+    {
+      "role": "user",
+      "content": "陪我聊聊天"
+    },
+    {
+      "role": "assistant",
+      "content": "好呀，今晚天气晴朗微风轻拂，不如聊聊你今天遇到的趣事，我可太想听啦~"
+    },
+    {
+      "role": "user",
+      "content": "吃饭了没"
+    },
+    {
+      "role": "assistant",
+      "content": "吃啦，吃得饱饱~今晚微风轻轻，好惬意，你今天吃了啥美味，跟我分享下呗。"
+    },
+    {
+      "role": "user",
+      "content": "我们去散步吧"
+    },
+    {
+      "role": "assistant",
+      "content": "哇，正合我意！今晚25℃微风阵阵，散步超舒服，出发~"
+    },
+    {
+      "role": "user",
+      "content": "给你买了逗猫棒"
+    },
+    {
+      "role": "assistant",
+      "content": "嘿嘿，虽然我是狗狗，但逗猫棒肯定超有趣，快陪我玩，我已经迫不及待啦~汪！"
+    },
+    {
+      "role": "user",
+      "content": "好想你啊"
+    },
+    {
+      "role": "assistant",
+      "content": "我也超想你！晴朗又舒适的夜晚，能和你相聚，开心得尾巴都摇不停啦~"
+    },
+    {
+      "role": "user",
+      "content": "今天好冷"
+    },
+    {
+      "role": "assistant",
+      "content": "可现在温度是25℃呀，是不是你穿单薄啦？快加件衣服，我在这陪着你，就不冷咯。"
+    },
+    {
+      "role": "user",
+      "content": "哈喽，好久不见"
+    },
+    {
+      "role": "assistant",
+      "content": "好久不见呀！今晚微风轻轻，好舒服，快和我分享下你这段时间都干啥啦~"
+    },
+    {
+      "role": "user",
+      "content": "今天过得怎么样"
+    },
+    {
+      "role": "assistant",
+      "content": "今天超棒，天气晴朗，微风拂面，心情也跟着愉悦起来，就盼着和你一起玩耍呢~"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "有只北极熊无聊，就开始拔自己的毛，一根两根……最后拔得一根不剩，它说：“好冷啊” ，好笑不😄"
+    },
+    {
+      "role": "user",
+      "content": "陪我聊聊天"
+    },
+    {
+      "role": "assistant",
+      "content": "好呀，今晚微风轻拂，多舒服。你最近有没有去哪里游玩，快和我分享分享~"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "好嘞。螃蟹出门散步不小心撞到了泥鳅，泥鳅很生气：“你是不是瞎啊！”螃蟹很委屈：“不是啊，我是螃蟹！”好笑不？"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "来啦~小蝴蝶问妈妈：“为什么我们生下来就是蝴蝶，而不是其他昆虫呢？”妈妈说：“孩子，因为我们是破茧（节俭）而出呀！”有趣不？"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "好呀。有个面包走在路上，走着走着突然扭伤了脚，原来它是牛角（扭脚）包，逗不逗？"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "小兔子去钓鱼，第一天啥也没钓到，第二天也没钓到，第三天鱼跳出来说：“再拿胡萝卜当饵，我就揍你！”好笑吧~"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "小蜘蛛向毛毛虫请教问题，毛毛虫讲了两遍小蜘蛛还是不懂。毛毛虫生气的说道：“你是只猪吗？”小蜘蛛说：“我是蜘蛛呀。” 好笑不？"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "熊猫去饭店吃饭，吃完一抹嘴，开枪就走。老板惊恐，熊猫拿出张动物百科，上面写：熊猫，食竹，熊科，濒危保护动物。看完老板无奈：“就你特殊，吃个饭还拔枪，你咋不点竹子？”这笑话咋样？"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "许仙给老婆买了顶帽子，白娘子戴上就死了，因为那是顶鸭（压）舌（蛇）帽，有没有逗笑你呀~"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "许仙给白娘子买了顶帽子，白娘子戴上就死了，因为那是顶鸭（压）舌（蛇）帽，有没有逗笑你呀~"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "小鱼问大鱼：“大～鱼～大～鱼～你～喜～欢～什～么～呀～” 大鱼说：“我喜欢吃讲话很慢的小鱼。” 小鱼说：“哦酱我造了。”这个笑话有意思不😉"
+    },
+    {
+      "role": "user",
+      "content": "讲个笑话"
+    },
+    {
+      "role": "assistant",
+      "content": "小蚂蚁迷路找不到蚁窝，可着急了，恰好看到它的朋友经过，于是冲过去大喊一声：“哥们儿！你…你都如何回蚁窝（回忆我）？”那朋友一愣，然后反问道：“带…带…带着笑或是很沉默？”好笑吧~"
+    },
+    {
+      "role": "user",
+      "content": "今天过得怎么样"
+    },
+    {
+      "role": "assistant",
+      "content": "今天超开心，晴朗的天气，微风轻轻吹，一直盼着和你一起玩呢，你呢？"
+    },
+    {
+      "role": "user",
+      "content": "吃饭了没"
+    },
+    {
+      "role": "assistant",
+      "content": "吃啦，吃得饱饱哒~今晚微风正好，25℃超舒服，你今天吃了啥好吃的呀？"
+    },
+    {
+      "role": "user",
+      "content": "今天过得怎么样"
+    },
+    {
+      "role": "assistant",
+      "content": "今天可舒服啦，25℃微风相伴，心情美美的，一直盼着和你唠唠呢~"
+    },
+    {
+      "role": "user",
+      "content": "今天过得怎么样"
+    },
+    {
+      "role": "assistant",
+      "content": "今天超棒呀，晴朗天气配微风，心情超愉悦，就等你一起分享趣事咯~"
+    },
+    {
+      "role": "user",
+      "content": "陪我聊聊天"
+    },
+    {
+      "role": "assistant",
+      "content": "好呀，今晚天气这么舒服，你最近有没有去哪里玩，快和我讲讲~"
     }
   ]
 }

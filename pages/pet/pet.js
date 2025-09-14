@@ -979,7 +979,8 @@ Page({
         birthday: that.data.petBirthday,
         personality: that.data.selectedPersonalities.join(','),
         hobby: that.data.selectedHobbies.join(','),
-        story: that.data.petDescription,
+        story: that.data.petStory,
+        description:that.data.petDescription,
         generated_image: that.data.petPhotos && that.data.petPhotos.length > 0 ? that.data.petPhotos[0] : '',
         // 移除model_url字段
         user_id: taskInfo.userId
@@ -1107,7 +1108,8 @@ Page({
           birthday: that.data.petBirthday,
           personality: that.data.selectedPersonalities.join(','),
           hobby: that.data.selectedHobbies.join(','),
-          story: that.data.petDescription,
+          story: that.data.petStory,
+          description: that.data.petDescription,
           generated_image: that.data.petPhotos && that.data.petPhotos.length > 0 ? that.data.petPhotos[0] : '',
           user_id: userId,
         },

@@ -65,7 +65,7 @@ class TaskManager:
                 try:
                     if task_type == '3d_model_generation':
                         # 导入3D模型生成模块
-                        from backend.combined_3d_generator import generate_3d_model
+                        from combined_3d_generator import generate_3d_model
                         
                         # 调用3D模型生成函数
                         result = generate_3d_model(

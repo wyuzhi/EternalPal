@@ -78,6 +78,7 @@ class Pet(db.Model):
     personality = db.Column(db.String(200))
     hobby = db.Column(db.String(200))
     story = db.Column(db.Text)
+    description = db.Column(db.Text)  # 宠物外观描述字段
     generated_image = db.Column(db.String(255))
     model_url = db.Column(db.String(255))
     preview_url = db.Column(db.String(255))
@@ -264,6 +265,7 @@ def get_user_latest_pet(user_id):
         'personality': latest_pet.personality,
         'hobby': latest_pet.hobby,
         'story': latest_pet.story,
+        'description': latest_pet.description,  # 宠物外观描述字段
         'generated_image': latest_pet.generated_image,
         'model_url': latest_pet.model_url,
         'preview_url': latest_pet.preview_url,
@@ -287,6 +289,7 @@ def create_pet():
             personality=data.get('personality'),
             hobby=data.get('hobby'),
             story=data.get('story'),
+            description=data.get('description'),  # 宠物外观描述字段
             generated_image=data.get('generated_image'),
             model_url=data.get('model_url'),
             user_id=data.get('user_id')
@@ -323,7 +326,8 @@ def create_pet_with_3d_model():
             'gender': data.get('gender'),
             'personality': data.get('personality'),
             'hobby': data.get('hobby'),
-            'story': data.get('story')
+            'story': data.get('story'),
+            'description': data.get('description')  # 添加外观描述字段
         }
         
         # 导入3D模型生成模块中的create_pet_description函数
@@ -343,6 +347,7 @@ def create_pet_with_3d_model():
             personality=data.get('personality'),
             hobby=data.get('hobby'),
             story=data.get('story'),
+            description=data.get('description'),  # 添加外观描述字段
             generated_image=data.get('generated_image'),
             model_url=None,  # 初始为None，等待异步任务完成后更新
             preview_url=None,  # 初始为None
@@ -393,6 +398,7 @@ def get_pet(pet_id):
         'personality': pet.personality,
         'hobby': pet.hobby,
         'story': pet.story,
+        'description': pet.description,  # 宠物外观描述字段
         'generated_image': pet.generated_image,
         'model_url': pet.model_url,
         'preview_url': pet.preview_url,
@@ -589,7 +595,7 @@ def chat_with_pet(pet_id):
             'species_breed': pet.type,
             'gender': pet.gender,
             'birthday': '2023-01-01',  # 默认生日
-            'appearance': pet.story or '可爱的宠物',
+            'appearance': pet.description or '可爱的宠物',
             'core_personality': pet.personality or '友好',
             'likes': pet.hobby or '和主人玩耍',
             'system_current_time': datetime.now().strftime('%Y-%m-%d %H:%M'),
@@ -900,6 +906,99 @@ def text_to_speech():
             'status': 'error',
             'message': f'语音生成服务异常: {str(e)}'
         }), 500
+
+# 获取系统预设宠物列表API
+@app.route('/api/system-pets', methods=['GET'])
+def get_system_pets():
+    """获取所有系统预设宠物（user_id为空的宠物）"""
+    try:
+        # 查询所有宠物
+        system_pets = Pet.query.all()
+        # 备用查询条件：只查询系统预设宠物（user_id为空或为0）
+        # system_pets = Pet.query.filter(Pet.user_id.is_(None)).all()
+        # system_pets = Pet.query.filter(Pet.user_id == 0).all()
+        
+        pets_data = []
+        for pet in system_pets:
+            pet_data = {
+                'id': pet.id,
+                'name': pet.name,
+                'type': pet.type,
+                'gender': pet.gender,
+                'personality': pet.personality,
+                'hobbies': pet.hobby,  # 注意数据库字段名是hobby
+                'story': pet.story,
+                'description': pet.description,
+                'preview_url': pet.preview_url,
+                'model_url': pet.model_url,
+                'material_url': pet.material_url,
+                'texture_url': pet.texture_url,
+                'status': pet.status,
+                'created_at': pet.created_at.isoformat() if pet.created_at else None,
+                'user_id': pet.user_id  # 应该为None
+            }
+            pets_data.append(pet_data)
+        
+        logger.info(f"获取到 {len(pets_data)} 只系统预设宠物")
+        
+        return jsonify({
+            'status': 'success',
+            'message': f'成功获取 {len(pets_data)} 只系统宠物',
+            'data': pets_data
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"获取系统宠物列表时出错: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# 领养宠物API
+@app.route('/api/pets/<int:pet_id>/adopt', methods=['POST'])
+def adopt_pet(pet_id):
+    """领养指定的宠物"""
+    try:
+        data = request.json
+        user_id = data.get('user_id')
+        
+        if not user_id:
+            return jsonify({'status': 'error', 'message': '用户ID不能为空'}), 400
+        
+        # 检查宠物是否存在
+        pet = Pet.query.get(pet_id)
+        if not pet:
+            return jsonify({'status': 'error', 'message': '宠物不存在'}), 404
+        
+        # 检查宠物是否已被领养
+        if pet.user_id is not None:
+            return jsonify({'status': 'error', 'message': '该宠物已被领养'}), 400
+        
+        # 检查用户是否存在
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'status': 'error', 'message': '用户不存在'}), 404
+        
+        # 更新宠物的归属用户
+        pet.user_id = user_id
+        pet.intimacy = 0  # 重置亲密度
+        
+        db.session.commit()
+        
+        logger.info(f"用户 {user_id} 成功领养宠物 {pet_id}")
+        
+        return jsonify({
+            'status': 'success',
+            'message': '领养成功！',
+            'data': {
+                'pet_id': pet.id,
+                'pet_name': pet.name,
+                'user_id': user_id,
+                'intimacy': pet.intimacy
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"领养宠物时出错: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 # 只有在直接运行该模块时才启动应用服务器
 if __name__ == '__main__':

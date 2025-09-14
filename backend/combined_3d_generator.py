@@ -59,7 +59,7 @@ POLLING_INTERVAL = 2
 
 # 导入app模块以访问数据库
 try:
-    from backend.app import db, Pet
+    from app import db, Pet
 except ImportError:
     logger.warning("无法导入数据库模块，部分功能可能受限")
     db = None
@@ -771,8 +771,8 @@ def generate_3d_model(image_url=None, prompt=None, pet_id=None):
         generated_2d_image_url = None
         
         # 构建系统提示词
-        system_prompt = "Generate IP design from photo: standing pose, accurate colors, white background, detailed features. User Description:"
-        system_prompt1 = "Generate animal IP design: standing pose, accurate features, white background, detailed texture. User Description:"
+        system_prompt = "输出是图片。基于参考照片动物，精准复刻特征，生成ip形象设计图。首先，让宠物处于宠物的站立姿势、每一个色块的颜色和具体位置要百分百还原。背景为纯白色（RGB 255,255,255），无杂色。结合用户描述特征，毛发还原毛色（含饱和度、渐变），完全还原毛发走势和质感（例如体现短毛颗粒感或长毛蓬松度），胡须保色泽韧性。五官复刻眼球颜色、瞳孔形状，眼周毛走向，鼻子质感，嘴唇弧度；耳朵还原大小、弧度及内侧绒毛。肢体按原图比例：颈、躯干、四肢骨骼，脚掌肉垫，尾巴形态。站姿符合习性，自然协调。3D 渲染达高精度，毛发用 PBR 材质，显光影细节；三点布光，明暗分明。形象保留原生特征，强化细节、增强亲和力。用户描述："
+        system_prompt1 = "输出是图片。任务：根据用户提供的动物记忆与描述，生成高保真度的3D动物IP设计图。动物记忆与描述："
         # 获取宠物详细描述
         pet_description = ""
         if pet_id:
@@ -814,7 +814,6 @@ def generate_3d_model(image_url=None, prompt=None, pet_id=None):
             from ge_router import generate_image
             
             logger.info(f"开始使用ge_router生成2D图片")
-            logger.info(f"使用的提示词: {final_prompt[:200]}...")
             
             # 调用ge_router生成2D图片
             if image_url:
@@ -857,19 +856,19 @@ def generate_3d_model(image_url=None, prompt=None, pet_id=None):
             else:
                 raise Exception(f"2D图片生成失败且无原始图片可用: {str(e)}")
         
-        使用生成的2D图片来生成3D模型
-        if generated_2d_image_url:
-            logger.info(f"开始使用生成的2D图片生成3D模型: {generated_2d_image_url}")
-            try:
-                result = client.generate_from_image(generated_2d_image_url)
-                if result:
-                    logger.info(f"3D模型生成成功，任务ID: {result.get('job_id', '未知')}")
-                    return process_3d_model_result(result, pet_id)
-                else:
-                    raise Exception("3D模型生成返回空结果")
-            except Exception as e:
-                logger.error(f"使用2D图片生成3D模型失败: {str(e)}")
-                raise Exception(f"3D模型生成失败: {str(e)}")
+        # # 使用生成的2D图片来生成3D模型
+        # if generated_2d_image_url:
+        #     logger.info(f"开始使用生成的2D图片生成3D模型: {generated_2d_image_url}")
+        #     try:
+        #         result = client.generate_from_image(generated_2d_image_url)
+        #         if result:
+        #             logger.info(f"3D模型生成成功，任务ID: {result.get('job_id', '未知')}")
+        #             return process_3d_model_result(result, pet_id)
+        #         else:
+        #             raise Exception("3D模型生成返回空结果")
+        #     except Exception as e:
+        #         logger.error(f"使用2D图片生成3D模型失败: {str(e)}")
+        #         raise Exception(f"3D模型生成失败: {str(e)}")
         
         # 如果都失败了
         logger.error("3D模型生成失败，没有可用的生成方式")

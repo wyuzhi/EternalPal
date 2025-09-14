@@ -5,7 +5,7 @@ import sys
 # 添加项目根目录到搜索路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from backend.app import app, db, Pet
+from app import app, db, Pet
 
 if __name__ == '__main__':
     # 获取当前脚本所在目录

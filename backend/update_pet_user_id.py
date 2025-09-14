@@ -20,18 +20,18 @@ try:
     print(f"连接数据库成功: {db_path}")
     print()
     
-    # 首先查询id为2的宠物当前信息
-    cursor.execute("SELECT id, name, user_id FROM pet WHERE id = 2")
+    # 首先查询id为5的宠物当前信息
+    cursor.execute("SELECT id, name, user_id FROM pet WHERE id = 5")
     pet_info = cursor.fetchone()
     
     if not pet_info:
-        print("错误：未找到id为2的宠物")
+        print("错误：未找到id为5的宠物")
     else:
         pet_id, pet_name, current_user_id = pet_info
         print(f"找到宠物: ID={pet_id}, 名称={pet_name}, 当前user_id={current_user_id}")
         
         # 更新user_id为1
-        cursor.execute("UPDATE pet SET user_id = 1 WHERE id = 2")
+        cursor.execute("UPDATE pet SET user_id = 1 WHERE id = 5")
         
         # 检查是否有行被更新
         if cursor.rowcount > 0:
@@ -41,7 +41,7 @@ try:
             conn.commit()
             
             # 验证更新结果
-            cursor.execute("SELECT id, name, user_id FROM pet WHERE id = 2")
+            cursor.execute("SELECT id, name, user_id FROM pet WHERE id = 5")
             updated_info = cursor.fetchone()
             if updated_info:
                 print(f"验证结果: ID={updated_info[0]}, 名称={updated_info[1]}, 新user_id={updated_info[2]}")

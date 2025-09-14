@@ -17,11 +17,7 @@ page {
   height: 100vh;
   z-index: -1;
   
-  background: linear-gradient(180deg, 
-    #ebf5ff 6%, 
-    #e7f6c7 40%, 
-    #f7f9df 76%, 
-    #fffbeb 100%);
+  background: var(--bg-gradient);
 }
 
 .container {
@@ -79,7 +75,7 @@ page {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: var(--m-m);
+  gap: var(--m-s);
   width: 100%;
 }
 .pet-info {
@@ -140,7 +136,7 @@ page {
 .intimacy {
   display: flex;
   align-items: center;
-  padding: var(--p-m) 0;
+  /* padding: var(--p-m) 0; */
   width: 50%;
   z-index: 100;
   opacity: 1;
@@ -568,6 +564,7 @@ page {
 /* 输入卡片区域 */
 .chat-flow {
   position: fixed;
+  top: 120rpx;
   left: 0;
   right: 0;
   bottom: 0;
@@ -576,12 +573,10 @@ page {
   flex-direction: column;
   z-index: 100;
   transition: bottom 0.3s ease;
-  /* 确保容器有明确的高度约束 */
-  height: 100vh;
+  /* 移除 height 属性，让 top 和 bottom 自动计算高度 */
   box-sizing: border-box;
 }
 
-/* 聊天历史显示区域 */
 .chat-history-display {
   position: relative;
   display: flex;
@@ -590,7 +585,8 @@ page {
   /* 使用flex布局自动占用剩余空间 */
   flex: 1;
   min-height: 0; /* 允许flex子元素收缩 */
-  margin-top: 120rpx; /* 为顶部导航留空间 */
+  /* margin-top: 120rpx; */ /* 为顶部导航留空间 */
+
   /* 添加渐变遮罩效果 - 上下从半透明到显示再到半透明 */
   mask: linear-gradient(to bottom, 
     rgba(0, 0, 0, 0.1) 0%, 
@@ -621,16 +617,30 @@ page {
   min-height: 0; /* 允许flex子元素收缩 */
 }
 
-.chat-history-display .message-container {
-  /* margin: var(--m-l) 0; */
-  display: flex;
-  row-gap: var(--m-l);
-  flex-direction: column;
+/* 占位元素 */
+.chat-history-display .message-spacer-top {
+  height: var(--m-xl);
+}
+.chat-history-display .message-spacer-bottom {
+  height: var(--m-l);
 }
 
-.chat-history-display .message-container:first-child {
-  margin-top: var(--m-l);
+
+.chat-history-display .message-container {
+  margin: var(--m-l) 0;
+  display: flex;
+  flex-direction: column;
 }
+/* 第一个消息容器 */
+.chat-history-display .chat-messages .message-container:nth-child(2) {
+  margin-top: 0 !important;
+}
+
+/* 最后一个消息容器 */
+.chat-history-display .chat-messages .message-container:nth-last-child(2) {
+  margin-bottom: 0 !important;
+}
+
 
 .chat-history-display .ai-message {
   align-items: flex-start;
@@ -685,6 +695,33 @@ page {
 .chat-history-display .user-message .message-time {
   align-self: flex-end;
   margin-right: 16rpx;
+}
+
+/* 时间分隔符样式 */
+.chat-history-display .time-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: var(--m-l) 0;
+  padding: 0 var(--p-l);
+}
+
+.chat-history-display .time-separator-line {
+  flex: 1;
+  height: 1rpx;
+  background-color: var(--border-light);
+  opacity: 0.6;
+}
+
+.chat-history-display .time-separator-text {
+  font-size: var(--f-sm);
+  color: var(--text-tertiary);
+  padding: var(--p-s) var(--p-m);
+  background-color: var(--bg-frosted);
+  backdrop-filter: blur(20rpx);
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
 /* send */

@@ -20,8 +20,14 @@ page {
   --bg-tertiary: #F0F0F0;         /* 第三级背景色 */
   --bg-overlay: rgba(0, 0, 0, 0.3); /* 遮罩背景 */
   --bg-overlay-dark: rgba(0, 0, 0, 0.6); /* 遮罩背景 */
-  --bg-frosted: rgba(255, 255, 255, 0.5); /* 磨砂背景 */
+  --bg-frosted: rgba(255, 255, 255, 0.6); /* 磨砂背景 */
   --bg-frosted-dark: rgba(255, 255, 255, 0.8); /* 磨砂背景 */
+
+  --bg-gradient: linear-gradient(180deg, 
+  #ebf5ff 6%, 
+  #ecf4d9 40%, 
+  #f8f9e8 76%, 
+  #fffbeb 100%);
   
   /* 边框色 */
   --border-frosted: rgba(0, 0, 0, 0.1); /* 磨砂边框 */

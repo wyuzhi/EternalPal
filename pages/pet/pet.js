@@ -42,6 +42,8 @@ Page({
     petPhotos: [],
     maxPhotos: 1,
     petDescription: '', // 宠物描述（没有照片时填写）
+    userName: '', // 用户名字
+    userRelation: '', // 用户称呼
     generationProgress: 0,
     isGenerating: false,
     generatedPetImage: '', // 生成的宠物图片
@@ -50,21 +52,21 @@ Page({
     estimatedTimeRemaining: '约3分钟', // 预计剩余时间
     currentTip: '每个灵伴都有独特的性格和爱好，就像真实的宠物一样', // 当前显示的小贴士
     petTips: [
-      '您的灵伴正在生成中，请稍后再回来看吧~',
-      '每个灵伴都有独特的性格和爱好，就像真实的宠物一样',
-      '和灵伴进行日常对话，它会根据您设定的性格特点回应',
-      '灵伴的3D模型是根据您提供的照片或描述生成的',
-      '生成过程需要一些时间，请耐心等待',
-      '您可以与灵伴一起聊天或者分享日常生活',
-      '灵伴会记录与您的互动，并随着时间变得更加了解您',
-      '我们会不断更新灵伴的功能，让它变得更加智能'
+      '我正在赶来的路上，耐心等我一下下~',
+      '我们都有自己的小性格和小爱好，就像真的宠物一样',
+      '和我聊天把，我会用我专属的方式回应你！',
+      '给我一点时间打扮自己，想以最好的一面见你',
+      '别急，我很快就到！',
+      '你可以随时和我分享日常，我最爱听你讲故事了',
+      '我会慢慢记住你，越来越懂你哦',
+      '我会不断学习新本领，带给你更多惊喜'
     ],
     generationSteps: [
-      '正在分析宠物特征...',
-      '构建基础模型中...',
-      '添加个性细节...',
-      '优化3D模型...',
-      '还有一点点细节...'
+      '嗅嗅，先认识一下我是谁...',
+      '正在现身中...',
+      '加点专属小性格...',
+      '缕缕毛发，变得更可爱...',
+      '还有一点点细节...我马上来啦！'
     ],
     isLiked: false, // 是否喜欢
     isDisliked: false, // 是否不喜欢
@@ -486,6 +488,20 @@ Page({
     }
   },
 
+  // 输入用户名字
+  inputUserName: function(e) {
+    this.setData({
+      userName: e.detail.value
+    })
+  },
+
+  // 输入用户称呼
+  inputUserRelation: function(e) {
+    this.setData({
+      userRelation: e.detail.value
+    })
+  },
+
   // 输入宠物故事
   inputPetStory: function(e) {
     this.setData({
@@ -652,6 +668,20 @@ Page({
         }
         return true
       case 2:
+        if (!this.data.userName || !this.data.userName.trim()) {
+          tt.showToast({
+            title: '记得告诉我你的名字哦',
+            icon: 'none'
+          })
+          return false
+        }
+        if (!this.data.userRelation || !this.data.userRelation.trim()) {
+          tt.showToast({
+            title: '我还不知道怎么称呼你呢',
+            icon: 'none'
+          })
+          return false
+        }
         // 故事可以不填
         return true
       case 3:

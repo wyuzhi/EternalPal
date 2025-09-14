@@ -2,36 +2,38 @@
   min-height: 100vh;
   padding: var(--p-l);
   padding-bottom: 50rpx;
-  background: linear-gradient(180deg, 
-    #ebf5ff 6%, 
-    #e7f6c7 40%, 
-    #f7f9df 76%, 
-    #fffbeb 100%);
+  background: var(--bg-gradient);
 }
 
 /* 宠物信息卡片 */
 .pet-card {
-  background: var(--bg-frosted);
-  border-radius: var(--r-card);
-  padding: var(--p-xl);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* background: var(--bg-frosted);
+  border-radius: var(--r-card); */
+  padding-top: var(--p-xl);
   margin-bottom: var(--p-l);
-  box-shadow: 0 4rpx 20rpx var(--shadow-light);
-  border: 1rpx solid var(--border-light);
-  backdrop-filter: blur(10rpx);
+  /* box-shadow: 0 4rpx 20rpx var(--shadow-light); */
+  /* border: 1rpx solid var(--border-light); */
+  /* backdrop-filter: blur(10rpx); */
 }
 
 .pet-header {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .pet-avatar-container {
-  width: 120rpx;
-  height: 120rpx;
+  width: 200rpx;
+  height: 200rpx;
   border-radius: 50%;
   overflow: hidden;
   margin-right: var(--p-l);
-  background-color: var(--bg-tertiary);
+  background-color: var(--bg-secondary);
 }
 
 .pet-avatar {
@@ -41,6 +43,11 @@
 
 .pet-basic-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--p-l) 0;
 }
 
 .pet-name {
@@ -56,21 +63,13 @@
   gap: var(--m-m);
 }
 
-.pet-type {
-  font-size: var(--f-sm);
-  color: var(--text-secondary);
-  background-color: var(--bg-tertiary);
-  padding: var(--p-s) var(--m-m);
-  border-radius: var(--r-m);
-}
-
-.pet-gender-tag, .pet-birthday-tag {
+.pet-type, .pet-gender-tag, .pet-birthday-tag {
   display: flex;
   align-items: center;
   gap: var(--p-s);
   font-size: var(--f-sm);
   color: var(--text-secondary);
-  background-color: var(--bg-tertiary);
+  background-color: var(--bg-secondary);
   padding: var(--p-s) var(--m-m);
   border-radius: var(--r-m);
 }
@@ -109,14 +108,20 @@
 .intimacy-info {
   /* background-color: var(--bg-frosted-dark); */
   border-radius: var(--r-m);
-  padding: var(--p-m);
-  margin-top: var(--m-l);
+  padding: var(--p-m) var(--p-xl);
+  width: 100%;
 }
 
 .intimacy-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: var(--m-m);
+}
+
+.intimacy-left {
+  display: flex;
+  align-items: center;
 }
 
 .heart-icon {
@@ -147,7 +152,7 @@
 .progress-bar {
   flex: 1;
   height: 12rpx;
-  background-color: var(--bg-tertiary);
+  background-color: var(--bg-secondary);
   border-radius: var(--r-s);
   overflow: hidden;
 }

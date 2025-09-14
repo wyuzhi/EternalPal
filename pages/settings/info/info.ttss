@@ -5,11 +5,7 @@
   /* background-color: var(--bg-primary); */
   min-height: 100vh;
   padding: var(--p-l);
-  background: linear-gradient(180deg, 
-    #ebf5ff 6%, 
-    #e7f6c7 40%, 
-    #f7f9df 76%, 
-    #fffbeb 100%);
+  background: var(--bg-gradient);
 }
 
 /* 应用信息头部 */
@@ -28,11 +24,16 @@
   width: 200rpx;
   height: 200rpx;
   border-radius: 50%;
+  background-color: var(--bg-secondary);
   box-shadow: 0 8rpx 24rpx var(--shadow-medium);
 }
 
 .app-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .app-name {
@@ -71,7 +72,7 @@
   grid-template-columns: 2fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: var(--p-m);
-  height: 400rpx;
+  height: 560rpx;
 }
 
 .bento-item {
@@ -103,47 +104,50 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: var(--p-m);
+  padding: 0;
   text-align: center;
+  position: relative;
 }
 
 .bento-icon {
-  width: 100rpx;
-  height: 100rpx;
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-  border-radius: var(--r-l);
+  width: 100%;
+  height: 100%;
+  border-radius: var(--r-card);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--m-m);
-  box-shadow: 0 4rpx 12rpx rgba(255, 191, 107, 0.3);
+  margin-bottom: 0;
+  box-shadow: none;
 }
 
-.bento-item.large .bento-icon {
-  width: 180rpx;
-  height: 180rpx;
-  margin-bottom: var(--m-l);
+.icon-image {
+  width: 100%;
+  height: 100%;
+  padding: var(--p-m);
+  border-radius: var(--r-card);
 }
 
-.icon-text {
-  font-size: var(--f-lg);
-  font-weight: bold;
-  color: var(--bg-primary);
-}
-
-.bento-item.large .icon-text {
-  font-size: var(--f-xl);
-}
 
 .bento-title {
+  position: absolute;
+  bottom: var(--p-m);
+  left: var(--p-m);
+  right: var(--p-m);
   font-size: var(--f-base);
   color: var(--text-primary);
   font-weight: 500;
   line-height: 1.4;
+  background-color: var(--bg-frosted);
+  padding: var(--p-s);
+  border-radius: var(--r-pill);
+  backdrop-filter: blur(10rpx);
+  text-align: center;
 }
 
 .bento-item.large .bento-title {
-  font-size: var(--f-base);
+  bottom: var(--p-l);
+  left: var(--p-l);
+  right: var(--p-l);
 }
 
 /* 时间线样式 */

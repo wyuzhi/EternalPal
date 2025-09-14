@@ -3,11 +3,7 @@
   /* background-color: var(--bg-primary); */
   min-height: 100vh;
   padding-bottom: 50rpx;
-  background: linear-gradient(180deg, 
-    #ebf5ff 6%, 
-    #e7f6c7 40%, 
-    #f7f9df 76%, 
-    #fffbeb 100%);
+  background: var(--bg-gradient);
 }
 
 /* 区块标题 */
@@ -16,7 +12,7 @@
   font-weight: bold;
   color: var(--text-primary);
   margin-bottom: var(--m-m);
-  margin-top: var(--m-xl);
+  margin-top: var(--m-xl);  
   padding-left: var(--p-s);
 }
 
@@ -28,7 +24,7 @@
 .section {
   background-color: var(--bg-frosted);
   border-radius: var(--r-card);
-  padding: var(--p-m);
+  padding: var(--p-l);
   margin-bottom: var(--p-l);
   border: 1rpx solid var(--border-light);
   box-shadow: 0 4rpx 20rpx var(--shadow-light);

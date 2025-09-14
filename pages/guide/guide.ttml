@@ -69,13 +69,13 @@
         <view wx:if="{{currentSlide === 0}}">
           <!-- 这里显示用户名，如果有的话，没有的话则“你好呀” -->
           <view class="greeting">hi {{userName}}</view>
-          <view class="greeting">准备好把你的伙伴<br/>带回你身边了吗</view>
-          <view class="description">让记忆延续，让陪伴发生，生成你独一无二的萌宠宠物</view>
+          <view class="greeting">准备好迎接<br/>你的专属宠伴了吗</view>
+          <view class="description">让陪伴发生，让快乐延续生成你独一无二的萌宠宠物</view>
         </view>
         <view wx:else>
           <view class="greeting">四步重逢</view>
-          <view class="greeting">让熟悉的伙伴再次回到你身边</view>
-          <view class="description">每一步都用心守护，让逝去或缺席的陪伴得以延续</view>
+          <view class="greeting">让你的专属宠伴活力登场</view>
+          <view class="description">每一步都充满惊喜，为你打造最懂你的宠物伙伴</view>
         </view>
       </view>
     </view>

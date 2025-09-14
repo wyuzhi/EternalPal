@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "创建灵伴",
   "requiredPrivateInfos": ["chooseImage"],
-  "usingComponents": {}
+  "usingComponents": {
+    "loader": "/components/loader/loader"
+  }
 }

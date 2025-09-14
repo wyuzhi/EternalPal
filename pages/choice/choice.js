@@ -33,45 +33,117 @@ Page({
     // 使用全局登录方法
     app.login().then(code => {
       console.log('获取登录凭证成功，code:', code)
-      // 将code发送到后端换取openid/douyin_id并创建用户记录
-      that.sendCodeToBackend(code)
+      // 先进行基础登录，不获取用户详细信息
+      that.sendCodeToBackend(code, null, null)
     }).catch(error => {
       console.error('获取登录凭证失败:', error)
       that.handleLoginFailure()
     })
   },
   
+  // 在用户点击时获取用户信息并更新
+  getUserProfileAndUpdate: function() {
+    const that = this
+    
+    // 使用tt.getUserProfile获取用户信息（必须在点击事件中调用）
+    tt.getUserProfile({
+      success: (userProfileRes) => {
+        console.log('获取用户信息成功:', userProfileRes)
+        const userInfo = userProfileRes.userInfo
+        
+        // 更新后端用户信息
+        that.updateUserProfile(userInfo.nickName, userInfo.avatarUrl)
+      },
+      fail: (error) => {
+        console.log('获取用户信息失败:', error)
+        // 即使获取失败也继续执行后续操作
+      }
+    })
+  },
+  
+  // 更新用户信息到后端
+  updateUserProfile: function(nickName, avatarUrl) {
+    const that = this
+    const userInfo = app.getUserInfo()
+    
+    if (!userInfo || !userInfo.id) {
+      console.log('用户未登录，无法更新信息')
+      return
+    }
+    
+    tt.request({
+      url: app.globalData.API_BASE_URL + '/users/update-profile',
+      method: 'POST',
+      data: {
+        user_id: userInfo.id,
+        name: nickName,
+        headp: avatarUrl
+      },
+      success: (response) => {
+        console.log('用户信息更新成功:', response)
+        // 更新本地用户信息
+        const updatedUserInfo = {
+          ...userInfo,
+          name: nickName,
+          headp: avatarUrl
+        }
+        app.setUserInfo(updatedUserInfo)
+        that.setData({
+          userName: nickName
+        })
+      },
+      fail: (error) => {
+        console.log('用户信息更新失败:', error)
+      }
+    })
+  },
+  
   // 发送code到后端并处理响应
-  sendCodeToBackend: function(code) {
+  sendCodeToBackend: function(code, userName, userAvatar) {
     const that = this
     const apiUrl = app.globalData.API_BASE_URL + '/users/login'
+    
+    const requestData = {
+      code: code
+    }
+    
+    // 如果有用户信息，添加到请求数据中
+    if (userName) {
+      requestData.name = userName
+    }
+    if (userAvatar) {
+      requestData.headp = userAvatar
+    }
     
     tt.request({
       url: apiUrl,
       method: 'POST',
-      data: {
-        code: code
-      },
+      data: requestData,
       timeout: 15000, // 延长超时时间至15秒
       success: (loginResponse) => {
         console.log('后端登录响应:', loginResponse)
         if (loginResponse.data && loginResponse.data.douyin_id && loginResponse.data.user_id) {
           const douyinId = loginResponse.data.douyin_id
           const userId = loginResponse.data.user_id
+          const userName = loginResponse.data.name || '你好呀'
+          const userAvatar = loginResponse.data.headp
           
           const userInfo = {
             id: userId,
-            douyin_id: douyinId
+            douyin_id: douyinId,
+            name: userName,
+            headp: userAvatar
           }
           
           // 更新全局用户信息
           app.setUserInfo(userInfo)
           
-          console.log('用户登录成功，ID:', userId, '抖音ID:', douyinId)
+          console.log('用户登录成功，ID:', userId, '抖音ID:', douyinId, '昵称:', userName)
           
-          // 设置授权状态
+          // 设置授权状态和用户名
           that.setData({
-            isAuthorized: true
+            isAuthorized: true,
+            userName: userName
           })
         } else {
           console.error('登录失败，未获取到用户标识', loginResponse.data)
@@ -81,34 +153,50 @@ Page({
       fail: (error) => {
         console.error('登录请求失败:', error)
         // 添加重试逻辑
-        that.retryLogin(code)
+        that.retryLogin(code, userName, userAvatar)
       }
     })
   },
 
   // 重试登录逻辑
-  retryLogin: function(code) {
+  retryLogin: function(code, userName, userAvatar) {
     const that = this
     console.log('开始重试登录...')
+    
+    const requestData = {
+      code: code
+    }
+    
+    // 如果有用户信息，添加到请求数据中
+    if (userName) {
+      requestData.name = userName
+    }
+    if (userAvatar) {
+      requestData.headp = userAvatar
+    }
     
     setTimeout(() => {
       tt.request({
         url: app.globalData.API_BASE_URL + '/users/login',
         method: 'POST',
-        data: {
-          code: code
-        },
+        data: requestData,
         timeout: 20000,
         success: (response) => {
           console.log('重试登录成功:', response)
           if (response.data && response.data.douyin_id && response.data.user_id) {
+            const userName = response.data.name || '你好呀'
+            const userAvatar = response.data.headp
+            
             const userInfo = {
               id: response.data.user_id,
-              douyin_id: response.data.douyin_id
+              douyin_id: response.data.douyin_id,
+              name: userName,
+              headp: userAvatar
             }
             app.setUserInfo(userInfo)
             that.setData({
-              isAuthorized: true
+              isAuthorized: true,
+              userName: userName
             })
           } else {
             that.handleLoginFailure()
@@ -143,17 +231,23 @@ Page({
     })
   },
 
-  // 自定义按钮点击事件 - 跳转到pet页面
+  // 自定义宠物按钮点击事件
   onCustomClick: function() {
     console.log('点击自定义按钮')
+    // 先尝试获取用户信息
+    this.getUserProfileAndUpdate()
+    
     tt.navigateTo({
       url: '/pages/pet/pet'
     })
   },
 
-  // 盲盒按钮点击事件 - 显示弹窗
+  // 盲盒按钮点击事件
   onBlindBoxClick: function() {
     console.log('点击盲盒按钮')
+    // 先尝试获取用户信息
+    this.getUserProfileAndUpdate()
+    
     this.setData({
       showBlindBoxModal: true
     })
@@ -166,9 +260,12 @@ Page({
     })
   },
 
-  // 领养按钮点击事件 - 跳转到systemPet页面
+  // 领养按钮点击事件
   onAdoptClick: function() {
     console.log('点击领养按钮')
+    // 先尝试获取用户信息
+    this.getUserProfileAndUpdate()
+    
     tt.navigateTo({
       url: '/pages/systemPet/systemPet'
     })

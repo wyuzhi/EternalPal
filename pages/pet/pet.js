@@ -42,7 +42,7 @@ Page({
     petPhotos: [],
     maxPhotos: 1,
     petDescription: '', // 宠物描述（没有照片时填写）
-    userName: '', // 用户名字
+
     userRelation: '', // 用户称呼
     generationProgress: 0,
     isGenerating: false,
@@ -488,12 +488,7 @@ Page({
     }
   },
 
-  // 输入用户名字
-  inputUserName: function(e) {
-    this.setData({
-      userName: e.detail.value
-    })
-  },
+
 
   // 输入用户称呼
   inputUserRelation: function(e) {
@@ -529,6 +524,21 @@ Page({
     })
 
     this.startGenerating()
+  },
+
+  // 预创建宠物（user_id为0）
+  preCreatePet: function() {
+    // 验证当前步骤表单
+    if (!this.validateCurrentStep()) return
+
+    // 输出收集的所有数据作为调试信息
+    console.log('预创建宠物信息数据:', JSON.stringify(this.data, null, 2))
+
+    this.setData({
+      currentStep: 4
+    })
+
+    this.startPreGenerating()
   },
 
   // 上传宠物照片
@@ -668,13 +678,6 @@ Page({
         }
         return true
       case 2:
-        if (!this.data.userName || !this.data.userName.trim()) {
-          tt.showToast({
-            title: '记得告诉我你的名字哦',
-            icon: 'none'
-          })
-          return false
-        }
         if (!this.data.userRelation || !this.data.userRelation.trim()) {
           tt.showToast({
             title: '我还不知道怎么称呼你呢',
@@ -1012,7 +1015,7 @@ Page({
         story: that.data.petStory,
         description:that.data.petDescription,
         generated_image: that.data.petPhotos && that.data.petPhotos.length > 0 ? that.data.petPhotos[0] : '',
-        // 移除model_url字段
+        user_relation: that.data.userRelation, // 宠物对用户的称呼
         user_id: taskInfo.userId
         // TODO: 初始化反馈相关字段
         // total_likes: 0,
@@ -1214,6 +1217,163 @@ Page({
         console.error('创建宠物失败', err)
         tt.showToast({
           title: '创建灵伴失败，请稍后重试',
+          icon: 'none'
+        })
+        // 重置到步骤3让用户重试
+        that.setData({
+          currentStep: 3,
+          generationProgress: 0
+        })
+      }
+    })
+  },
+
+  // 开始预生成宠物（user_id为0）
+  startPreGenerating: function() {
+    console.log('startPreGenerating 函数被调用')
+    const that = this
+    console.log('重置进度条为0%')
+    this.setData({
+      currentStep: 4,
+      generationProgress: 0
+    })
+    console.log('进度条重置完成，当前进度:', this.data.generationProgress)
+    
+    // 启动生成步骤文字更新
+    this.updateGenerationSteps()
+    
+    // 启动小贴士轮播
+    console.log('准备调用 startTipsRotation')
+    this.startTipsRotation()
+
+    // 清除之前的定时器（如果存在）
+    if (that.progressTimer) {
+      clearInterval(that.progressTimer)
+    }
+    
+    // 模拟进度条更新，3分钟内只到99%
+    const timer = setInterval(function() {
+      let progress = that.data.generationProgress + 0.55 // 调整增长速度，3分钟(180秒)内到99%
+      if (progress >= 99) {
+        progress = 99 // 最多只到99%，等待轮询成功后才到100%
+        clearInterval(timer) // 到达99%后停止进度条更新
+        that.progressTimer = null // 清除定时器引用
+      }
+      console.log('进度条更新:', progress.toFixed(2) + '%')
+      that.setData({
+        generationProgress: parseFloat(progress.toFixed(2))
+      })
+      
+      // 更新预计剩余时间
+      let remainingTime
+      if (progress < 30) {
+        remainingTime = '约3分钟'
+      } else if (progress < 60) {
+        remainingTime = '约2分钟'
+      } else if (progress < 90) {
+        remainingTime = '约1分钟'
+      } else {
+        remainingTime = '即将完成'
+      }
+      
+      that.setData({
+        estimatedTimeRemaining: remainingTime
+      })
+    }, 1000) // 改为每秒更新一次
+
+    // 保存定时器引用，用于后续清理
+    that.progressTimer = timer
+    
+    // 调用新的集成API，先创建3D模型再保存宠物（user_id为0）
+    // 增加超时时间到10分钟，因为3D模型生成可能需要较长时间
+    tt.request({
+        url: app.globalData.API_BASE_URL + '/pets/create-with-3d',
+        method: 'POST',
+        timeout: 600000, // 增加到10分钟超时时间
+        data: {
+          name: that.data.petName || '我的萌宠',
+          type: that.data.petType,
+          gender: that.data.petGender,
+          birthday: that.data.petBirthday,
+          personality: that.data.selectedPersonalities.join(','),
+          hobby: that.data.selectedHobbies.join(','),
+          story: that.data.petStory,
+          description: that.data.petDescription,
+          generated_image: that.data.petPhotos && that.data.petPhotos.length > 0 ? that.data.petPhotos[0] : '',
+          user_relation: that.data.userRelation,
+          user_id: 0, // 预创建时user_id为0
+        },
+        success: function(res) {
+          // 不要在这里清除进度条定时器，让进度条继续运行到99%
+          // 进度条定时器会在到达99%时自动清除，或者在轮询成功时清除
+          tt.hideLoading()
+          console.log('预创建宠物和3D模型生成响应:', res)
+          
+          // 增加更详细的日志
+          if (res.data) {
+            console.log('响应数据:', res.data)
+            console.log('状态码:', res.statusCode)
+          } else {
+            console.error('响应数据为空')
+          }
+          
+          // 处理响应
+          if (res.statusCode === 202 && res.data && res.data.status === 'pending') {
+            // 202状态码表示请求已接受但处理尚未完成（3D模型生成是异步的）
+            // 保存宠物ID到本地，但不立即跳转到步骤5
+            that.setData({
+              petId: res.data.pet_id,
+              taskId: res.data.task_id,
+              // 继续停留在步骤4，显示等待状态
+              currentStep: 4
+            })
+            
+            tt.showToast({
+              title: '预创建宠物成功，3D模型正在生成中...',
+              icon: 'none',
+              duration: 3000
+            })
+            
+            // 开始轮询检查3D模型生成状态
+            that.startCheckingModelStatus(res.data.pet_id, res.data.task_id)
+          } else if (res.statusCode === 201 || (res.data && res.data.status === 'success')) {
+            // 如果是同步生成成功（这种情况在当前实现中应该不会发生）
+            that.setData({
+              generationProgress: 100,
+              petId: res.data?.pet_id || 'unknown',
+              modelUrl: res.data?.model_url || res.data?.file_urls?.OBJ?.url || res.data?.file_urls?.GIF?.url || '',
+              modelLoaded: true,
+              generatedPetImage: '/images/pet_sample.png',
+              currentStep: 5
+            })
+            tt.navigateTo({
+              url: '/pages/companion/companion'
+            })
+            tt.showToast({
+              title: '预创建灵伴和3D模型生成成功！',
+              icon: 'success'
+            })
+          } else {
+            // 生成失败，停留在步骤4并显示错误提示
+            that.setData({
+              generationProgress: 0
+            })
+            tt.showToast({
+              title: '预创建失败：' + (res.data?.message || '未知错误'),
+              icon: 'none'
+            })
+          }
+      },
+      fail: function(err) {
+        // API请求失败时，清除进度条定时器并显示错误
+        if (that.progressTimer) {
+          clearInterval(that.progressTimer)
+          that.progressTimer = null
+        }
+        tt.hideLoading()
+        console.error('预创建宠物失败', err)
+        tt.showToast({
+          title: '预创建灵伴失败，请稍后重试',
           icon: 'none'
         })
         // 重置到步骤3让用户重试

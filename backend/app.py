@@ -89,11 +89,14 @@ class Pet(db.Model):
     status = db.Column(db.String(20), default='pending')  # 添加状态字段
     task_id = db.Column(db.String(100), nullable=True)    # 添加任务ID字段
     intimacy = db.Column(db.Integer, default=0)           # 亲密度字段，默认为0，无上限
+    user_relation = db.Column(db.Text)                    # 宠物对用户的称呼字段
 
 # 定义用户模型
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     douyin_id = db.Column(db.String(100), unique=True, nullable=False)
+    name = db.Column(db.String(100))  # 用户昵称
+    headp = db.Column(db.String(255))  # 用户头像URL
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     pets = db.relationship('Pet', backref='owner', lazy=True)
 
@@ -116,6 +119,8 @@ def douyin_login():
     try:
         data = request.json
         code = data.get('code')
+        user_name = data.get('name')  # 用户昵称
+        user_headp = data.get('headp')  # 用户头像URL
         
         if not code:
             return jsonify({'error': 'Missing code parameter'}), 400
@@ -158,30 +163,64 @@ def douyin_login():
         user = User.query.filter_by(douyin_id=douyin_id).first()
         if not user:
             # 创建新用户
-            user = User(douyin_id=douyin_id)
+            user = User(douyin_id=douyin_id, name=user_name, headp=user_headp)
             db.session.add(user)
             db.session.commit()
-            print(f"新用户创建成功，抖音ID: {douyin_id}")
+            print(f"新用户创建成功，抖音ID: {douyin_id}, 昵称: {user_name}")
         else:
-            print(f"用户登录成功，抖音ID: {douyin_id}")
+            # 更新现有用户的昵称和头像（如果提供了新信息）
+            if user_name and user.name != user_name:
+                user.name = user_name
+            if user_headp and user.headp != user_headp:
+                user.headp = user_headp
+            db.session.commit()
+            print(f"用户登录成功，抖音ID: {douyin_id}, 昵称: {user.name}")
         
         return jsonify({
             'user_id': user.id,
-            'douyin_id': user.douyin_id
+            'douyin_id': user.douyin_id,
+            'name': user.name,
+            'headp': user.headp
         })
     except Exception as e:
-        print(f"登录过程发生错误: {str(e)}")
-        # 发生错误时，使用模拟数据确保小程序能正常运行
-        douyin_id = 'douyin_' + str(hash(code))
-        user = User.query.filter_by(douyin_id=douyin_id).first()
+        print(f"登录错误: {e}")
+        return jsonify({'error': '登录失败'}), 500
+
+@app.route('/api/users/update-profile', methods=['POST'])
+def update_user_profile():
+    """更新用户信息"""
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        name = data.get('name')
+        headp = data.get('headp')
+        
+        if not user_id:
+            return jsonify({'error': '缺少用户ID'}), 400
+            
+        # 查找用户
+        user = User.query.get(user_id)
         if not user:
-            user = User(douyin_id=douyin_id)
-            db.session.add(user)
-            db.session.commit()
+            return jsonify({'error': '用户不存在'}), 404
+            
+        # 更新用户信息
+        if name:
+            user.name = name
+        if headp:
+            user.headp = headp
+            
+        db.session.commit()
+        
         return jsonify({
+            'message': '用户信息更新成功',
             'user_id': user.id,
-            'douyin_id': user.douyin_id
+            'name': user.name,
+            'headp': user.headp
         })
+        
+    except Exception as e:
+        print(f"更新用户信息错误: {e}")
+        return jsonify({'error': '更新失败'}), 500
 
 # 通过抖音ID获取或创建用户（保留原有接口，用于兼容）
 @app.route('/api/users/douyin/<string:douyin_id>', methods=['GET'])
@@ -272,7 +311,9 @@ def get_user_latest_pet(user_id):
         'created_at': latest_pet.created_at.isoformat(),
         'material_url': latest_pet.material_url,
         'texture_url': latest_pet.texture_url,
-        'intimacy': latest_pet.intimacy  # 亲密度字段
+        'intimacy': latest_pet.intimacy,  # 亲密度字段
+        'user_relation':latest_pet.user_relation
+
     }
     
     return jsonify({'status': 'success', 'data': pet_data})
@@ -292,7 +333,8 @@ def create_pet():
             description=data.get('description'),  # 宠物外观描述字段
             generated_image=data.get('generated_image'),
             model_url=data.get('model_url'),
-            user_id=data.get('user_id')
+            user_id=data.get('user_id'),
+            user_relation=data.get('user_relation')  # 宠物对用户的称呼
         )
         db.session.add(new_pet)
         db.session.commit()
@@ -327,7 +369,8 @@ def create_pet_with_3d_model():
             'personality': data.get('personality'),
             'hobby': data.get('hobby'),
             'story': data.get('story'),
-            'description': data.get('description')  # 添加外观描述字段
+            'description': data.get('description'),  # 添加外观描述字段
+            'user_relation':data.get('user_relation')
         }
         
         # 导入3D模型生成模块中的create_pet_description函数
@@ -347,6 +390,7 @@ def create_pet_with_3d_model():
             personality=data.get('personality'),
             hobby=data.get('hobby'),
             story=data.get('story'),
+            user_relation=data.get('user_relation'),
             description=data.get('description'),  # 添加外观描述字段
             generated_image=data.get('generated_image'),
             model_url=None,  # 初始为None，等待异步任务完成后更新
@@ -407,7 +451,8 @@ def get_pet(pet_id):
         'task_id': pet.task_id,  # 包含任务ID
         'material_url': pet.material_url,
         'texture_url': pet.texture_url,
-        'intimacy': pet.intimacy  # 亲密度字段
+        'intimacy': pet.intimacy,  # 亲密度字段
+        'user_relation': pet.user_relation  # 宠物对用户的称呼
     }
     # 直接在根级别返回状态信息，方便前端直接获取
     return jsonify({'status': pet.status, **pet_data})
@@ -527,6 +572,7 @@ def get_ai_reply(pet_id):
         'appearance': pet.story or '可爱的宠物',
         'core_personality': pet.personality or '友好',
         'likes': pet.hobby or '和主人玩耍',
+        'user_relation':data.get('user_relation'),
         'system_current_time': datetime.now().strftime('%Y-%m-%d %H:%M'),
         'local_weather_data': {
             'weather': '晴朗',
@@ -598,6 +644,7 @@ def chat_with_pet(pet_id):
             'appearance': pet.description or '可爱的宠物',
             'core_personality': pet.personality or '友好',
             'likes': pet.hobby or '和主人玩耍',
+            'user_relation':data.get('user_relation'),
             'system_current_time': datetime.now().strftime('%Y-%m-%d %H:%M'),
             'local_weather_data': {
                 'weather': '晴朗',
@@ -913,10 +960,10 @@ def get_system_pets():
     """获取所有系统预设宠物（user_id为空的宠物）"""
     try:
         # 查询所有宠物
-        system_pets = Pet.query.all()
+        # system_pets = Pet.query.all()
         # 备用查询条件：只查询系统预设宠物（user_id为空或为0）
         # system_pets = Pet.query.filter(Pet.user_id.is_(None)).all()
-        # system_pets = Pet.query.filter(Pet.user_id == 0).all()
+        system_pets = Pet.query.filter(Pet.user_id == 0).all()
         
         pets_data = []
         for pet in system_pets:

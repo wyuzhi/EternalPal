@@ -80,6 +80,7 @@ def chat_with_ai(userid,pet_profile, message, system_prompt="你是人工智能�
     你的外貌特征：{pet_profile['appearance']}。  
     你的性格：{pet_profile['core_personality']}。  
     你的爱好：{pet_profile['likes']}。
+    你对用户的称呼：{pet_profile['user_relation']}。
 
     ## 系统信息
     - 当前时间：{pet_profile['system_current_time']}。

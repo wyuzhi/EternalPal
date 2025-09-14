@@ -437,10 +437,19 @@
   gap: var(--m-l);
 }
 
+/* 创建按钮容器 */
+.create-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--m-m);
+  flex: 1;
+}
+
 /* 所有按钮基础样式 */
 .btn,
 .next-btn,
 .create-btn,
+.pre-create-btn,
 .generating-btn,
 .save-btn,
 .back-btn {
@@ -455,6 +464,7 @@
 .btn::after,
 .next-btn::after,
 .create-btn::after,
+.pre-create-btn::after,
 .generating-btn::after,
 .save-btn::after,
 .back-btn::after {
@@ -464,6 +474,7 @@
 /* 主要按钮样式 */
 .next-btn,
 .create-btn,
+.pre-create-btn,
 .generating-btn,
 .save-btn {
   height: 90rpx;
@@ -483,6 +494,13 @@
 .save-btn {
   background-color: var(--primary-color);
   color: var(--text-primary);
+}
+
+/* 预创建按钮颜色 */
+.pre-create-btn {
+  background-color: var(--bg-frosted);
+  color: var(--text-secondary);
+  border: 1rpx solid var(--border-light);
 }
 
 /* 生成中状态 */
@@ -516,6 +534,7 @@
 /* 主要按钮交互效果 */
 .next-btn:active,
 .create-btn:active,
+.pre-create-btn:active,
 .save-btn:active,
 .back-btn:active {
   transform: scale(0.98);

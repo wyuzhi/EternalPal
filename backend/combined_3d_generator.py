@@ -856,19 +856,19 @@ def generate_3d_model(image_url=None, prompt=None, pet_id=None):
             else:
                 raise Exception(f"2D图片生成失败且无原始图片可用: {str(e)}")
         
-        # # 使用生成的2D图片来生成3D模型
-        # if generated_2d_image_url:
-        #     logger.info(f"开始使用生成的2D图片生成3D模型: {generated_2d_image_url}")
-        #     try:
-        #         result = client.generate_from_image(generated_2d_image_url)
-        #         if result:
-        #             logger.info(f"3D模型生成成功，任务ID: {result.get('job_id', '未知')}")
-        #             return process_3d_model_result(result, pet_id)
-        #         else:
-        #             raise Exception("3D模型生成返回空结果")
-        #     except Exception as e:
-        #         logger.error(f"使用2D图片生成3D模型失败: {str(e)}")
-        #         raise Exception(f"3D模型生成失败: {str(e)}")
+        # 使用生成的2D图片来生成3D模型
+        if generated_2d_image_url:
+            logger.info(f"开始使用生成的2D图片生成3D模型: {generated_2d_image_url}")
+            try:
+                result = client.generate_from_image(generated_2d_image_url)
+                if result:
+                    logger.info(f"3D模型生成成功，任务ID: {result.get('job_id', '未知')}")
+                    return process_3d_model_result(result, pet_id)
+                else:
+                    raise Exception("3D模型生成返回空结果")
+            except Exception as e:
+                logger.error(f"使用2D图片生成3D模型失败: {str(e)}")
+                raise Exception(f"3D模型生成失败: {str(e)}")
         
         # 如果都失败了
         logger.error("3D模型生成失败，没有可用的生成方式")

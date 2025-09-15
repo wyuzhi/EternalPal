@@ -1020,15 +1020,11 @@ def adopt_pet(pet_id):
         if not user:
             return jsonify({'status': 'error', 'message': '用户不存在'}), 404
         
-        # 检查用户是否已经领养过这只宠物
-        existing_pet = Pet.query.filter_by(
-            name=original_pet.name,
-            type=original_pet.type,
-            user_id=user_id
-        ).first()
+        # 检查用户是否已经有宠物
+        existing_pet = Pet.query.filter_by(user_id=user_id).first()
         
         if existing_pet:
-            return jsonify({'status': 'error', 'message': '您已经领养过这只宠物了'}), 400
+            return jsonify({'status': 'error', 'message': '您已经有宠物了，不能再领养'}), 400
         
         # 创建宠物副本给用户
         new_pet = Pet(

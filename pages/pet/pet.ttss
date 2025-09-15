@@ -5,6 +5,18 @@
   overflow: hidden;
 }
 
+/* 内容区域 */
+.content {
+  flex: 1;
+  padding-top: 0;
+  transition: padding-top 0.3s ease;
+}
+
+/* 当显示全局进度条时，为内容区域添加顶部间距 */
+.content.with-progress {
+  padding-top: 120rpx;
+}
+
 .bg-pattern {
   position: fixed;
   top: 0;
@@ -93,6 +105,7 @@
 
 /* 宠物类型标签 */
 .pet-type-labels {
+  position: relative;
   display: flex;
   justify-content: center;
   gap: 16rpx;
@@ -547,14 +560,32 @@
   box-shadow: 0 4rpx 10rpx var(--shadow-light);
 }
 
+/* 返回按钮禁用状态 */
+.back-btn.disabled {
+  background-color: var(--bg-tertiary);
+  border: 1rpx solid var(--border-light);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.back-btn.disabled .back-icon {
+  opacity: 0.5;
+}
+
 /* 主要按钮交互效果 */
 .next-btn:active,
 .create-btn:active,
 .pre-create-btn:active,
 .save-btn:active,
-.back-btn:active {
+.back-btn:active:not(.disabled) {
   transform: scale(0.98);
   box-shadow: 0 2rpx 6rpx var(--shadow-light);
+}
+
+/* 禁用按钮无交互效果 */
+.back-btn.disabled:active {
+  transform: none;
+  box-shadow: 0 4rpx 10rpx var(--shadow-light);
 }
 
 /* 生成中按钮禁用交互 */
@@ -913,6 +944,249 @@
 .remaining-time {
   font-size: var(--f-sm);
   color: var(--text-tertiary);
+}
+
+/* 全局3D模型生成进度条 */
+.floating-model-progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: var(--p-s) var(--p-m);
+  border-radius: var(--r-m);
+  z-index: 100;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.floating-model-progress-bar .progress-label {
+  font-size: var(--f-sm);
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: var(--m-xs);
+  font-weight: 500;
+}
+
+/* 小猫跑动进度条容器 */
+.floating-model-progress-bar .cat-progress-container {
+  width: 100%;
+  height: 60rpx;
+  position: relative;
+  margin-bottom: var(--m-s);
+}
+
+/* 进度条轨道 */
+.floating-model-progress-bar .progress-track {
+  width: 100%;
+  height: 8rpx;
+  background-color: var(--bg-secondary);
+  border-radius: var(--r-pill);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  overflow: hidden;
+}
+
+/* 进度条填充 */
+.floating-model-progress-bar .progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7968E5, #E076D6, #FF7787);
+  border-radius: var(--r-pill);
+  transition: width 0.8s ease;
+  position: relative;
+}
+
+/* 进度条光效 */
+.floating-model-progress-bar .progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+/* 跑动的小猫 */
+.floating-model-progress-bar .running-cat {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  transition: left 0.8s ease;
+  z-index: 10;
+}
+
+/* 小猫图标 */
+.floating-model-progress-bar .cat-icon {
+  width: 48rpx;
+  height: 48rpx;
+  animation: catRunning 0.6s infinite alternate;
+}
+
+/* 小猫阴影 */
+.floating-model-progress-bar .cat-shadow {
+  width: 32rpx;
+  height: 8rpx;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  position: absolute;
+  bottom: -8rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: shadowBounce 0.6s infinite alternate;
+}
+
+/* 小猫跑动动画 */
+@keyframes catRunning {
+  0% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  100% {
+    transform: translateY(-6rpx) rotate(2deg);
+  }
+}
+
+/* 阴影弹跳动画 */
+@keyframes shadowBounce {
+  0% {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateX(-50%) scaleX(0.8);
+    opacity: 0.2;
+  }
+}
+
+.floating-model-progress-bar .progress-text {
+  font-size: var(--f-xs);
+  color: var(--text-tertiary);
+  text-align: center;
+  font-weight: 500;
+}
+
+/* 错误对话框样式 */
+.error-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5rpx);
+}
+
+.error-dialog {
+  background: white;
+  border-radius: 20rpx;
+  width: 600rpx;
+  max-width: 90vw;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: errorDialogShow 0.3s ease-out;
+}
+
+@keyframes errorDialogShow {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-50rpx);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.error-dialog-header {
+  padding: 40rpx 40rpx 20rpx 40rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.error-dialog-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.error-dialog-close {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: #f5f5f5;
+  border: none;
+  font-size: 36rpx;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.error-dialog-close:active {
+  background: #e0e0e0;
+  transform: scale(0.95);
+}
+
+.error-dialog-body {
+  padding: 20rpx 40rpx 40rpx 40rpx;
+}
+
+.error-dialog-message {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+.error-dialog-footer {
+  padding: 20rpx 40rpx 40rpx 40rpx;
+  display: flex;
+  gap: 20rpx;
+  justify-content: flex-end;
+}
+
+.error-dialog-btn {
+  padding: 20rpx 40rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  transition: all 0.2s ease;
+  min-width: 120rpx;
+}
+
+.retry-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.retry-btn:active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+.cancel-btn {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.cancel-btn:active {
+  background: #e0e0e0;
+  transform: scale(0.95);
 }
 
 /* 进度条 */

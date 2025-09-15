@@ -21,7 +21,7 @@ try:
     print()
     
     # 首先查询要删除的记录
-    cursor.execute("SELECT id, name, type FROM pet WHERE id > 3")
+    cursor.execute("SELECT id, name, type FROM pet WHERE id > 1")
     pets_to_delete = cursor.fetchall()
     
     if not pets_to_delete:
@@ -37,7 +37,7 @@ try:
         confirm = input("确认删除以上宠物记录吗？(y/N): ")
         if confirm.lower() in ['y', 'yes']:
             # 执行删除操作
-            cursor.execute("DELETE FROM pet WHERE id > 3")
+            cursor.execute("DELETE FROM pet WHERE id > 1")
             deleted_count = cursor.rowcount
             
             # 提交事务

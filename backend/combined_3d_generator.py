@@ -794,6 +794,8 @@ def generate_3d_model(image_url=None, prompt=None, pet_id=None):
                             desc_parts.append(f"喜欢{pet.hobby}")
                         if pet.story:
                             desc_parts.append(f"背景故事：{pet.story}")
+                        if pet.description:
+                            desc_parts.append(f"外观为：{pet.description}")
                         
                         if desc_parts:
                             pet_description = "，".join(desc_parts)
@@ -872,7 +874,7 @@ def generate_3d_model(image_url=None, prompt=None, pet_id=None):
         if generated_2d_image_url:
             logger.info(f"开始使用生成的2D图片生成3D模型: {generated_2d_image_url}")
             try:
-                # result = client.generate_from_image(generated_2d_image_url)
+                result = client.generate_from_image(generated_2d_image_url)
                 if result:
                     logger.info(f"3D模型生成成功，任务ID: {result.get('job_id', '未知')}")
                     return process_3d_model_result(result, pet_id)

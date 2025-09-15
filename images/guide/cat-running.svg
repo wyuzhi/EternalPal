@@ -1,0 +1,52 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- 小猫身体（侧面椭圆形） -->
+  <ellipse cx="16" cy="20" rx="10" ry="5" fill="#FF8C42" stroke="#E67E22" stroke-width="1">
+    <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 16 20;1 16 20;0 16 20;-1 16 20;0 16 20" dur="0.6s" repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- 小猫头部（侧面） -->
+  <ellipse cx="24" cy="14" rx="5" ry="6" fill="#FF8C42" stroke="#E67E22" stroke-width="1">
+    <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 24 14;0.5 24 14;0 24 14;-0.5 24 14;0 24 14" dur="0.6s" repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- 小猫耳朵（侧面） -->
+  <polygon points="22,8 24,4 26,8" fill="#FF8C42" stroke="#E67E22" stroke-width="1">
+    <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 24 6;0.5 24 6;0 24 6;-0.5 24 6;0 24 6" dur="0.6s" repeatCount="indefinite"/>
+  </polygon>
+  <polygon points="25,9 27,5 29,9" fill="#FF8C42" stroke="#E67E22" stroke-width="1">
+    <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 27 7;0.5 27 7;0 27 7;-0.5 27 7;0 27 7" dur="0.6s" repeatCount="indefinite"/>
+  </polygon>
+  
+  <!-- 小猫眼睛（侧面单眼） -->
+  <circle cx="26" cy="13" r="1.5" fill="#2C3E50">
+    <animate attributeName="cy" values="13;12.5;13;13.5;13" dur="0.6s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- 小猫鼻子（侧面） -->
+  <circle cx="29" cy="15" r="1" fill="#E74C3C">
+    <animate attributeName="cx" values="29;28.5;29;29.5;29" dur="0.6s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- 小猫前腿 -->
+  <ellipse cx="22" cy="25" rx="1.5" ry="4" fill="#FF8C42" stroke="#E67E22" stroke-width="1">
+    <animate attributeName="ry" values="4;3;4;5;4" dur="0.3s" repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- 小猫后腿 -->
+  <ellipse cx="12" cy="25" rx="1.5" ry="4" fill="#FF8C42" stroke="#E67E22" stroke-width="1">
+    <animate attributeName="ry" values="4;5;4;3;4" dur="0.3s" repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- 小猫尾巴（侧面弯曲） -->
+  <path d="M6 18 Q2 12 4 8 Q6 6 8 8" stroke="#FF8C42" stroke-width="3" fill="none" stroke-linecap="round">
+    <animate attributeName="d" values="M6 18 Q2 12 4 8 Q6 6 8 8;M6 18 Q1 13 3 9 Q5 7 7 9;M6 18 Q2 12 4 8 Q6 6 8 8;M6 18 Q3 11 5 7 Q7 5 9 7;M6 18 Q2 12 4 8 Q6 6 8 8" dur="0.6s" repeatCount="indefinite"/>
+  </path>
+  
+  <!-- 小猫胡须（侧面） -->
+  <line x1="29" y1="14" x2="32" y2="13" stroke="#2C3E50" stroke-width="0.5">
+    <animate attributeName="x2" values="32;31;32;33;32" dur="0.6s" repeatCount="indefinite"/>
+  </line>
+  <line x1="29" y1="16" x2="32" y2="17" stroke="#2C3E50" stroke-width="0.5">
+    <animate attributeName="x2" values="32;33;32;31;32" dur="0.6s" repeatCount="indefinite"/>
+  </line>
+</svg>

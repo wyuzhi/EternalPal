@@ -2,11 +2,10 @@
 
   <view class="bg-pattern"></view>
 
-
   <!-- 内容区域 -->
   <view class="content">
     <!-- 宠物类型轮播选择 -->
-    <view class="pet-type-carousel {{currentStep > 1 ? 'disabled' : ''}}" wx:if="{{currentStep !== 4 && currentStep !== 5}}">      
+    <view class="pet-type-carousel {{currentStep > 1 ? 'disabled' : ''}}" wx:if="{{currentStep !== 4 && currentStep !== 5}}">
       <view class="carousel-scroll">
         <view class="carousel-container">
           <view 
@@ -25,6 +24,20 @@
       </view>
       <!-- 宠物类型标签 -->
       <view class="pet-type-labels">
+        <!-- 3D模型生成进度条 - 覆盖在标签文字上方 -->
+        <view wx:if="{{showModelProgress && modelGenerationStarted && (currentStep === 2 || currentStep === 3 || currentStep === 4)}}" class="floating-model-progress-bar">
+          <view class="progress-label">小猫正在为你生成3D模型...</view>
+          <view class="cat-progress-container">
+            <view class="progress-track">
+              <view class="progress-fill" style="width: {{modelGenerationProgress}}%;"></view>
+            </view>
+            <view class="running-cat" style="left: {{modelGenerationProgress}}%;">
+              <image src="/images/guide/cat-running.svg" class="cat-icon" mode="aspectFit"></image>
+              <view class="cat-shadow"></view>
+            </view>
+          </view>
+          <view class="progress-text">{{modelGenerationProgress}}% 完成</view>
+        </view>
         <view 
           wx:for="{{allPetTypes}}" 
           wx:key="type" 
@@ -38,9 +51,60 @@
       </view>
     </view>
 
-    <!-- 步骤1: 宠物基本信息 -->
+    <!-- 步骤1: 上传照片 -->
     <view wx:if="{{currentStep === 1}}" class="step1-container">
+
+      <!-- 照片上传卡片 -->
+      <view class="info-card">
+        <view class="card-header">
+          <text class="card-title">我的照片</text>
+        </view>
         
+        <view class="form-group">
+          <view class="upload-container">
+            <!-- 已上传的照片 -->
+            <view wx:if="{{petPhotos.length > 0}}" class="single-photo-item">
+              <image src="{{petPhotos[0]}}" mode="aspectFill" class="uploaded-single-photo"></image>
+              <view class="delete-photo-btn" bindtap="deletePetPhoto" data-index="0">
+                <image src="/images/guide/close.svg" mode="aspectFit" class="delete-icon"></image>
+              </view>
+            </view>
+            <!-- 上传按钮 -->
+            <view wx:else class="single-upload-box" bindtap="uploadPetPhotos">
+              <view class="upload-icon">
+                <image src="/images/guide/image.svg" mode="aspectFit" style="width: 80rpx; height: 80rpx;"></image>
+              </view>
+              <text class="upload-text">点击上传照片</text>
+            </view>
+          </view>
+          <view class="form-note">上传一张清晰的宠物照片，有助于生成更准确的3D模型</view>
+        </view>
+      </view>
+
+      <!-- 没有照片的描述卡片 -->
+      <view class="info-card">
+        <view class="card-header">
+          <text class="card-title">没有照片？</text>
+        </view>
+        
+        <view class="form-group">
+          <view class="input-container">
+            <textarea 
+              class="form-input-supplement"
+              placeholder="我长什么样？有什么特征？" 
+              value="{{petDescription}}" 
+              bindinput="inputPetDescription"
+              maxlength="100"
+              auto-height="true"
+            />
+            <view class="char-count">{{petDescription.length}}/100</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 步骤2: 宠物基本信息 -->
+    <view wx:if="{{currentStep === 2}}" class="step2-container">
 
       <!-- 基本信息卡片 -->
       <view class="info-card">
@@ -126,8 +190,8 @@
       </view>
     </view>
 
-    <!-- 步骤2: 用户故事 -->
-    <view wx:if="{{currentStep === 2}}" class="step2-container">
+    <!-- 步骤3: 用户故事 -->
+    <view wx:if="{{currentStep === 3}}" class="step3-container">
 
       <view class="info-card">
         <view class="card-header">
@@ -153,58 +217,6 @@
               auto-height="true"
             />
             <view class="char-count">{{petStory.length}}/300</view>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <!-- 步骤3: 上传照片 -->
-    <view wx:if="{{currentStep === 3}}" class="step3-container">
-
-      <!-- 照片上传卡片 -->
-      <view class="info-card">
-        <view class="card-header">
-          <text class="card-title">我的照片</text>
-        </view>
-        
-        <view class="form-group">
-          <view class="upload-container">
-            <!-- 已上传的照片 -->
-            <view wx:if="{{petPhotos.length > 0}}" class="single-photo-item">
-              <image src="{{petPhotos[0]}}" mode="aspectFill" class="uploaded-single-photo"></image>
-              <view class="delete-photo-btn" bindtap="deletePetPhoto" data-index="0">
-                <image src="/images/guide/close.svg" mode="aspectFit" class="delete-icon"></image>
-              </view>
-            </view>
-            <!-- 上传按钮 -->
-            <view wx:else class="single-upload-box" bindtap="uploadPetPhotos">
-              <view class="upload-icon">
-                <image src="/images/guide/image.svg" mode="aspectFit" style="width: 80rpx; height: 80rpx;"></image>
-              </view>
-              <text class="upload-text">点击上传照片</text>
-            </view>
-          </view>
-          <view class="form-note">上传一张清晰的宠物照片，有助于生成更准确的3D模型</view>
-        </view>
-      </view>
-
-      <!-- 没有照片的描述卡片 -->
-      <view class="info-card">
-        <view class="card-header">
-          <text class="card-title">没有照片？</text>
-        </view>
-        
-        <view class="form-group">
-          <view class="input-container">
-            <textarea 
-              class="form-input-supplement"
-              placeholder="我长什么样？有什么特征？" 
-              value="{{petDescription}}" 
-              bindinput="inputPetDescription"
-              maxlength="100"
-              auto-height="true"
-            />
-            <view class="char-count">{{petDescription.length}}/100</view>
           </view>
         </view>
       </view>
@@ -312,7 +324,7 @@
       
       <!-- 步骤2: 返回 + 继续 -->
       <view wx:if="{{currentStep === 2}}" class="button-group">
-        <button class="back-btn" bindtap="prevStep">
+        <button class="back-btn {{modelGenerationStarted ? 'disabled' : ''}}" bindtap="prevStep">
           <image class="back-icon" src="/images/guide/continue.svg" mode="aspectFit"></image>
         </button>
         <button class="next-btn" bindtap="nextStep">
@@ -321,21 +333,15 @@
         </button>
       </view>
       
-      <!-- 步骤3: 返回 + 创建Linki -->
-      <view wx:if="{{currentStep === 3 && !isGenerating}}" class="button-group">
+      <!-- 步骤3: 返回 + 继续 -->
+      <view wx:if="{{currentStep === 3}}" class="button-group">
         <button class="back-btn" bindtap="prevStep">
           <image class="back-icon" src="/images/guide/continue.svg" mode="aspectFit"></image>
         </button>
-        <view class="create-buttons">
-          <button class="pre-create-btn" bindtap="preCreatePet">
-            <text class="btn-text">预创建</text>
-            <image class="btn-icon" src="/images/guide/generate.svg" mode="aspectFit"></image>
-          </button>
-          <button class="create-btn" bindtap="createPet">
-            <text class="btn-text">创建</text>
-            <image class="btn-icon" src="/images/guide/generate.svg" mode="aspectFit"></image>
-          </button>
-        </view>
+        <button class="next-btn" bindtap="nextStep">
+          <text class="btn-text">继续</text>
+          <image class="btn-icon" src="/images/guide/continue.svg" mode="aspectFit"></image>
+        </button>
       </view>
     </view>
   </view>
@@ -357,6 +363,23 @@
         <text class="btn-text">保存</text>
         <image class="btn-icon" src="/images/guide/save.svg" mode="aspectFit"></image>
       </button>
+    </view>
+  </view>
+
+  <!-- 错误对话框 -->
+  <view wx:if="{{showErrorDialog}}" class="error-dialog-overlay">
+    <view class="error-dialog">
+      <view class="error-dialog-header">
+        <text class="error-dialog-title">{{errorDialogTitle}}</text>
+        <button class="error-dialog-close" bindtap="closeErrorDialog">×</button>
+      </view>
+      <view class="error-dialog-body">
+        <text class="error-dialog-message">{{errorDialogMessage}}</text>
+      </view>
+      <view class="error-dialog-footer">
+        <button wx:if="{{canRetry}}" class="error-dialog-btn retry-btn" bindtap="retryModelGeneration">重试</button>
+        <button class="error-dialog-btn cancel-btn" bindtap="closeErrorDialog">取消</button>
+      </view>
     </view>
   </view>
 </view>

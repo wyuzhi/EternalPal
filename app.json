@@ -1,8 +1,7 @@
 {
   "pages": [
-    "pages/pet/pet",
     "pages/guide/guide",
-    
+    "pages/pet/pet",
     "pages/presetPet/presetPet",
     "pages/companion/companion",
     "pages/petProfile/petProfile",

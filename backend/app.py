@@ -364,7 +364,7 @@ def create_pet_with_3d_model():
         
         data = request.json
         # 验证必要数据
-        if not data or not data.get('name') or data.get('user_id') is None:
+        if not data or not data.get('type') or data.get('user_id') is None:
             logger.error("无效的请求数据")
             return jsonify({'status': 'error', 'message': '缺少必要参数'}), 400
         
@@ -924,6 +924,60 @@ def update_pet_descriptions(pet_id):
         
     except Exception as e:
         logger.error(f"更新宠物描述时出错: {str(e)}")
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# 更新宠物完整信息API
+@app.route('/api/pets/<int:pet_id>', methods=['PUT'])
+def update_pet(pet_id):
+    """更新宠物完整信息"""
+    try:
+        data = request.json
+        
+        # 获取宠物信息
+        pet = Pet.query.get(pet_id)
+        if not pet:
+            return jsonify({'status': 'error', 'message': '宠物不存在'}), 404
+        
+        # 更新宠物字段
+        if data.get('name') is not None:
+            pet.name = data.get('name')
+        if data.get('gender') is not None:
+            pet.gender = data.get('gender')
+        if data.get('birthday') is not None:
+            pet.birthday = data.get('birthday')
+        if data.get('personality') is not None:
+            pet.personality = data.get('personality')
+        if data.get('hobby') is not None:
+            pet.hobby = data.get('hobby')
+        if data.get('story') is not None:
+            pet.story = data.get('story')
+        if data.get('user_relation') is not None:
+            pet.user_relation = data.get('user_relation')
+        if data.get('description') is not None:
+            pet.description = data.get('description')
+        if data.get('type') is not None:
+            pet.type = data.get('type')
+        
+        db.session.commit()
+        
+        return jsonify({
+            'status': 'success',
+            'message': '宠物信息更新成功',
+            'data': {
+                'id': pet.id,
+                'name': pet.name,
+                'type': pet.type,
+                'gender': pet.gender,
+                'personality': pet.personality,
+                'hobby': pet.hobby,
+                'story': pet.story,
+                'user_relation': pet.user_relation
+            }
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"更新宠物信息时出错: {str(e)}")
         db.session.rollback()
         return jsonify({'status': 'error', 'message': str(e)}), 500
 

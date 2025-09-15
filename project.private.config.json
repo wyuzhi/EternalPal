@@ -1,5 +1,42 @@
 {
     "setting": {
         "urlCheck": false
+    },
+    "condition": {
+        "miniprogram": {
+            "current": 1757913367503,
+            "list": [
+                {
+                    "id": 1757910658506,
+                    "name": "创建",
+                    "pathName": "pages/pet/pet",
+                    "query": "",
+                    "scene": "990001",
+                    "launchFrom": "scan",
+                    "location": "qr_code",
+                    "mockUpdateType": "Noupdate"
+                },
+                {
+                    "id": 1757913124007,
+                    "name": "档案",
+                    "pathName": "pages/petProfile/petProfile",
+                    "query": "",
+                    "scene": "990001",
+                    "launchFrom": "scan",
+                    "location": "qr_code",
+                    "mockUpdateType": "Noupdate"
+                },
+                {
+                    "id": 1757913367503,
+                    "name": "主页",
+                    "pathName": "pages/companion/companion",
+                    "query": "",
+                    "scene": "990001",
+                    "launchFrom": "scan",
+                    "location": "qr_code",
+                    "mockUpdateType": "Noupdate"
+                }
+            ]
+        }
     }
 }

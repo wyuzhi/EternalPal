@@ -5,7 +5,7 @@
       <image src="{{appInfo.logo}}" mode="aspectFit" class="app-logo"></image>
     </view>
     <view class="app-info">
-      <text class="app-name">{{appInfo.name}}</text>
+      <image src="{{appInfo.logo_name}}" mode="aspectFit" class="app-name"></image>
       <view class="version-container" bindtap="onCopyVersion">
         <text class="app-version">{{appInfo.version}}</text>
       </view>
@@ -21,7 +21,7 @@
   </view>
 
   <!-- 核心功能 -->
-  <view class="section-title">核心功能</view>
+  <!-- <view class="section-title">核心功能</view>
   
     <view class="bento-grid">
       <view wx:for="{{appInfo.features}}" wx:key="name" class="bento-item {{index % 3 === 0 ? 'large' : 'small'}}">
@@ -32,7 +32,7 @@
           <text class="bento-title">{{item.name}}</text>
         </view>
       </view>
-    </view>
+    </view> -->
   
 
   <!-- 开发时间线 -->
@@ -40,13 +40,14 @@
   <view class="section">
     <view class="timeline-container">
       <view wx:for="{{timeline}}" wx:key="date" class="timeline-item {{item.status}}">
-        <view class="timeline-date">
-          <text>{{item.date}}</text>
-        </view>
+        
         <view class="timeline-content">
           <view class="timeline-dot"></view>
           <view class="timeline-info">
             <text class="timeline-title">{{item.title}}</text>
+            <view class="timeline-date">
+              <text>{{item.date}}</text>
+            </view>
             <text class="timeline-desc">{{item.description}}</text>
           </view>
         </view>

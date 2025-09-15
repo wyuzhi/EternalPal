@@ -155,7 +155,7 @@ Page({
       petHobbies: hobbies,
       
       // 图片和模型
-      petImage: petInfo.preview_url || petInfo.generated_image || '/images/petTypes/dog.svg',
+      petImage: petInfo.preview_url || petInfo.generated_image || '',
       generatedPetImage: petInfo.generated_image || '',
       modelUrl: petInfo.model_url || '',
       
@@ -210,8 +210,7 @@ Page({
     this.setData({
       petName: '暂无宠物',
       petType: 'unknown',
-      petDescription: '您还没有创建宠物，请先去创建一个可爱的Linki吧！',
-      petImage: '/images/petTypes/dog.svg'
+      petDescription: '您还没有创建宠物，请先去创建/领养一个吧！'
     });
     
     tt.showModal({

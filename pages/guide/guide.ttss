@@ -231,3 +231,11 @@
   width: 100rpx;
   height: 100rpx;
 }
+
+.logo-text {
+  width: 200rpx;
+  height: 50rpx;
+}
+
+
+

@@ -38,6 +38,6 @@
   <!-- 固定logo、名称 -->
   <view class="logo-section">
     <image src="/images/logo.svg" mode="aspectFit" class="logo"></image>
-    <text class="name">Linki</text>
+    <image src="/images/logo_name.svg" mode="aspectFit" class="logo-text"></image>
   </view>
 </view>

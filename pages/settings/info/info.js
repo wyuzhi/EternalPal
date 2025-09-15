@@ -3,10 +3,11 @@ const app = getApp();
 Page({
   data: {
     appInfo: {
-      name: 'Linki Eternal Pal',
+      name: 'Linki',
       version: 'v 0.1.0',
-      description: 'Linki（Eternal Pal/E Pal）是一款AI原生的数字宠物情感陪伴应用，通过AI技术重现用户的宠物形象，实现对话互动与情感链接，Linki让逝去或缺席的陪伴得以延续，为用户带来真实而温暖的情感链接。',
+      description: 'Linki 以 AI 打造专属数字伙伴，既能带来线上情感治愈，又能通过 NFC 3D 手办延伸到线下社交，实现虚拟与现实的双重陪伴。',
       logo: '/images/logo.svg',
+      logo_name: '/images/logo_name.svg',
       features: [
         {
           name: '宠物形象重建',

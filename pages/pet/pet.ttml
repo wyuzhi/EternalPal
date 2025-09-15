@@ -48,16 +48,23 @@
           <text class="card-title">基本信息</text>
         </view>
         
-        <view class="form-group">
-          <view class="form-label">
-            <text>我的大名</text>
-          </view>
-          <input class="form-input" placeholder="输入我将来的名字" value="{{petName}}" bindinput="inputPetName" maxlength="20"/>
-        </view>
+        <!-- <view class="form-group">
+          
+        </view> -->
 
         <!-- 性别和生日 -->
         <view class="form-row">
           <view class="form-group form-group-half">
+            
+            <view class="form-label">
+            <text>我的大名</text>
+            </view>
+            <input class="form-input" placeholder="输入我将来的名字" value="{{petName}}" bindinput="inputPetName" maxlength="20"/>
+
+          </view>
+
+          <view class="form-group form-group-half">
+            
             <view class="form-label">
               <text>性别</text>
             </view>
@@ -71,9 +78,7 @@
                 <text>女孩</text>
               </label>
             </radio-group>
-          </view>
-
-          <view class="form-group form-group-half">
+            
             <!-- <view class="form-label">
               <text>生日</text>
             </view>

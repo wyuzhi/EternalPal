@@ -395,7 +395,7 @@
 /* 补充输入框 */
 .form-input-supplement {
   width: 100%;
-  min-height: 100rpx;
+  min-height: 120rpx;
   border: 1rpx solid var(--border-frosted);
   border-radius: var(--r-m);
   padding: var(--p-m);

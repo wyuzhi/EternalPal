@@ -232,7 +232,7 @@ Page({
     enableVoiceReply: false, // 是否开启语音播放功能
     isPlaying: false, // 是否正在播放语音
     currentAudio: null, // 当前音频对象
-    voiceLoadingMessages: new Set(), // 正在生成语音的消息ID集合
+    voiceLoadingMessages: [], // 正在生成语音的消息ID集合
     // 模拟聊天数据
     mockConversations: [
       { id: 1, text: "今天天气真不错呢！", isUser: false },
@@ -677,9 +677,16 @@ Page({
           // 保存宠物信息到本地存储
           tt.setStorageSync('currentPet', petInfo);
           
-          // 标记需要初始化3D渲染器，但不在这里直接调用
-          // 让onReady统一处理初始化
-          console.log('[Companion] 宠物信息获取完成，等待onReady初始化3D渲染器');
+          // 宠物信息获取完成后，检查是否需要初始化3D渲染器
+          console.log('[Companion] 宠物信息获取完成，检查3D渲染器初始化状态');
+          
+          // 如果页面已经ready且还没有初始化3D渲染器，则立即初始化
+          if (that.pageReady && petInfo.id && petInfo.id !== 'mock' && !that.modelRenderer) {
+            console.log('[Companion] 页面已ready，立即初始化3D渲染器');
+            setTimeout(() => {
+              that.init3DRenderer();
+            }, 200);
+          }
           
           // 获取聊天记录
           that.fetchChatHistory();
@@ -888,6 +895,10 @@ Page({
   
   onReady: function() {
     console.log('[Companion] 页面渲染完成，onReady被调用');
+    
+    // 标记页面已经ready
+    this.pageReady = true;
+    
     // 页面渲染完成后滚动到底部
     setTimeout(() => {
       this.scrollToBottom();
@@ -906,6 +917,9 @@ Page({
   
   onShow: function() {
     console.log('[Companion] 页面显示，onShow被调用');
+    
+    // 重新初始化语音设置，确保从设置页面返回时能读取最新设置
+    this.initVoiceSettings();
     
     // 检查是否有宠物信息更新
     const updatedPet = tt.getStorageSync('currentPet') || {};
@@ -2071,10 +2085,12 @@ Page({
     this.stopCurrentAudio();
     
     // 标记正在生成语音的消息
-    this.data.voiceLoadingMessages.add(messageId);
-    this.setData({
-      voiceLoadingMessages: this.data.voiceLoadingMessages
-    });
+    if (!this.data.voiceLoadingMessages.includes(messageId)) {
+      this.data.voiceLoadingMessages.push(messageId);
+      this.setData({
+        voiceLoadingMessages: this.data.voiceLoadingMessages
+      });
+    }
     
     const that = this;
     
@@ -2089,10 +2105,13 @@ Page({
         console.log('[Companion] TTS API调用成功:', res);
         
         // 移除加载标记
-        that.data.voiceLoadingMessages.delete(messageId);
-        that.setData({
-          voiceLoadingMessages: that.data.voiceLoadingMessages
-        });
+        const index = that.data.voiceLoadingMessages.indexOf(messageId);
+        if (index > -1) {
+          that.data.voiceLoadingMessages.splice(index, 1);
+          that.setData({
+            voiceLoadingMessages: that.data.voiceLoadingMessages
+          });
+        }
         
         if (res.data && res.data.status === 'success' && res.data.audio_url) {
           // 播放生成的语音
@@ -2120,10 +2139,13 @@ Page({
         console.error('[Companion] TTS API调用失败:', error);
         
         // 移除加载标记
-        that.data.voiceLoadingMessages.delete(messageId);
-        that.setData({
-          voiceLoadingMessages: that.data.voiceLoadingMessages
-        });
+        const index = that.data.voiceLoadingMessages.indexOf(messageId);
+        if (index > -1) {
+          that.data.voiceLoadingMessages.splice(index, 1);
+          that.setData({
+            voiceLoadingMessages: that.data.voiceLoadingMessages
+          });
+        }
         
         tt.showToast({
           title: '网络错误，语音播放失败',

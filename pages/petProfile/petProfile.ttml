@@ -49,33 +49,33 @@
   </view>
 
   <!-- 宠物性格 -->
-  <view class="section" wx:if="{{petPersonalities.length > 0}}">
+  <view class="section" wx:if="{{petPersonalities.length > 0 || petPersonalities_desc}}">
     <view class="section-header">
       <image src="/images/petProfile/character.svg" mode="aspectFit" class="section-icon"></image>
       <text class="section-title">性格</text>
     </view>
-    <view class="likes-container">
+    <view class="likes-container" wx:if="{{petPersonalities.length > 0}}">
       <view wx:for="{{petPersonalities}}" wx:key="*this" class="like-tag">
         <text>{{item}}</text>
       </view>
     </view>
-    <view class="info-desc">
+    <view class="info-desc" wx:if="{{petPersonalities_desc}}">
       <text>{{petPersonalities_desc}}</text>
     </view>
   </view>
 
   <!-- 宠物爱好 -->
-  <view class="section" wx:if="{{petHobbies.length > 0}}">
+  <view class="section" wx:if="{{petHobbies.length > 0 || petHobbies_desc}}">
     <view class="section-header">
       <image src="/images/petProfile/likes.svg" mode="aspectFit" class="section-icon"></image>
       <text class="section-title">爱好</text>
     </view>
-    <view class="likes-container">
+    <view class="likes-container" wx:if="{{petHobbies.length > 0}}">
       <view wx:for="{{petHobbies}}" wx:key="*this" class="like-tag">
         <text>{{item}}</text>
       </view>
     </view>
-    <view class="info-desc">
+    <view class="info-desc" wx:if="{{petHobbies_desc}}">
       <text>{{petHobbies_desc}}</text>
     </view>
   </view>

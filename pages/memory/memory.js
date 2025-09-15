@@ -428,14 +428,171 @@ Page({
 
   // 加载记忆记录
   loadMemoryRecords: function() {
-    // 这里可以从后端API加载真实的记忆记录
-    // 暂时使用模拟数据
+    const that = this;
+    const currentPet = tt.getStorageSync('currentPet') || {};
+    const petId = currentPet.id;
+    
+    if (!petId) {
+      console.error('[Memory] 没有宠物ID，无法加载记忆记录');
+      return;
+    }
+    
+    console.log('[Memory] 开始加载记忆记录，宠物ID:', petId);
+    
+    // 显示加载提示
+    tt.showLoading({
+      title: '正在生成记忆日记...'
+    });
+    
+    // 先获取聊天记录
+    tt.request({
+      url: app.globalData.API_BASE_URL + '/pets/' + petId + '/chat_history',
+      method: 'GET',
+      success: function(res) {
+        console.log('[Memory] 获取聊天记录结果:', res);
+        
+        if (res.data && res.data.status === 'success' && res.data.data && res.data.data.length > 0) {
+          // 处理聊天记录，生成日记内容
+          that.generateDiaryFromChats(res.data.data);
+        } else {
+          console.log('[Memory] 没有聊天记录，使用模拟数据');
+          that.loadMockRecords();
+        }
+      },
+      fail: function(error) {
+        console.error('[Memory] 获取聊天记录失败:', error);
+        tt.hideLoading();
+        that.loadMockRecords();
+      }
+    });
+  },
+  
+  // 从聊天记录生成日记
+  generateDiaryFromChats: function(chatHistory) {
+    const that = this;
+    
+    // 将聊天记录按日期分组
+    const chatsByDate = that.groupChatsByDate(chatHistory);
+    const diaryPromises = [];
+    
+    // 为每一天的聊天记录生成日记
+    Object.keys(chatsByDate).forEach(date => {
+      const dayChats = chatsByDate[date];
+      const chatContent = that.formatChatsForAPI(dayChats);
+      
+      if (chatContent.trim()) {
+        const promise = that.callDiaryAPI(chatContent, date);
+        diaryPromises.push(promise);
+      }
+    });
+    
+    // 等待所有日记生成完成
+    Promise.all(diaryPromises).then(diaryRecords => {
+      tt.hideLoading();
+      
+      // 过滤掉失败的记录
+      const validRecords = diaryRecords.filter(record => record !== null);
+      
+      if (validRecords.length > 0) {
+        // 按日期排序（最新的在前）
+        validRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        that.setData({
+          memoryRecords: validRecords
+        });
+        
+        console.log('[Memory] 成功生成', validRecords.length, '条日记记录');
+      } else {
+        console.log('[Memory] 没有生成有效的日记记录，使用模拟数据');
+        that.loadMockRecords();
+      }
+    }).catch(error => {
+      console.error('[Memory] 生成日记失败:', error);
+      tt.hideLoading();
+      that.loadMockRecords();
+    });
+  },
+  
+  // 按日期分组聊天记录
+  groupChatsByDate: function(chatHistory) {
+    const chatsByDate = {};
+    
+    chatHistory.forEach(chat => {
+      const chatDate = new Date(chat.created_at || chat.timestamp * 1000);
+      const dateKey = chatDate.toISOString().split('T')[0]; // YYYY-MM-DD格式
+      
+      if (!chatsByDate[dateKey]) {
+        chatsByDate[dateKey] = [];
+      }
+      
+      chatsByDate[dateKey].push(chat);
+    });
+    
+    return chatsByDate;
+  },
+  
+  // 格式化聊天记录为API所需格式
+  formatChatsForAPI: function(dayChats) {
+    const chatContent = dayChats.map(chat => {
+      const speaker = chat.is_user || chat.isUser ? '主人' : '宠物';
+      const content = chat.content || chat.text;
+      return `${speaker}: ${content}`;
+    }).join('\n');
+    
+    return chatContent;
+  },
+  
+  // 调用日记生成API
+  callDiaryAPI: function(chatContent, date) {
+    return new Promise((resolve) => {
+      tt.request({
+        url: 'http://156.254.6.237:1666/api/process',
+        method: 'POST',
+        header: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          content: chatContent,
+          type: 'cp'
+        },
+        success: function(res) {
+          console.log('[Memory] 日记API调用成功:', res);
+          
+          if (res.data && res.data.daily_feeling) {
+            const diaryRecord = {
+              id: Date.now() + Math.random(), // 生成唯一ID
+              title: res.data.pet_perspective || '今日回忆',
+              description: res.data.daily_feeling,
+              date: date,
+              time: new Date().toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit' }),
+              mood: res.data.emoji_icon || '😊',
+              tags: res.data.tags || ['日常陪伴'],
+              monthDay: `${new Date(date).getMonth() + 1}/${new Date(date).getDate()}`,
+              year: new Date(date).getFullYear().toString()
+            };
+            
+            resolve(diaryRecord);
+          } else {
+            console.error('[Memory] 日记API返回数据格式错误:', res.data);
+            resolve(null);
+          }
+        },
+        fail: function(error) {
+          console.error('[Memory] 日记API调用失败:', error);
+          resolve(null);
+        }
+      });
+    });
+  },
+  
+  // 加载模拟数据（备用方案）
+  loadMockRecords: function() {
     const mockRecords = [
       {
         id: 1,
         title: '温暖的情感对话',
         description: '今天与Linki聊了很多心里话，它总是能理解我的感受，让我感到被陪伴的温暖。',
-        date: '2025-09-20',
+        date: '2025-01-20',
         time: '14:30',
         mood: '😊',
         tags: ['情感对话', '温暖陪伴', '心灵交流']
@@ -444,7 +601,7 @@ Page({
         id: 2,
         title: '共同成长时刻',
         description: 'Linki今天分享了很多有趣的知识，我们一起学习新事物，感觉彼此都在成长。',
-        date: '2025-09-18',
+        date: '2025-01-18',
         time: '16:45',
         mood: '🤗',
         tags: ['共同成长', '知识分享', '学习']
@@ -453,7 +610,7 @@ Page({
         id: 3,
         title: '静默的陪伴',
         description: '安静地陪伴在一起，虽然没有太多对话，但Linki的存在让我感到安心和温暖。',
-        date: '2025-09-15',
+        date: '2025-01-15',
         time: '20:15',
         mood: '💕',
         tags: ['静默陪伴', '安心', '温暖']

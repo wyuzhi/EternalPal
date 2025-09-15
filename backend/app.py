@@ -78,6 +78,8 @@ class Pet(db.Model):
     gender = db.Column(db.String(20))
     personality = db.Column(db.String(200))
     hobby = db.Column(db.String(200))
+    personalities_desc = db.Column(db.Text)  # 性格描述字段
+    hobbies_desc = db.Column(db.Text)  # 爱好描述字段
     story = db.Column(db.Text)
     description = db.Column(db.Text)  # 宠物外观描述字段
     generated_image = db.Column(db.String(255))
@@ -330,6 +332,8 @@ def create_pet():
             gender=data.get('gender'),
             personality=data.get('personality'),
             hobby=data.get('hobby'),
+            personalities_desc=data.get('personalities_desc'),  # 性格描述字段
+            hobbies_desc=data.get('hobbies_desc'),  # 爱好描述字段
             story=data.get('story'),
             description=data.get('description'),  # 宠物外观描述字段
             generated_image=data.get('generated_image'),
@@ -442,6 +446,8 @@ def get_pet(pet_id):
         'gender': pet.gender,
         'personality': pet.personality,
         'hobby': pet.hobby,
+        'personalities_desc': pet.personalities_desc,  # 性格描述字段
+        'hobbies_desc': pet.hobbies_desc,  # 爱好描述字段
         'story': pet.story,
         'description': pet.description,  # 宠物外观描述字段
         'generated_image': pet.generated_image,
@@ -879,6 +885,42 @@ def update_pet_intimacy(pet_id):
         
     except Exception as e:
         logger.error(f"更新宠物亲密度时出错: {str(e)}")
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# 更新宠物描述API
+@app.route('/api/pets/<int:pet_id>/descriptions', methods=['PUT'])
+def update_pet_descriptions(pet_id):
+    """更新宠物性格和爱好描述"""
+    try:
+        data = request.json
+        personalities_desc = data.get('personalities_desc')
+        hobbies_desc = data.get('hobbies_desc')
+        
+        # 获取宠物信息
+        pet = Pet.query.get(pet_id)
+        if not pet:
+            return jsonify({'status': 'error', 'message': '宠物不存在'}), 404
+        
+        # 更新描述字段
+        if personalities_desc is not None:
+            pet.personalities_desc = personalities_desc
+        if hobbies_desc is not None:
+            pet.hobbies_desc = hobbies_desc
+        
+        db.session.commit()
+        
+        return jsonify({
+            'status': 'success',
+            'message': '描述更新成功',
+            'data': {
+                'personalities_desc': pet.personalities_desc,
+                'hobbies_desc': pet.hobbies_desc
+            }
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"更新宠物描述时出错: {str(e)}")
         db.session.rollback()
         return jsonify({'status': 'error', 'message': str(e)}), 500
 

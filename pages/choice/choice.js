@@ -5,7 +5,8 @@ Page({
   data: {
     isAuthorized: false,
     userName: '你好呀', // 用户名，默认值为"你好呀"
-    showBlindBoxModal: false // 控制盲盒弹窗显示
+    showBlindBoxModal: false, // 控制盲盒弹窗显示
+    hasGetUserProfile: false // 标记是否已经获取过用户信息
   },
 
   onLoad: function (options) {
@@ -41,9 +42,15 @@ Page({
     })
   },
   
-  // 在用户点击时获取用户信息并更新
+  // 在用户点击时获取用户信息并更新（只获取一次）
   getUserProfileAndUpdate: function() {
     const that = this
+    
+    // 如果已经获取过用户信息，直接返回
+    if (this.data.hasGetUserProfile) {
+      console.log('已获取过用户信息，跳过')
+      return
+    }
     
     // 使用tt.getUserProfile获取用户信息（必须在点击事件中调用）
     tt.getUserProfile({
@@ -51,12 +58,20 @@ Page({
         console.log('获取用户信息成功:', userProfileRes)
         const userInfo = userProfileRes.userInfo
         
+        // 标记已获取用户信息
+        that.setData({
+          hasGetUserProfile: true
+        })
+        
         // 更新后端用户信息
         that.updateUserProfile(userInfo.nickName, userInfo.avatarUrl)
       },
       fail: (error) => {
         console.log('获取用户信息失败:', error)
-        // 即使获取失败也继续执行后续操作
+        // 即使获取失败也标记为已尝试获取，避免重复弹窗
+        that.setData({
+          hasGetUserProfile: true
+        })
       }
     })
   },

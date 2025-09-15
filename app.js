@@ -2,7 +2,7 @@ App({
   globalData: {
     userInfo: null,
     hasLogin: false,
-    API_BASE_URL: 'http://127.0.0.1:5001/api',
+    API_BASE_URL: 'http://115.190.57.202:5001/api',
     // 新增请求配置
     requestConfig: {
       timeout: 120000, // 设置为120秒

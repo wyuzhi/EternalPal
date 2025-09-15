@@ -74,7 +74,7 @@
           </view>
 
           <view class="form-group form-group-half">
-            <view class="form-label">
+            <!-- <view class="form-label">
               <text>生日</text>
             </view>
             <picker mode="date" value="{{petBirthday}}" bindchange="selectPetBirthday" class="birthday-picker">
@@ -82,7 +82,7 @@
                 <text class="{{petBirthday ? 'selected' : 'placeholder'}}">{{petBirthday || '请选择生日'}}</text>
                 <image class="date-arrow" src="/images/petProfile/date.svg" mode="aspectFit"></image>
               </view>
-            </picker>
+            </picker> -->
           </view>
         </view>
       </view>
@@ -281,14 +281,14 @@
   <view class="regenerate-modal-overlay" wx:if="{{showRegenerateModal}}" bindtap="closeRegenerateModal">
     <view class="regenerate-modal" catchtap="">
       <view class="modal-header">
-        <text class="modal-title">重新生成灵伴</text>
+        <text class="modal-title">重新生成Linki</text>
         <view class="modal-close" bindtap="closeRegenerateModal">
           <image src="/images/guide/close.svg" class="close-icon"></image>
         </view>
       </view>
       <view class="modal-content">
-        <text class="modal-text">当前的灵伴将被删除，确定要重新生成吗？</text>
-        <text class="modal-subtitle">重新生成后，您将回到第一步重新设置灵伴信息</text>
+        <text class="modal-text">当前的Linki将被删除，确定要重新生成吗？</text>
+        <text class="modal-subtitle">重新生成后，您将回到第一步重新设置Linki信息</text>
       </view>
       <view class="modal-actions">
         <button class="modal-btn cancel-btn" bindtap="closeRegenerateModal">
@@ -321,7 +321,7 @@
         </button>
       </view>
       
-      <!-- 步骤3: 返回 + 预创建 + 创建灵伴 -->
+      <!-- 步骤3: 返回 + 创建Linki -->
       <view wx:if="{{currentStep === 3 && !isGenerating}}" class="button-group">
         <button class="back-btn" bindtap="prevStep">
           <image class="back-icon" src="/images/guide/continue.svg" mode="aspectFit"></image>

@@ -1,4 +1,3 @@
-// d:\OneDrive\Codes\repo\EternalPal\components\loader\loader.js
 Component({
   data: {
     // 组件内部数据

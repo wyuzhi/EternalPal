@@ -1,0 +1,119 @@
+.popup-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity 0.3s, background-color 0.3s;
+  pointer-events: none;
+  z-index: 999999;
+  touch-action: none;
+}
+
+.popup-mask.show {
+  background-color: rgba(0, 0, 0, 0.6);
+  opacity: 1;
+  pointer-events: auto !important;
+  touch-action: none;
+}
+
+.popup-container {
+  position: relative;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  background-color: var(--color-gray-light);
+  filter: drop-shadow(0px 12rpx 12rpx rgba(0, 0, 0, 0.15));
+  pointer-events: auto;
+}
+
+.popup-container.hide {
+  pointer-events: none;
+}
+
+/* 底部弹出样式 */
+.popup-container.bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  border-top-right-radius: 40rpx;
+  border-top-left-radius: 40rpx;
+  padding: 20rpx 20rpx;
+  padding-bottom: max(20rpx, env(safe-area-inset-bottom));
+  transform: translateY(100%);
+}
+
+.popup-container.bottom.show {
+  animation: slideUp 0.3s forwards;
+}
+
+.popup-container.bottom.hide {
+  animation: slideDown 0.3s forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+/* 中部弹出样式 */
+.popup-container.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  width: fit-content;
+  max-height: 80vh;
+  border-radius: 40rpx;
+  opacity: 0;
+}
+
+.popup-container.center.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  animation: scaleIn 0.3s forwards;
+}
+
+.popup-container.center.hide {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
+  animation: scaleOut 0.3s forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+}
+

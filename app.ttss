@@ -3,7 +3,7 @@
 /* 主色调 */
 page {
   --primary-color: #FFBF6B;
-  --primary-light: #FFFBEB;
+  --primary-light: #f5f3ec;
   --primary-dark: #F0A23D;
   --primary-deep: #FF936B;
   --primary-alpha: rgba(255, 191, 107, 0.2);

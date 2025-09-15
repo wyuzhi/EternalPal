@@ -1,0 +1,203 @@
+<view class="system-pet-container">
+
+  <!-- 加载状态 -->
+  <view class="loading-container" tt:if="{{loading}}">
+    <loader size="60px" color="#333" speed="0.8s"></loader>
+  </view>
+
+  <!-- 搜索栏 -->
+  <view class="search-container" tt:if="{{!loading}}">
+    <view class="search-bar">
+      <view class="search-input-wrapper">
+        <image class="search-icon" src="/images/guide/search.svg" mode="aspectFit"></image>
+        <input 
+          class="search-input" 
+          type="text" 
+          placeholder="搜索理想型的名称、品种或性格..." 
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          bindfocus="onSearchFocus"
+          bindblur="onSearchBlur"
+          confirm-type="search"
+          bindconfirm="onSearchConfirm"
+        />
+        <view class="search-clear" tt:if="{{searchKeyword}}" bindtap="clearSearch">
+          <view class="clear-icon">
+            <image src="/images/guide/close.svg" mode="aspectFit"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 搜索建议 -->
+    <view class="search-suggestions" tt:if="{{showSuggestions && searchSuggestions.length > 0}}">
+      <view 
+        class="suggestion-item" 
+        tt:for="{{searchSuggestions}}" 
+        tt:key="index"
+        data-keyword="{{item}}"
+        bindtap="selectSuggestion"
+      >
+        <image class="suggestion-icon" src="/images/guide/library.svg" mode="aspectFit"></image>
+        <text class="suggestion-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 标签选择器 -->
+  <view class="tab-selector" tt:if="{{!loading}}">
+    <scroll-view class="tab-scroll" scroll-x="true" show-scrollbar="false">
+      <view class="tab-list">
+        <view 
+          class="tab-item {{currentTab === item.key ? 'active' : ''}}"
+          tt:for="{{tabs}}"
+          tt:key="key"
+          data-tab="{{item.key}}"
+          bindtap="onTabChange"
+        >
+          <text class="tab-text">{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 宠物列表 -->
+  <view class="pets-container" tt:if="{{!loading}}">
+    <view class="pets-waterfall">
+      <view class="waterfall-column">
+        <view 
+          class="pet-card" 
+          tt:for="{{leftColumnPets}}" 
+          tt:key="id"
+          data-pet-id="{{item.id}}"
+          bindtap="onPetCardTap"
+        >
+          <!-- 宠物预览图 -->
+          <view class="pet-image-container">
+            <image 
+              class="pet-image" 
+              src="{{item.preview_url || '/static/images/default-pet.png'}}" 
+              mode="aspectFill"
+              lazy-load="true"
+            />
+            <!-- 宠物信息覆盖层 -->
+            <view class="pet-info-overlay">
+              <view class="pet-name-row">
+                <view class="pet-name">{{item.name || 'Linki'}}</view>
+                <view class="popularity-info">
+                  <image class="popularity-icon" src="/images/guide/popular.svg" mode="aspectFit"></image>
+                  <text class="popularity-count">{{item.popularity || 0}}</text>
+                </view>
+              </view>
+              <view class="pet-details">
+                <view class="detail-item" tt:if="{{item.type}}">
+                  <text class="detail-label">种类：</text>
+                  <text class="detail-value">{{item.type}}</text>
+                </view>
+                <view class="detail-item" tt:if="{{item.personality}}">
+                  <text class="detail-label">性格：</text>
+                  <text class="detail-value">{{item.personality}}</text>
+                </view>
+                <view class="detail-item" tt:if="{{item.hobbies}}">
+                  <text class="detail-label">爱好：</text>
+                  <text class="detail-value">{{item.hobbies}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="waterfall-column">
+        <view 
+          class="pet-card" 
+          tt:for="{{rightColumnPets}}" 
+          tt:key="id"
+          data-pet-id="{{item.id}}"
+          bindtap="onPetCardTap"
+        >
+          <!-- 宠物预览图 -->
+          <view class="pet-image-container">
+            <image 
+              class="pet-image" 
+              src="{{item.preview_url || '/static/images/default-pet.png'}}" 
+              mode="aspectFill"
+              lazy-load="true"
+            />
+            <!-- 宠物信息覆盖层 -->
+            <view class="pet-info-overlay">
+              <view class="pet-name-row">
+                <view class="pet-name">{{item.name || '神秘宠物'}}</view>
+                <view class="popularity-info">
+                  <image class="popularity-icon" src="/images/guide/popular.svg" mode="aspectFit"></image>
+                  <text class="popularity-count">{{item.popularity || 0}}</text>
+                </view>
+              </view>
+              <view class="pet-details">
+                <view class="detail-item" tt:if="{{item.type}}">
+                  <text class="detail-label">种类：</text>
+                  <text class="detail-value">{{item.type}}</text>
+                </view>
+                <view class="detail-item" tt:if="{{item.personality}}">
+                  <text class="detail-label">性格：</text>
+                  <text class="detail-value">{{item.personality}}</text>
+                </view>
+                <view class="detail-item" tt:if="{{item.hobbies}}">
+                  <text class="detail-label">爱好：</text>
+                  <text class="detail-value">{{item.hobbies}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" tt:if="{{systemPets.length === 0}}">
+      <view class="empty-icon">🐾</view>
+      <view class="empty-text">暂无可领养的Linki</view>
+      <view class="empty-desc">请稍后再来看看吧</view>
+    </view>
+  </view>
+
+  <!-- 领养确认弹窗 -->
+  <popup show="{{showAdoptModal}}" position="center" bind:close="closeAdoptModal">
+    <view class="adopt-modal-content">
+      <!-- <view class="adopt-modal-header">
+        <text class="adopt-modal-title">确认领养</text>
+      </view> -->
+      
+      <view class="adopt-modal-body">
+        <view class="adopt-pet-info">
+          <image 
+            class="adopt-pet-image" 
+            src="{{selectedPet.preview_url || '/static/images/default-pet.png'}}" 
+            mode="aspectFill"
+          />
+          <view class="adopt-pet-details">
+            <view class="adopt-pet-name">{{selectedPet.name || '神秘宠物'}}</view>
+            <view class="adopt-pet-traits">
+              <text tt:if="{{selectedPet.personality}}">性格：{{selectedPet.personality}}</text>
+              <text tt:if="{{selectedPet.hobbies}}">爱好：{{selectedPet.hobbies}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="adopt-message">
+          <text class="message-text">你确定要领养我吗？期待ing！</text>
+          <text class="message-desc">领养后我会成为你的专属伙伴哦！</text>
+        </view>
+      </view>
+      
+      <view class="adopt-modal-footer">
+        <view class="adopt-modal-btn cancel-btn" bindtap="closeAdoptModal">
+          <text class="btn-text">取消</text>
+        </view>
+        <view class="adopt-modal-btn confirm-btn" bindtap="confirmAdopt">
+          <text class="btn-text">确认领养</text>
+        </view>
+      </view>
+    </view>
+  </popup>
+</view>

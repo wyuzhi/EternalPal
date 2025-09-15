@@ -57,7 +57,7 @@
 
   <!-- 版权信息 -->
   <view class="footer">
-    <text class="copyright">© 2025 灵伴团队. All rights reserved.</text>
+    <text class="copyright">© 2025 Linki团队. All rights reserved.</text>
     <text class="powered">Powered by AI & Love</text>
   </view>
 </view>

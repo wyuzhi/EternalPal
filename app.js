@@ -12,7 +12,7 @@ App({
   },
   
   onLaunch: function () {
-    console.log('EternalPal小程序启动')
+    console.log('Linki小程序启动')
     
     // 初始化全局错误处理
     this.initErrorHandler()

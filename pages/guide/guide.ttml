@@ -40,7 +40,7 @@
   <!-- 固定logo、名称 -->
   <view class="logo-section">
     <image src="/images/logo.svg" mode="aspectFit" class="logo"></image>
-    <text class="main-title">遇见属于你的灵仔，让陪伴不再孤单</text>
+    <text class="main-title">遇见属于你的Linki灵仔，让陪伴触手可及</text>
     <image src="/images/logo_name.svg" mode="aspectFit" class="logo-text"></image>
   </view>
 </view>

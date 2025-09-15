@@ -118,12 +118,17 @@ Page({
     const userInfo = tt.getStorageSync('userInfo') || {};
     const currentPet = tt.getStorageSync('currentPet') || {};
     
+    console.log('[Memory] 当前宠物数据:', currentPet);
+    
     let startDate;
     if (currentPet.created_at) {
       startDate = new Date(currentPet.created_at);
+      console.log('[Memory] 使用宠物创建时间:', currentPet.created_at);
     } else {
-      // 如果没有宠物创建时间，使用模拟数据
-      startDate = new Date('2024-01-01'); // 示例开始日期
+      // 如果没有宠物创建时间，尝试从服务器获取最新信息
+      console.log('[Memory] 未找到创建时间，尝试从服务器获取最新宠物信息');
+      this.fetchLatestPetInfo();
+      return; // 等待服务器返回后再计算
     }
     
     const today = new Date();
@@ -140,7 +145,65 @@ Page({
       companionDays: newDays
     });
     
-    console.log('[Memory] 陪伴天数:', daysDiff);
+    console.log('[Memory] 陪伴天数计算 - 开始时间:', startDate, '今天:', today, '天数:', newDays);
+  },
+
+  // 从服务器获取最新宠物信息
+  fetchLatestPetInfo: function() {
+    const userInfo = tt.getStorageSync('userInfo') || {};
+    if (!userInfo.id) {
+      console.log('[Memory] 未找到用户信息，使用当前时间作为开始时间');
+      this.calculateCompanionDaysWithCurrentTime();
+      return;
+    }
+
+    const that = this;
+    tt.request({
+      url: app.globalData.API_BASE_URL + '/users/' + userInfo.id + '/latest_pet',
+      method: 'GET',
+      success: function(res) {
+        console.log('[Memory] 获取最新宠物信息结果:', res);
+        
+        if (res.data && res.data.status === 'success' && res.data.data) {
+          const latestPet = res.data.data;
+          
+          // 更新本地存储的宠物信息
+          tt.setStorageSync('currentPet', latestPet);
+          
+          // 重新计算陪伴天数
+          that.calculateCompanionDays();
+        } else {
+          console.log('[Memory] 未获取到宠物信息，使用当前时间');
+          that.calculateCompanionDaysWithCurrentTime();
+        }
+      },
+      fail: function(error) {
+        console.error('[Memory] 获取最新宠物信息失败:', error);
+        that.calculateCompanionDaysWithCurrentTime();
+      }
+    });
+  },
+
+  // 使用当前时间计算陪伴天数（作为备用方案）
+  calculateCompanionDaysWithCurrentTime: function() {
+    const startDate = new Date();
+    const today = new Date();
+    const timeDiff = today.getTime() - startDate.getTime();
+    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    const newDays = Math.max(1, daysDiff);
+    
+    // 如果天数发生变化，触发翻页动画
+    if (newDays !== this.data.companionDays) {
+      this.animateDaysChange(this.data.companionDays, newDays);
+    }
+    
+    this.setData({
+      companionDays: newDays
+    });
+    
+    this.initDaysDigits(newDays);
+    
+    console.log('[Memory] 使用当前时间计算陪伴天数:', newDays);
   },
 
   // 初始化数字显示

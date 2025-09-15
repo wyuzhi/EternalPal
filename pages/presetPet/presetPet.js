@@ -38,11 +38,15 @@ Page({
   // 获取当前用户信息
   getCurrentUser: function() {
     const userInfo = tt.getStorageSync('userInfo');
+    console.log('getCurrentUser called, userInfo:', userInfo);
+    
     if (userInfo && userInfo.id) {
       this.setData({
         currentUserId: userInfo.id
       });
+      console.log('currentUserId set to:', userInfo.id);
     } else {
+      console.log('No user info found in storage');
       // 如果没有用户信息，跳转到登录页面
       tt.showToast({
         title: '请先登录',
@@ -248,14 +252,30 @@ Page({
 
   // 点击宠物卡片
   onPetCardTap: function(e) {
+    console.log('onPetCardTap called', e);
     const petId = e.currentTarget.dataset.petId;
-    const pet = this.data.systemPets.find(p => p.id === petId);
+    console.log('petId from dataset:', petId, 'type:', typeof petId);
+    console.log('systemPets:', this.data.systemPets);
+    console.log('currentUserId:', this.data.currentUserId);
+    
+    // 确保petId是数字类型进行比较
+    const petIdNum = parseInt(petId);
+    const pet = this.data.systemPets.find(p => p.id === petIdNum);
+    console.log('found pet:', pet);
     
     if (pet) {
+      console.log('Setting showAdoptModal to true for pet:', pet.name);
       // 直接显示领养弹窗
       this.setData({
         selectedPet: pet,
         showAdoptModal: true
+      });
+      console.log('showAdoptModal set to true');
+    } else {
+      console.log('Pet not found with id:', petIdNum);
+      tt.showToast({
+        title: '宠物信息获取失败',
+        icon: 'none'
       });
     }
   },
@@ -263,6 +283,7 @@ Page({
   // 关闭领养弹窗
   closeAdoptModal: function() {
     console.log('closeAdoptModal called, current showAdoptModal:', this.data.showAdoptModal);
+    console.trace('closeAdoptModal call stack');
     this.setData({
       showAdoptModal: false,
       selectedPet: null
@@ -275,11 +296,25 @@ Page({
     const that = this;
     const { selectedPet, currentUserId } = this.data;
     
-    if (!selectedPet || !currentUserId) {
+    console.log('confirmAdopt called, selectedPet:', selectedPet, 'currentUserId:', currentUserId);
+    
+    if (!selectedPet) {
+      console.log('selectedPet is null or undefined');
       tt.showToast({
-        title: '参数错误',
+        title: '请先选择宠物',
         icon: 'none'
       });
+      return;
+    }
+    
+    if (!currentUserId) {
+      console.log('currentUserId is null or undefined');
+      tt.showToast({
+        title: '用户信息获取失败，请重新登录',
+        icon: 'none'
+      });
+      // 尝试重新获取用户信息
+      this.getCurrentUser();
       return;
     }
 

@@ -35,6 +35,26 @@
                     "launchFrom": "scan",
                     "location": "qr_code",
                     "mockUpdateType": "Noupdate"
+                },
+                {
+                    "id": 1757946396769,
+                    "name": "linkiTap",
+                    "pathName": "pages/linkiTap/linkiTap",
+                    "query": "",
+                    "scene": "990001",
+                    "launchFrom": "scan",
+                    "location": "qr_code",
+                    "mockUpdateType": "Noupdate"
+                },
+                {
+                    "id": 1757952666437,
+                    "name": "记忆",
+                    "pathName": "pages/memory/memory",
+                    "query": "",
+                    "scene": "990001",
+                    "launchFrom": "scan",
+                    "location": "qr_code",
+                    "mockUpdateType": "Noupdate"
                 }
             ]
         }

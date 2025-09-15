@@ -7,7 +7,8 @@
         "pages/petProfile/petProfile",
         "pages/settings/settings",
         "pages/settings/info/info",
-        "pages/memory/memory"
+        "pages/memory/memory",
+        "pages/linkiTap/linkiTap"
     ],
     "window": {
         "backgroundTextStyle": "light",

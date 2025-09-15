@@ -261,7 +261,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  background: linear-gradient(transparent, var(--bg-overlay));
   padding: 60rpx var(--p-m) var(--p-m);
   color: white;
 }

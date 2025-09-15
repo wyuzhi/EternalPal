@@ -13,7 +13,6 @@
         <image src="/images/guide/wand.svg" mode="aspectFit" class="button-icon"></image>
         <view class="button-text-container">
           <text class="button-text">亲手捏一只属于你的宝宝</text>
-          <text class="button-desc">自定义</text>
         </view>
       </view>
 
@@ -22,7 +21,6 @@
         <image src="/images/guide/dice.svg" mode="aspectFit" class="button-icon"></image>
         <view class="button-text-container">
           <text class="button-text">惊喜盲盒，猜猜我是谁</text>
-          <text class="button-desc">随机盲盒</text>
         </view>
       </view>
 
@@ -31,7 +29,6 @@
         <image src="/images/guide/library.svg" mode="aspectFit" class="button-icon"></image>
         <view class="button-text-container">
           <text class="button-text">我在等你，带我回家！</text>
-          <text class="button-desc">使用预设</text>
         </view>
       </view>
     </view>

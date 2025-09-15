@@ -2,7 +2,8 @@ App({
   globalData: {
     userInfo: null,
     hasLogin: false,
-    API_BASE_URL: 'http://115.190.57.202:5001/api',
+    hasGetUserProfile: false, // 是否已获取用户详细信息
+    API_BASE_URL: 'http://localhost:5001/api',
     // 新增请求配置
     requestConfig: {
       timeout: 120000, // 设置为120秒
@@ -19,6 +20,9 @@ App({
     
     // 检查运行环境
     this.checkEnvironment()
+    
+    // 恢复用户信息
+    this.restoreUserInfo()
   },
   
   // 初始化全局错误处理
@@ -44,6 +48,26 @@ App({
         // 可以根据不同的环境做适配
       }
     })
+  },
+
+  // 恢复用户信息
+  restoreUserInfo: function() {
+    try {
+      const userInfo = tt.getStorageSync('userInfo')
+      const hasGetUserProfile = tt.getStorageSync('hasGetUserProfile')
+      
+      if (userInfo) {
+        console.log('恢复用户信息:', userInfo)
+        this.globalData.userInfo = userInfo
+        this.globalData.hasLogin = true
+      }
+      
+      // 将hasGetUserProfile状态存储到全局数据中，供页面使用
+      this.globalData.hasGetUserProfile = hasGetUserProfile || false
+      
+    } catch (error) {
+      console.error('恢复用户信息失败:', error)
+    }
   },
   
   // 全局登录方法
@@ -82,7 +106,9 @@ App({
   logout: function() {
     this.globalData.userInfo = null
     this.globalData.hasLogin = false
+    this.globalData.hasGetUserProfile = false
     tt.removeStorageSync('userInfo')
+    tt.removeStorageSync('hasGetUserProfile')
   },
 
   // 新增全局请求方法

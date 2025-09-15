@@ -264,6 +264,11 @@ Page({
 
   // 选择宠物类型
   selectPetType: function(e) {
+    // 如果当前步骤大于1，禁用宠物类型选择
+    if (this.data.currentStep > 1) {
+      return;
+    }
+    
     const selectedType = e.currentTarget.dataset.type;
     const selectedIndex = parseInt(e.currentTarget.dataset.index);
     
@@ -298,7 +303,7 @@ Page({
           const inputValue = res.content.trim();
           
           // 只有当输入不是默认的宠物类型时，才更新petType
-          const defaultTypes = this.data.petTypeOptions.filter(option => !option.isCustom).map(option => option.type);
+          const defaultTypes = that.data.petTypeOptions.filter(option => !option.isCustom).map(option => option.type);
           
           if (!defaultTypes.includes(inputValue) && inputValue !== '自定义') {
             // 更新自定义类型名称和类型
@@ -342,7 +347,7 @@ Page({
     const inputValue = e.detail.value.trim();
     
     // 如果输入不为空且不是默认类型，则设置为宠物类型
-    const defaultTypes = ['狗狗', '猫咪', '小鸟', '兔兔'];
+    const defaultTypes = ['狗狗', '猫咪', '鸭鸭'];
     if (inputValue && !defaultTypes.includes(inputValue) && inputValue !== '自定义') {
       this.setData({
         petType: inputValue

@@ -13,6 +13,12 @@ Page({
     console.log('Choice页面加载')
     console.log('Choice页面参数:', options);
     
+    // 从全局数据恢复hasGetUserProfile状态
+    const app = getApp()
+    this.setData({
+      hasGetUserProfile: app.globalData.hasGetUserProfile
+    })
+    
     // 检查是否来自分享链接
     if (options && options.isShare === 'true') {
       console.log('Choice页面: 来自分享链接，来源:', options.from);
@@ -63,6 +69,10 @@ Page({
           hasGetUserProfile: true
         })
         
+        // 保存到本地存储和全局数据
+        tt.setStorageSync('hasGetUserProfile', true)
+        app.globalData.hasGetUserProfile = true
+        
         // 更新后端用户信息
         that.updateUserProfile(userInfo.nickName, userInfo.avatarUrl)
       },
@@ -71,6 +81,49 @@ Page({
         // 即使获取失败也标记为已尝试获取，避免重复弹窗
         that.setData({
           hasGetUserProfile: true
+        })
+        
+        // 保存到本地存储和全局数据
+        tt.setStorageSync('hasGetUserProfile', true)
+        app.globalData.hasGetUserProfile = true
+      }
+    })
+  },
+
+  // 获取用户信息并执行回调
+  getUserProfileWithCallback: function(callback) {
+    const that = this
+    
+    // 使用tt.getUserProfile获取用户信息（必须在点击事件中调用）
+    tt.getUserProfile({
+      success: (userProfileRes) => {
+        console.log('获取用户信息成功:', userProfileRes)
+        const userInfo = userProfileRes.userInfo
+        
+        // 标记已获取用户信息
+        that.setData({
+          hasGetUserProfile: true
+        })
+        
+        // 保存到本地存储和全局数据
+        tt.setStorageSync('hasGetUserProfile', true)
+        app.globalData.hasGetUserProfile = true
+        
+        // 更新后端用户信息
+        that.updateUserProfile(userInfo.nickName, userInfo.avatarUrl)
+        
+        // 执行回调函数
+        if (callback && typeof callback === 'function') {
+          callback()
+        }
+      },
+      fail: (error) => {
+        console.log('获取用户信息失败:', error)
+        // 用户拒绝授权时不执行回调，留在当前页面
+        tt.showToast({
+          title: '需要授权才能继续',
+          icon: 'none',
+          duration: 2000
         })
       }
     })
@@ -160,6 +213,9 @@ Page({
             isAuthorized: true,
             userName: userName
           })
+          
+          // 检查用户是否已有宠物
+          that.checkUserPet(userId)
         } else {
           console.error('登录失败，未获取到用户标识', loginResponse.data)
           that.handleLoginFailure()
@@ -213,6 +269,9 @@ Page({
               isAuthorized: true,
               userName: userName
             })
+            
+            // 检查用户是否已有宠物
+            that.checkUserPet(response.data.user_id)
           } else {
             that.handleLoginFailure()
           }
@@ -249,22 +308,40 @@ Page({
   // 自定义宠物按钮点击事件
   onCustomClick: function() {
     console.log('点击自定义按钮')
-    // 先尝试获取用户信息
-    this.getUserProfileAndUpdate()
     
-    tt.navigateTo({
-      url: '/pages/pet/pet'
+    // 如果已经获取过用户信息，直接跳转
+    if (this.data.hasGetUserProfile) {
+      tt.navigateTo({
+        url: '/pages/pet/pet'
+      })
+      return
+    }
+    
+    // 获取用户信息，成功后跳转
+    this.getUserProfileWithCallback(() => {
+      tt.navigateTo({
+        url: '/pages/pet/pet'
+      })
     })
   },
 
   // 盲盒按钮点击事件
   onBlindBoxClick: function() {
     console.log('点击盲盒按钮')
-    // 先尝试获取用户信息
-    this.getUserProfileAndUpdate()
     
-    this.setData({
-      showBlindBoxModal: true
+    // 如果已经获取过用户信息，直接显示弹窗
+    if (this.data.hasGetUserProfile) {
+      this.setData({
+        showBlindBoxModal: true
+      })
+      return
+    }
+    
+    // 获取用户信息，成功后显示弹窗
+    this.getUserProfileWithCallback(() => {
+      this.setData({
+        showBlindBoxModal: true
+      })
     })
   },
 
@@ -278,11 +355,52 @@ Page({
   // 领养按钮点击事件
   onAdoptClick: function() {
     console.log('点击领养按钮')
-    // 先尝试获取用户信息
-    this.getUserProfileAndUpdate()
     
-    tt.navigateTo({
-      url: '/pages/presetPet/presetPet'
+    // 如果已经获取过用户信息，直接跳转
+    if (this.data.hasGetUserProfile) {
+      tt.navigateTo({
+        url: '/pages/presetPet/presetPet'
+      })
+      return
+    }
+    
+    // 获取用户信息，成功后跳转
+    this.getUserProfileWithCallback(() => {
+      tt.navigateTo({
+        url: '/pages/presetPet/presetPet'
+      })
+    })
+  },
+
+  // 检查用户是否已有宠物
+  checkUserPet: function(userId) {
+    const that = this
+    const app = getApp()
+    const apiUrl = `${app.globalData.API_BASE_URL}/users/${userId}/has_pets`
+    
+    console.log('检查用户宠物，用户ID:', userId)
+    
+    tt.request({
+      url: apiUrl,
+      method: 'GET',
+      timeout: 10000,
+      success: (response) => {
+        console.log('获取用户宠物响应:', response)
+        if (response.data && response.data.has_pets === true) {
+          console.log('用户已有宠物，跳转到companion页面')
+          // 用户已有宠物，跳转到companion页面
+          tt.redirectTo({
+            url: '/pages/companion/companion'
+          })
+        } else {
+          console.log('用户暂无宠物，停留在guide页面')
+          // 用户暂无宠物，停留在当前页面
+        }
+      },
+      fail: (error) => {
+        console.error('检查用户宠物失败:', error)
+        // 请求失败时，停留在当前页面
+      }
     })
   }
 })

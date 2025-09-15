@@ -6,13 +6,13 @@
   <!-- 内容区域 -->
   <view class="content">
     <!-- 宠物类型轮播选择 -->
-    <view class="pet-type-carousel" wx:if="{{currentStep !== 4 && currentStep !== 5}}">      
+    <view class="pet-type-carousel {{currentStep > 1 ? 'disabled' : ''}}" wx:if="{{currentStep !== 4 && currentStep !== 5}}">      
       <view class="carousel-scroll">
         <view class="carousel-container">
           <view 
             wx:for="{{allPetTypes}}" 
             wx:key="type" 
-            class="pet-type-item {{currentIndex === index ? 'active' : ''}} {{item.isCustom ? 'custom-type' : ''}}"
+            class="pet-type-item {{currentIndex === index ? 'active' : ''}} {{item.isCustom ? 'custom-type' : ''}} {{currentStep > 1 ? 'disabled' : ''}}"
             style="transform: {{currentIndex === index ? 'scale(1.2) translateX(0)' : index < currentIndex ? 'scale(0.8) translateX(-' + (300 * (currentIndex - index)) + 'rpx)' : index > currentIndex ? 'scale(0.8) translateX(' + (300 * (index - currentIndex)) + 'rpx)' : 'scale(0.8) translateX(0)'}}"
             bindtap="selectPetType" 
             data-type="{{item.type}}"
@@ -28,7 +28,7 @@
         <view 
           wx:for="{{allPetTypes}}" 
           wx:key="type" 
-          class="pet-type-label {{currentIndex === index ? 'active' : ''}}"
+          class="pet-type-label {{currentIndex === index ? 'active' : ''}} {{currentStep > 1 ? 'disabled' : ''}}"
           bindtap="selectPetType"
           data-type="{{item.type}}"
           data-index="{{index}}"

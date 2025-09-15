@@ -90,6 +90,7 @@
   background-color: var(--bg-frosted);
 }
 
+
 /* 宠物类型标签 */
 .pet-type-labels {
   display: flex;
@@ -116,6 +117,21 @@
   color: var(--text-primary);
   border-color: var(--primary-color);
   transform: scale(1.05);
+}
+
+.pet-type-label.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--bg-disabled);
+  color: var(--text-disabled);
+  border-color: var(--border-disabled);
+}
+
+.pet-type-label.disabled.active {
+  background-color: var(--bg-disabled);
+  color: var(--text-disabled);
+  border-color: var(--border-disabled);
+  transform: none;
 }
 
 /* 步骤容器样式 - 统一所有步骤容器 */

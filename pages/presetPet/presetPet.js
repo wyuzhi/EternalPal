@@ -14,7 +14,12 @@ Page({
     showSuggestions: false, // 显示搜索建议
     searchSuggestions: [], // 搜索建议列表
     searchHistory: [], // 搜索历史
-    tabs: [            // TODO 获取数据库中的宠物类型
+    // 抽卡效果相关状态
+    showCardDraw: false, // 显示抽卡动画
+    cardFlipped: false, // 卡牌翻转状态
+    cardRevealed: false, // 卡牌揭示状态
+    cardDrawText: '正在召唤神秘伙伴...', // 抽卡文字
+    tabs: [            // TODO 获取数据库中的宠物类型，构建动态标签列表
       { key: 'all', name: '全部' },
       { key: 'popular', name: '热门' },
       { key: 'new', name: '最新' },
@@ -54,86 +59,85 @@ Page({
     const that = this;
     
     // 模拟数据（已注释）
-    /*
-    setTimeout(() => {
-      // 模拟数据
-      const mockPets = [
-        {
-          id: 1,
-          name: '小橘',
-          type: '橘猫',
-          personality: '活泼开朗',
-            hobbies: '晒太阳,玩毛线球',
-            preview_url: '/sample/1.jpg',
-          user_id: null,
-          popularity: 128
-        },
-        {
-          id: 2,
-          name: '金毛',
-          type: '金毛寻回犬',
-          personality: '温顺友善',
-          hobbies: '游泳,捡球',
-          preview_url: '/sample/2.jpg', 
-          user_id: null,
-          popularity: 256
-        },
-        {
-          id: 3,
-          name: '小黄',
-          type: '柯尔鸭',
-          personality: '聪明机灵',
-          hobbies: '游泳,散步',
-          preview_url: '/sample/3.jpg',
-          user_id: null,
-          popularity: 89
-        },
-        {
-          id: 4,
-          name: '雪球',
-          type: '波斯猫',
-          personality: '优雅安静',
-          hobbies: '睡觉,梳毛',
-          preview_url: '/sample/4.jpg',
-          user_id: 123, // 已被领养
-          popularity: 312
-        },
-        {
-          id: 5,
-          name: '哈士奇',
-          type: '西伯利亚雪橇犬',
-          personality: '精力充沛',
-          hobbies: '跑步,拆家',
-          preview_url: '/sample/5.jpg',
-          user_id: null,
-          popularity: 445
-        },
-        {
-          id: 6,
-          name: '小白',
-          type: '白鸭',
-          personality: '活泼好动',
-          hobbies: '游泳,觅食',
-          preview_url: '/sample/6.jpg',
-          user_id: null,
-          popularity: 67
-        }
-      ];
+    // setTimeout(() => {
+    //   // 模拟数据
+    //   const mockPets = [
+    //     {
+    //       id: 1,
+    //       name: '小橘',
+    //       type: '橘猫',
+    //       personality: '活泼开朗',
+    //         hobbies: '晒太阳,玩毛线球',
+    //         preview_url: '/sample/1.jpg',
+    //       user_id: null,
+    //       popularity: 128
+    //     },
+    //     {
+    //       id: 2,
+    //       name: '金毛',
+    //       type: '金毛寻回犬',
+    //       personality: '温顺友善',
+    //       hobbies: '游泳,捡球',
+    //       preview_url: '/sample/2.jpg', 
+    //       user_id: null,
+    //       popularity: 256
+    //     },
+    //     {
+    //       id: 3,
+    //       name: '小黄',
+    //       type: '柯尔鸭',
+    //       personality: '聪明机灵',
+    //       hobbies: '游泳,散步',
+    //       preview_url: '/sample/3.jpg',
+    //       user_id: null,
+    //       popularity: 89
+    //     },
+    //     {
+    //       id: 4,
+    //       name: '雪球',
+    //       type: '波斯猫',
+    //       personality: '优雅安静',
+    //       hobbies: '睡觉,梳毛',
+    //       preview_url: '/sample/4.jpg',
+    //       user_id: 123, // 已被领养
+    //       popularity: 312
+    //     },
+    //     {
+    //       id: 5,
+    //       name: '哈士奇',
+    //       type: '西伯利亚雪橇犬',
+    //       personality: '精力充沛',
+    //       hobbies: '跑步,拆家',
+    //       preview_url: '/sample/5.jpg',
+    //       user_id: null,
+    //       popularity: 445
+    //     },
+    //     {
+    //       id: 6,
+    //       name: '小白',
+    //       type: '白鸭',
+    //       personality: '活泼好动',
+    //       hobbies: '游泳,觅食',
+    //       preview_url: '/sample/6.jpg',
+    //       user_id: null,
+    //       popularity: 67
+    //     }
+    //   ];
 
-      that.setData({
-        systemPets: mockPets,
-        loading: false
-      });
+    //   that.setData({
+    //     systemPets: mockPets,
+    //     loading: false
+    //   });
       
-      // 分配瀑布流数据
-      that.distributeWaterfallData(mockPets);
-    }, 1000); // 模拟1秒加载时间
-    */
+    //   // 分配瀑布流数据
+    //   that.distributeWaterfallData(mockPets);
+    // }, 1000); // 模拟1秒加载时间
+    
 
     // 使用原有API调用
-    tt.showLoading({
-      title: '加载中...'
-    });
+    // tt.showLoading({
+    //   title: '加载中...'
+    // });
 
     tt.request({
       url: app.globalData.API_BASE_URL + '/system-pets',
@@ -508,5 +512,100 @@ Page({
     this.setData({
       searchHistory: history
     });
+  },
+
+  // 随机选择宠物 - 启动抽卡效果
+  onRandomSelect: function() {
+    const availablePets = this.data.systemPets;
+    
+    if (!availablePets || availablePets.length === 0) {
+      tt.showToast({
+        title: '暂无可选择的宠物',
+        icon: 'none'
+      });
+      return;
+    }
+
+    // 随机选择一个宠物
+    const randomIndex = Math.floor(Math.random() * availablePets.length);
+    const randomPet = availablePets[randomIndex];
+    
+    // 开始抽卡动画
+    this.startCardDrawAnimation(randomPet);
+  },
+
+  // 开始抽卡动画
+  startCardDrawAnimation: function(selectedPet) {
+    const that = this;
+    
+    // 重置抽卡状态
+    this.setData({
+      selectedPet: selectedPet,
+      showCardDraw: true,
+      cardFlipped: false,
+      cardRevealed: false,
+      cardDrawText: '正在召唤神秘伙伴...'
+    });
+
+    // 第一阶段：显示卡牌背面并开始浮动
+    setTimeout(() => {
+      that.setData({
+        cardDrawText: '命运的齿轮正在转动...'
+      });
+    }, 1500);
+
+    // 第二阶段：翻转卡牌
+    setTimeout(() => {
+      that.setData({
+        cardFlipped: true,
+        cardDrawText: '即将揭晓你的专属伙伴！'
+      });
+    }, 3000);
+
+    // 第三阶段：显示卡牌正面
+    setTimeout(() => {
+      that.setData({
+        cardRevealed: true
+      });
+    }, 4000);
+
+    // 第四阶段：自动关闭抽卡界面并显示领养弹窗
+    setTimeout(() => {
+      that.closeCardDrawAnimation();
+    }, 7000);
+  },
+
+  // 跳过抽卡动画
+  skipCardAnimation: function() {
+    if (this.data.cardRevealed) {
+      this.closeCardDrawAnimation();
+    } else {
+      // 快速完成动画
+      this.setData({
+        cardFlipped: true,
+        cardRevealed: true,
+        cardDrawText: '恭喜获得新伙伴！'
+      });
+      
+      setTimeout(() => {
+        this.closeCardDrawAnimation();
+      }, 1000);
+    }
+  },
+
+  // 关闭抽卡动画
+  closeCardDrawAnimation: function() {
+    this.setData({
+      showCardDraw: false,
+      cardFlipped: false,
+      cardRevealed: false
+    });
+    
+    // 显示领养确认弹窗
+    setTimeout(() => {
+      this.setData({
+        showAdoptModal: true
+      });
+    }, 300);
   }
 });

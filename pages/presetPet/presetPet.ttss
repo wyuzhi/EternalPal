@@ -474,7 +474,7 @@
 }
 
 .confirm-btn {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-deep) 100%);
+  background: var(--primary-color);
 }
 
 .confirm-btn:active {
@@ -489,4 +489,491 @@
 
 .confirm-btn .btn-text {
   color: var(--text-primary);
+}
+
+/* 随机按钮样式 */
+.random-button {
+  position: fixed;
+  bottom: 140rpx;
+  right: 60rpx;
+  width: 120rpx;
+  height: 120rpx;
+  background: var(--bg-frosted);
+  border: 1rpx solid var(--border-light);
+  box-shadow: 0 4rpx 12rpx var(--shadow-light);
+  backdrop-filter: blur(20rpx);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.random-button:active {
+  transform: scale(0.9);
+  box-shadow: 0 4rpx 20rpx var(--shadow-light);
+}
+
+.random-button::before {
+  content: '';
+  position: absolute;
+  top: -2rpx;
+  left: -2rpx;
+  right: -2rpx;
+  bottom: -2rpx;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  border-radius: 50%;
+  animation: shimmer 2s infinite;
+  opacity: 0.6;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.random-icon {
+  width: 80rpx;
+  height: 80rpx;
+  /* filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7495%) hue-rotate(288deg) brightness(100%) contrast(100%); 白化*/ 
+  transition: transform 0.3s ease;
+}
+
+.random-button:active .random-icon {
+  transform: rotate(180deg);
+}
+
+/* 抽卡效果样式 */
+.card-draw-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.9) 0%, 
+    rgba(30, 20, 60, 0.95) 50%, 
+    rgba(0, 0, 0, 0.9) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.card-draw-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 背景光效 */
+.card-draw-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.light-beam {
+  position: absolute;
+  width: 4rpx;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(255, 215, 0, 0.8) 50%, 
+    transparent 100%);
+  animation: lightMove 3s infinite ease-in-out;
+}
+
+.light-beam-1 {
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.light-beam-2 {
+  left: 50%;
+  animation-delay: 1s;
+}
+
+.light-beam-3 {
+  left: 80%;
+  animation-delay: 2s;
+}
+
+@keyframes lightMove {
+  0%, 100% {
+    opacity: 0;
+    transform: translateX(-100rpx);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(100rpx);
+  }
+}
+
+.sparkle {
+  position: absolute;
+  width: 8rpx;
+  height: 8rpx;
+  background: radial-gradient(circle, #fff 0%, transparent 70%);
+  border-radius: 50%;
+  animation: sparkleFloat 2s infinite ease-in-out;
+}
+
+.sparkle-1 {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.sparkle-2 {
+  top: 30%;
+  right: 15%;
+  animation-delay: 0.5s;
+}
+
+.sparkle-3 {
+  top: 60%;
+  left: 20%;
+  animation-delay: 1s;
+}
+
+.sparkle-4 {
+  top: 70%;
+  right: 25%;
+  animation-delay: 1.5s;
+}
+
+.sparkle-5 {
+  top: 40%;
+  left: 50%;
+  animation-delay: 0.8s;
+}
+
+@keyframes sparkleFloat {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-40rpx) scale(1);
+  }
+}
+
+/* 卡牌容器 */
+.card-container {
+  position: relative;
+  width: 500rpx;
+  height: 700rpx;
+  perspective: 1000rpx;
+  margin-bottom: 60rpx;
+}
+
+/* 卡牌背面 */
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, 
+    #4a4a8a 0%, 
+    #2a2a5a 50%, 
+    #1a1a3a 100%);
+  border-radius: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.5);
+  border: 4rpx solid rgba(255, 215, 0, 0.3);
+  animation: cardEntry 1s ease-out, cardFloat 3s infinite ease-in-out 1s;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-back.flipped {
+  transform: rotateY(180deg);
+}
+
+@keyframes cardEntry {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotateY(-180deg) translateY(200rpx);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1) rotateY(-90deg) translateY(-50rpx);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg) translateY(0);
+  }
+}
+
+@keyframes cardFloat {
+  0%, 100% {
+    transform: translateY(0) rotateZ(0deg);
+  }
+  50% {
+    transform: translateY(-20rpx) rotateZ(1deg);
+  }
+}
+
+.card-back-pattern {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40rpx;
+}
+
+.pattern-circle {
+  width: 200rpx;
+  height: 200rpx;
+  border: 6rpx solid rgba(255, 215, 0, 0.6);
+  border-radius: 50%;
+  position: relative;
+  animation: circleRotate 4s infinite linear;
+}
+
+.pattern-circle::before {
+  content: '';
+  position: absolute;
+  top: -10rpx;
+  left: -10rpx;
+  right: -10rpx;
+  bottom: -10rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: circleRotate 6s infinite linear reverse;
+}
+
+@keyframes circleRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pattern-star {
+  font-size: 80rpx;
+  color: rgba(255, 215, 0, 0.8);
+  animation: starPulse 2s infinite ease-in-out;
+}
+
+@keyframes starPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.card-back-text {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: rgba(255, 215, 0, 0.9);
+  text-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.5);
+  letter-spacing: 4rpx;
+}
+
+/* 卡牌正面 */
+.card-front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(240, 240, 255, 0.9) 100%);
+  border-radius: 40rpx;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.3);
+  border: 4rpx solid rgba(255, 215, 0, 0.8);
+  transform: rotateY(180deg);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.card-front.revealed {
+  opacity: 1;
+  transform: rotateY(0deg);
+  animation: cardReveal 1s ease-out, cardGlow 2s infinite ease-in-out 1s;
+}
+
+@keyframes cardReveal {
+  0% {
+    transform: rotateY(180deg) scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateY(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes cardGlow {
+  0%, 100% {
+    box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 20rpx 60rpx rgba(255, 215, 0, 0.4);
+  }
+}
+
+.card-pet-image {
+  width: 100%;
+  height: 420rpx;
+  border-radius: 36rpx 36rpx 0 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.pet-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-pet-info {
+  padding: 40rpx 30rpx;
+  text-align: center;
+}
+
+.card-pet-name {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+.card-pet-type {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.card-pet-personality {
+  font-size: 24rpx;
+  color: #888;
+  padding: 10rpx 20rpx;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 20rpx;
+  display: inline-block;
+}
+
+.card-rarity-glow {
+  position: absolute;
+  top: -10rpx;
+  left: -10rpx;
+  right: -10rpx;
+  bottom: -10rpx;
+  background: linear-gradient(45deg, 
+    transparent, 
+    rgba(255, 215, 0, 0.2), 
+    transparent, 
+    rgba(255, 215, 0, 0.2), 
+    transparent);
+  border-radius: 50rpx;
+  animation: rarityGlow 3s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes rarityGlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* 抽卡文字 */
+.card-draw-text {
+  text-align: center;
+  color: white;
+}
+
+.draw-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: rgba(255, 215, 0, 0.9);
+  text-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.5);
+  animation: textPulse 2s infinite ease-in-out;
+}
+
+.draw-result {
+  font-size: 42rpx;
+  font-weight: bold;
+  color: rgba(255, 215, 0, 1);
+  text-shadow: 0 4rpx 12rpx rgba(255, 215, 0, 0.5);
+  margin-bottom: 20rpx;
+  animation: resultGlow 1s ease-out;
+}
+
+.draw-hint {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.7);
+  animation: hintBlink 2s infinite ease-in-out;
+}
+
+@keyframes textPulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes resultGlow {
+  0% {
+    opacity: 0;
+    transform: translateY(20rpx) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes hintBlink {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }

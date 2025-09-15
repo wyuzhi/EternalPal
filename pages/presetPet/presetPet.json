@@ -3,6 +3,6 @@
         "loader": "/components/loader/loader",
         "popup": "/components/popup/popup"
     },
-    "navigationBarTitleText": "推荐",
+    "navigationBarTitleText": "Linki World",
     "navigationStyle": "custom"
 }

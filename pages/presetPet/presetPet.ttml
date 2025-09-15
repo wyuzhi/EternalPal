@@ -76,7 +76,7 @@
           <view class="pet-image-container">
             <image 
               class="pet-image" 
-              src="{{item.preview_url || '/static/images/default-pet.png'}}" 
+              src="{{item.2d_url || '/images/logo.svg'}}" 
               mode="aspectFill"
               lazy-load="true"
             />
@@ -120,14 +120,14 @@
           <view class="pet-image-container">
             <image 
               class="pet-image" 
-              src="{{item.preview_url || '/static/images/default-pet.png'}}" 
+              src="{{item.2d_url || '/images/logo.svg'}}" 
               mode="aspectFill"
               lazy-load="true"
             />
             <!-- 宠物信息覆盖层 -->
             <view class="pet-info-overlay">
               <view class="pet-name-row">
-                <view class="pet-name">{{item.name || '神秘宠物'}}</view>
+                <view class="pet-name">{{item.name || '神秘嘉宾'}}</view>
                 <view class="popularity-info">
                   <image class="popularity-icon" src="/images/guide/popular.svg" mode="aspectFit"></image>
                   <text class="popularity-count">{{item.popularity || 0}}</text>
@@ -200,4 +200,62 @@
       </view>
     </view>
   </popup>
+
+  <!-- 随机按钮 -->
+  <view class="random-button" bindtap="onRandomSelect" tt:if="{{!loading && systemPets.length > 0}}">
+    <image class="random-icon" src="/images/guide/dice.svg" mode="aspectFit"></image>
+  </view>
+
+  <!-- 抽卡效果弹窗 -->
+  <view class="card-draw-overlay" tt:if="{{showCardDraw}}" bindtap="skipCardAnimation">
+    <view class="card-draw-container">
+      <!-- 背景光效 -->
+      <view class="card-draw-bg">
+        <view class="light-beam light-beam-1"></view>
+        <view class="light-beam light-beam-2"></view>
+        <view class="light-beam light-beam-3"></view>
+        <view class="sparkle sparkle-1"></view>
+        <view class="sparkle sparkle-2"></view>
+        <view class="sparkle sparkle-3"></view>
+        <view class="sparkle sparkle-4"></view>
+        <view class="sparkle sparkle-5"></view>
+      </view>
+      
+      <!-- 卡牌容器 -->
+      <view class="card-container">
+        <!-- 卡牌背面 -->
+        <view class="card-back {{cardFlipped ? 'flipped' : ''}}" tt:if="{{!cardRevealed}}">
+          <view class="card-back-pattern">
+            <view class="pattern-circle"></view>
+            <view class="pattern-star">✨</view>
+            <text class="card-back-text">Linki</text>
+          </view>
+        </view>
+        
+        <!-- 卡牌正面 -->
+        <view class="card-front {{cardRevealed ? 'revealed' : ''}}" tt:if="{{selectedPet}}">
+          <view class="card-pet-image">
+            <image 
+              class="pet-card-image" 
+              src="{{selectedPet.2d_url || '/images/logo.svg'}}" 
+              mode="aspectFill"
+            />
+          </view>
+          <view class="card-pet-info">
+            <view class="card-pet-name">{{selectedPet.name || '神秘宠物'}}</view>
+            <view class="card-pet-type">{{selectedPet.type || '未知品种'}}</view>
+            <view class="card-pet-personality">{{selectedPet.personality || '神秘性格'}}</view>
+          </view>
+          <view class="card-rarity-glow"></view>
+        </view>
+      </view>
+      
+      <!-- 抽卡提示文字 -->
+      <view class="card-draw-text">
+        <text class="draw-title" tt:if="{{!cardRevealed}}">{{cardDrawText}}</text>
+        <text class="draw-result" tt:if="{{cardRevealed}}">我来啦！</text>
+        <text class="draw-hint" tt:if="{{cardRevealed}}">点击任意处继续</text>
+      </view>
+    </view>
+  </view>
 </view>

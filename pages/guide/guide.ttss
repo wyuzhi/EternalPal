@@ -1,351 +1,233 @@
-.container {
+/* 页面容器 */
+.choice-container {
+  min-height: 100vh;
+  background: var(--primary-light);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background: var(--bg-gradient);
-}
-
-/* 加载容器样式 */
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  gap: 30rpx;
-}
-
-.loading-text {
-  font-size: var(--f-md);
-  color: var(--text-secondary);
-}
-
-/* 引导页容器 */
-.guide-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100%;
-}
-
-/* 滑动容器 */
-.slide-container {
-  height: 100%;
-  width: 100%;
-}
-
-.slide-item {
-  width: 100%;
-  height: 100%;
-}
-
-.slide-content {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  position: relative;
-}
-
-/* 图片区域 */
-.image-area {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: var(--p-container);
-  min-height: 50vh;
-}
-
-/* 卡片容器样式 */
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-/* 第一个滑块 */
-.slide-item:first-child .card-container {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* 倾斜散落卡片 */
-.slide-item:first-child .card {
-  position: absolute;
-  width: 300rpx;
-  height: 450rpx;
-  background-color: var(--text-disabled);
-  border-radius: var(--r-card);
-  overflow: hidden;
-  box-shadow: 0 8rpx 12rpx var(--shadow-medium);
-  transition: transform 0.3s ease;
-  opacity: 0;
-}
-
-/* 卡片滑入 */
-.slide-item:first-child .card.animate-in {
-  opacity: 1;
-  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.slide-item:first-child .card image {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  top: 0;
-  left: 0;
-}
-
-/* 第一张卡片 - 左方 */
-.slide-item:first-child .card:nth-child(1) {
-  top: 100rpx;
-  left: 0rpx;
-  transform: rotate(-25deg) translateX(-400rpx) scale(0.6);
-  z-index: 3;
-}
-
-.slide-item:first-child .card:nth-child(1).animate-in {
-  transform: rotate(-8deg) translateX(0) scale(1);
-  transition-delay: 0.1s;
-}
-
-/* 第二张卡片 - 右方上 */
-.slide-item:first-child .card:nth-child(2) {
-  top: -40rpx;
-  right: 20rpx;
-  transform: rotate(25deg) translateX(400rpx) scale(0.6);
-  z-index: 2;
-}
-
-.slide-item:first-child .card:nth-child(2).animate-in {
-  transform: rotate(12deg) translateX(0) scale(1);
-  transition-delay: 0.3s;
-}
-
-/* 第三张卡片 - 右方下 */
-.slide-item:first-child .card:nth-child(3) {
-  top: 320rpx;
-  right: 40rpx;
-  transform: rotate(30deg) translateX(400rpx) scale(0.6);
-  z-index: 1;
-}
-
-.slide-item:first-child .card:nth-child(3).animate-in {
-  transform: rotate(20deg) translateX(0) scale(1);
-  transition-delay: 0.3s;
-}
-
-/* 第二个滑块 - 操作指引图标 */
-.slide-item:last-child .card-container {
-  display: grid;
-  margin-bottom: 650rpx;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--m-xl);
-  padding: var(--p-container);
-  width: 100%;
+  padding: 0 60rpx;
   box-sizing: border-box;
 }
 
-.slide-item:last-child .card {
-  width: 300rpx;
-  height: 300rpx;
-  border-radius: var(--r-card);
-  background: var(--bg-secondary);
-  position: relative;
-  overflow: hidden;
+.choice-section {
+  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4rpx 12rpx var(--shadow-light);
-  transition: all 0.2s ease;
-  border: 1rpx solid var(--border-light);
-}
-.slide-item:last-child .card:active {
-  transform: scale(0.95);
-  opacity: 0.9;
+  flex-direction: column;
+  transform: translateY(50%);
+  gap: var(--m-xxl);
 }
 
-/* 图标容器 */
-.slide-item:last-child .card .icon-wrapper {
+/* 标题区域 */
+.title-section {  
+  text-align: center;
+}
+
+.main-title {
+  font-size: var(--f-xl);
+  color: var(--text-primary);
+  text-shadow: var(--shadow-light);
+  letter-spacing: 4rpx;
+}
+
+/* 按钮区域 */
+.buttons-section {
+  width: 100%;
+  max-width: 600rpx;
+  display: flex;
+  flex-direction: column;
+  gap: var(--m-xxl);
+}
+
+/* 选择按钮基础样式 */
+.choice-button {
+  width: 100%;
+  height: 150rpx;
+  border-radius: var(--r-pill);
+  border: 1rpx solid var(--border-light);
+  backdrop-filter: blur(10rpx);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 0 var(--p-xxl);
+  box-shadow: 0 4rpx 12rpx var(--shadow-light);
+  transition: all 0.3s ease;
+}
+
+.choice-button:active {
+  transform: translateY(4rpx);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 自定义按钮 */
+.custom-button {
+  background: var(--bg-primary);
+}
+
+.custom-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* 盲盒按钮 */
+.blindbox-button {
+  background: var(--bg-primary);
+}
+
+.blindbox-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* 领养按钮 */
+.adopt-button {
+  background: var(--bg-primary);
+}
+
+.adopt-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* 按钮图标 */
+.button-icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-bottom: var(--m-s);
+  z-index: 1;
+  margin-right: var(--m-l);
+}
+
+/* 按钮文字 */
+.button-text-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--p-l);
 }
 
-.slide-item:last-child .card image {
-  width: 160rpx;
-  height: 160rpx;
-  border-radius: var(--r-s);
-  display: block;
-  transition: transform 0.2s ease;
-}
-.slide-item:last-child .card:active image {
-  transform: scale(0.9);
-}
-
-/* 步骤标签 */
-.slide-item:last-child .card .step-label {
-  margin-top: var(--m-l);
-  font-size: var(--f-sm);
-  color: var(--text-secondary);
-  font-weight: 500;
-  text-align: center;
-}
-
-.slide-item:last-child .card .step-number {
-  position: absolute;
-  top: 0rpx;
-  left: 0rpx;
-  width: 50rpx;
-  height: 50rpx;
-  background: var(--primary-color);
-  color: var(--text-primary);
-  font-size: var(--f-md);
+.button-text {
+  font-size: var(--f-l);
   font-weight: bold;
-  border-top-left-radius: var(--r-card);
-  border-bottom-right-radius: var(--r-card);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  box-shadow: 0 2rpx 8rpx var(--shadow-light);
-}
-
-/* 文字区域 - 圆弧背景 */
-.text-area {
-  position: fixed;
-  bottom: -80vh;
-  left: 50%;
-  transform: translateX(-50%) translateY(200rpx);
-  width: 240vw;
-  height: 240vw;
-  background-color: white;
-  border-radius: 50%;
-  z-index: 10;
-  box-shadow: 0 -10rpx 30rpx var(--shadow-light);
-  opacity: 0;
-  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* 圆弧滑入动画 */
-.text-area.animate-in {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-  transition-delay: 0.1s;
-}
-
-/* 文本容器样式 */
-.text-container {
-  position: absolute;
-  top: 80rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  text-align: center;
-  z-index: 11;
-  padding: 60rpx 40rpx;
-}
-
-.greeting {
-  font-size: var(--f-2xl);
-  font-weight: bold;
-  margin-bottom: var(--m-l);
   color: var(--text-primary);
-  text-align: center;
-  white-space: pre-line;
+  margin-bottom: var(--m-s);
+  text-shadow: var(--shadow-light);
+  z-index: 1;
 }
 
-.description {
+.button-desc {
   font-size: var(--f-sm);
-  color: var(--text-secondary);
-  text-align: center;
-  margin-top: var(--m-xl);
+  color: var(--text-primary);
+  z-index: 1;
 }
 
-/* 分页指示器容器 */
-.pagination-container {
-  position: absolute;
-  top: 75rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 12;
-}
-
-.pagination-dots {
-  display: flex;
-  align-items: center;
-  gap: 20rpx;
-}
-
-.dot {
-  width: 12rpx;
-  height: 12rpx;
-  border-radius: 50%;
-  background-color: var(--text-disabled);
-  transition: all 0.3s ease;
-}
-
-.dot.active {
-  background-color: var(--text-primary);
-  width: 50rpx;
-  border-radius: var(--r-pill);
-}
-
-/* 底部按钮容器 */
-.button-container {
+/* 弹窗样式 */
+.modal-overlay {
   position: fixed;
-  bottom: 80rpx;
+  top: 0;
   left: 0;
   right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
-  z-index: 15;
+  align-items: center;
+  z-index: 1000;
 }
 
-/* 按钮样式 */
-.continue-btn {
-  height: 90rpx;
-  background-color: var(--primary-color);
-  color: var(--text-primary);
-  font-size: var(--f-md);
-  border-radius: var(--r-pill);
+.modal-content {
+  width: 560rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  padding: 48rpx 40rpx 24rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
+}
+
+.modal-title {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+}
+
+.modal-body {
+  padding: 40rpx;
+  text-align: center;
+}
+
+.modal-message {
+  font-size: 32rpx;
+  color: #333333;
+  line-height: 1.6;
+}
+
+.modal-footer {
+  padding: 0 40rpx 40rpx;
+}
+
+.modal-button {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16rpx;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.3);
+}
+
+.modal-button:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 6rpx rgba(102, 126, 234, 0.4);
+}
+
+.modal-button-text {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+/* 固定logo、名称 */
+.logo-section {
+  position: fixed;
+  bottom: 150rpx;
+  left: 0;
+  right: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16rpx;
-  box-shadow: 0 4rpx 10rpx var(--shadow-light);
-  transition: all 0.3s ease;
+  gap: var(--m-s);
 }
 
-.continue-btn::after {
-  border: none; /* 移除默认的边框效果 */
-}
-
-.continue-btn:active {
-  transform: scale(0.98);
-  box-shadow: 0 2rpx 6rpx var(--shadow-light);
-}
-
-/* 按钮内文本样式 */
-.btn-text {
-  font-size: var(--f-md);
-  font-weight: bold;
-  color: var(--text-primary);
-}
-
-/* 按钮内图标样式 */
-.btn-icon {
-  width: 60rpx;
-  height: 60rpx;
+.logo {
+  width: 100rpx;
+  height: 100rpx;
 }

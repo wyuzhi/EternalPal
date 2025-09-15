@@ -82,7 +82,7 @@
       
       <view class="empty-state" wx:if="{{anniversaries.length === 0}}">
         <text class="empty-text">还没有记录珍贵时刻</text>
-        <text class="empty-hint">点击右上角记录与灵伴的重要时光</text>
+        <text class="empty-hint">点击右上角记录与Linki的重要时光</text>
       </view>
     </view>
   </view>
@@ -118,7 +118,7 @@
       <!-- 空状态 -->
       <view class="empty-state" wx:if="{{memoryRecords.length === 0}}">
         <text class="empty-text">还没有情感记忆</text>
-        <text class="empty-hint">每次与灵伴的互动都会记录温暖时光</text>
+        <text class="empty-hint">每次与Linki的互动都会记录温暖时光</text>
       </view>
     </view>
   </view>

@@ -644,7 +644,7 @@ Page({
     const that = this;
     
     tt.showLoading({
-      title: '正在获取灵伴信息...',
+      title: '正在获取Linki信息...',
     });
     
     // 调用后端API获取用户的最新宠物信息
@@ -687,7 +687,7 @@ Page({
           // 没有获取到宠物信息
           console.log('未获取到宠物信息');
           tt.showToast({
-            title: '获取灵伴信息失败',
+            title: '获取Linki信息失败',
             icon: 'none'
           });
         }
@@ -1758,7 +1758,7 @@ Page({
       // 分享模板ID（需要在抖音开放平台后台配置）
       templateId: "3h8i11h04d3g40njx3", // 这是一个示例ID，实际使用时需要替换为真实的模板ID
       // 分享标题
-      title: '灵伴 EternalPal - 你的专属AI宠物',
+      title: 'Linki - 你的专属AI宠物',
       // 分享成功回调
       // success: function() {
       //   console.log('[Companion] 分享面板调起成功');

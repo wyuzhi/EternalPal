@@ -1,0 +1,4 @@
+<view class="mask {{show ? 'show' : ''}}" style="z-index: {{zindex}};" tt:bindtap="onMaskTap" tt:catchtouchmove="catchTouchMove">
+    <slot></slot>
+</view>
+

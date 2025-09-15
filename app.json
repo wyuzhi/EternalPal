@@ -1,20 +1,18 @@
 {
     "pages": [
-        "pages/choice/choice",
         "pages/guide/guide",
         "pages/pet/pet",
-        "pages/systemPet/systemPet",
+        "pages/presetPet/presetPet",
         "pages/companion/companion",
         "pages/petProfile/petProfile",
         "pages/settings/settings",
         "pages/settings/info/info",
-        "pages/memory/memory",
-        "pages/systemPet/systemPet"
+        "pages/memory/memory"
     ],
     "window": {
         "backgroundTextStyle": "light",
         "navigationBarBackgroundColor": "#fff",
-        "navigationBarTitleText": "灵伴",
+        "navigationBarTitleText": "Linki",
         "navigationBarTextStyle": "black"
     },
     "privacy": {
@@ -23,7 +21,7 @@
         ],
         "scope": {
             "chooseImage": {
-                "desc": "用于上传宠物照片，以便生成虚拟灵伴形象"
+                "desc": "用于上传宠物照片，以便生成虚拟Linki形象"
             }
         }
     }

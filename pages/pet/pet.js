@@ -50,7 +50,7 @@ Page({
     particles: [], // 粒子效果数据
     generationStepText: '正在分析宠物特征...', // 生成步骤提示文字
     estimatedTimeRemaining: '约3分钟', // 预计剩余时间
-    currentTip: '每个灵伴都有独特的性格和爱好，就像真实的宠物一样', // 当前显示的小贴士
+    currentTip: '每个Linki都有独特的性格和爱好，就像真实的宠物一样', // 当前显示的小贴士
     petTips: [
       '我正在赶来的路上，耐心等我一下下~',
       '我们都有自己的小性格和小爱好，就像真的宠物一样',
@@ -84,7 +84,7 @@ Page({
     const that = this;
     
     tt.showLoading({
-      title: '正在获取灵伴信息...',
+      title: '正在获取Linki信息...',
     });
     
     // 使用新的API获取用户的最新宠物信息
@@ -111,7 +111,7 @@ Page({
           tt.setStorageSync('currentPet', latestPet);
           
           tt.showToast({
-            title: '灵伴加载成功！',
+            title: 'Linki加载成功！',
             icon: 'success'
           });
         } else {
@@ -511,7 +511,7 @@ Page({
     })
   },
 
-  // 创建灵伴
+  // 创建Linki
   createPet: function() {
     // 验证当前步骤表单
     if (!this.validateCurrentStep()) return
@@ -665,13 +665,6 @@ Page({
         if (!this.data.petName.trim()) {
           tt.showToast({
             title: '请输入宠物名称',
-            icon: 'none'
-          })
-          return false
-        }
-        if (!this.data.petBirthday) {
-          tt.showToast({
-            title: '请选择宠物生日',
             icon: 'none'
           })
           return false
@@ -856,7 +849,7 @@ Page({
       // 清空用户填写的宠物信息，让用户重新填写
       petName: '',
       petGender: 'male',
-      petBirthday: '',
+      // petBirthday: '',
       selectedPersonalities: [],
       selectedHobbies: [],
       petStory: '',
@@ -996,7 +989,7 @@ Page({
     const that = this
     
     tt.showLoading({
-      title: '正在创建灵伴...',
+      title: '正在创建Linki...',
     })
     
     // TODO: 需要在宠物记录中添加反馈统计字段
@@ -1006,10 +999,10 @@ Page({
       url: app.globalData.API_BASE_URL + '/pets',
       method: 'POST',
       data: {
-        name: taskInfo.petName || '我的萌宠',
+        name: taskInfo.petName || '我的Linki',
         type: taskInfo.petType,
         gender: that.data.petGender,
-        birthday: that.data.petBirthday,
+        // birthday: that.data.petBirthday,
         personality: that.data.selectedPersonalities.join(','),
         hobby: that.data.selectedHobbies.join(','),
         story: that.data.petStory,
@@ -1036,12 +1029,12 @@ Page({
           })
           
           tt.showToast({
-            title: '灵伴创建成功！',
+            title: 'Linki创建成功！',
             icon: 'success'
           })
         } else {
           tt.showToast({
-            title: '创建灵伴失败：' + (res.data?.message || '未知错误'),
+            title: '创建Linki失败：' + (res.data?.message || '未知错误'),
             icon: 'none'
           })
         }
@@ -1050,7 +1043,7 @@ Page({
         tt.hideLoading()
         console.error('创建宠物失败', err)
         tt.showToast({
-          title: '创建灵伴失败，请稍后重试',
+          title: '创建Linki失败，请稍后重试',
           icon: 'none'
         })
       }
@@ -1082,7 +1075,7 @@ Page({
     if (!userId) {
       tt.hideLoading()
       tt.showToast({
-        title: '用户未登录，无法生成灵伴',
+        title: '用户未登录，无法生成Linki',
         icon: 'none'
       })
       return
@@ -1193,7 +1186,7 @@ Page({
               url: '/pages/companion/companion'
             })
             tt.showToast({
-              title: '灵伴和3D模型生成成功！',
+              title: 'Linki和3D模型生成成功！',
               icon: 'success'
             })
           } else {
@@ -1216,7 +1209,7 @@ Page({
         tt.hideLoading()
         console.error('创建宠物失败', err)
         tt.showToast({
-          title: '创建灵伴失败，请稍后重试',
+          title: '创建Linki失败，请稍后重试',
           icon: 'none'
         })
         // 重置到步骤3让用户重试

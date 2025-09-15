@@ -1,0 +1,24 @@
+# IDE配置
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+## mac
+**/.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+## windows
+ehthumbs.db
+Thumbs.db
+
+# 小程序相关
+project.private.config.json
+sitemap.json
+miniprogram_npm/
+node_modules/
+
+/sample

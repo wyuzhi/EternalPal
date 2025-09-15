@@ -83,7 +83,7 @@
     
     <view class="setting-item clickable" bindtap="onAbout">
       <view class="setting-info">
-        <text class="setting-label">关于灵伴</text>
+        <text class="setting-label">关于Linki</text>
         <text class="setting-desc">版本信息和应用介绍</text>
       </view>
       <image class="arrow-icon" src="/images/mainPage/list/arrow.svg" mode="aspectFit"></image>

@@ -210,7 +210,7 @@ Page({
     this.setData({
       petName: '暂无宠物',
       petType: 'unknown',
-      petDescription: '您还没有创建宠物，请先去创建一个可爱的灵伴吧！',
+      petDescription: '您还没有创建宠物，请先去创建一个可爱的Linki吧！',
       petImage: '/images/petTypes/dog.svg'
     });
     

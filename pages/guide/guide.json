@@ -1,5 +1,4 @@
 {
-    "usingComponents": {
-        "loader": "/components/loader/loader"
-    }
+  "navigationBarTitleText": "初见",
+  "enablePullDownRefresh": false
 }

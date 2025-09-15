@@ -1,93 +1,46 @@
-<view class="container">
-  <!-- 加载提示 -->
-  <view wx:if="{{!isAuthorized}}" class="loading-container">
-    <loader size="50px" color="#333" speed="0.8s"></loader>
-    <!-- <text class="loading-text">正在进行抖音授权...</text> -->
-  </view>
+<view class="choice-container">
   
-  <!-- 授权成功后显示的内容 - 滑动引导页 -->
-  <view wx:else class="guide-container">
-    <!-- 滑动容器 -->
-    <swiper 
-      class="slide-container" 
-      current="{{currentSlide}}" 
-      bindchange="onSlideChange"
-      duration="300">
-      
-      <!-- Slide1: 欢迎引导 -->
-      <swiper-item class="slide-item">
-        <view class="slide-content">
-          <!-- 图片区域 -->
-          <view class="image-area">
-            <view class="card-container">
-              <view wx:for="{{welcomeImages}}" wx:key="index" class="card {{showWelcomeAnimation ? 'animate-in' : ''}}">
-                <image src="{{item}}" mode="aspectFill"></image>
-              </view>
-            </view>
-          </view>
+  <view class="choice-section">
+    <!-- 标题 -->
+    <!-- <view class="title-section">
+      <text class="main-title">选择我们见面方式</text>
+    </view> -->
 
-        </view>
-      </swiper-item>
-
-      <!-- Slide2: 操作指引 -->
-      <swiper-item class="slide-item">
-        <view class="slide-content">
-          <!-- 图片区域 -->
-          <view class="image-area">
-            <view class="card-container">
-              <view wx:for="{{stepsImages}}" wx:key="index" class="card">
-                <view class="step-number">{{index + 1}}</view>
-                <view class="icon-wrapper">
-                  <image src="{{item}}" mode="aspectFit"></image>
-                  <text class="step-label">{{stepsLabels[index]}}</text>
-                </view>
-              </view>
-            </view>
-          </view>
-
-        </view>
-      </swiper-item>
-    </swiper>
-
-    <!-- 固定的大圆弧文字区域 -->
-    <view class="text-area {{showWelcomeAnimation ? 'animate-in' : ''}}">
-      <!-- 分页指示器 -->
-      <view class="pagination-container">
-        <view class="pagination-dots">
-          <view 
-            wx:for="{{2}}" 
-            wx:key="index" 
-            class="dot {{currentSlide === index ? 'active' : ''}}"
-            data-index="{{index}}"
-            bindtap="onDotTap">
-          </view>
+    <!-- 按钮区域 -->
+    <view class="buttons-section">
+      <!-- 自定义按钮 -->
+      <view class="choice-button custom-button" bindtap="onCustomClick">
+        <image src="/images/guide/wand.svg" mode="aspectFit" class="button-icon"></image>
+        <view class="button-text-container">
+          <text class="button-text">亲手捏一只属于你的宝宝</text>
+          <text class="button-desc">自定义</text>
         </view>
       </view>
-      
-      <view class="text-container">
-        <!-- 根据当前滑块显示不同内容 -->
-        <view wx:if="{{currentSlide === 0}}">
-          <!-- 这里显示用户名，如果有的话，没有的话则“你好呀” -->
-          <view class="greeting">hi {{userName}}</view>
-          <view class="greeting">准备好迎接<br/>你的专属宠伴了吗</view>
-          <view class="description">让陪伴发生，让快乐延续生成你独一无二的萌宠宠物</view>
+
+      <!-- 盲盒按钮 -->
+      <view class="choice-button blindbox-button" bindtap="onBlindBoxClick">
+        <image src="/images/guide/dice.svg" mode="aspectFit" class="button-icon"></image>
+        <view class="button-text-container">
+          <text class="button-text">惊喜盲盒，猜猜我是谁</text>
+          <text class="button-desc">随机盲盒</text>
         </view>
-        <view wx:else>
-          <view class="greeting">四步重逢</view>
-          <view class="greeting">让你的专属宠伴活力登场</view>
-          <view class="description">每一步都充满惊喜，为你打造最懂你的宠物伙伴</view>
+      </view>
+
+      <!-- 领养按钮 -->
+      <view class="choice-button adopt-button" bindtap="onAdoptClick">
+        <image src="/images/guide/library.svg" mode="aspectFit" class="button-icon"></image>
+        <view class="button-text-container">
+          <text class="button-text">我在等你，带我回家！</text>
+          <text class="button-desc">使用预设</text>
         </view>
       </view>
     </view>
 
-    <!-- 底部按钮 -->
-    <view class="button-container">
-      <button 
-        class="continue-btn" 
-        bindtap="onContinueClick">
-        <text class="btn-text">继续</text>
-        <image class="btn-icon" src="/images/guide/continue.svg" mode="aspectFit"></image>
-      </button>
-    </view>
+  </view>  
+
+  <!-- 固定logo、名称 -->
+  <view class="logo-section">
+    <image src="/images/logo.svg" mode="aspectFit" class="logo"></image>
+    <text class="name">Linki</text>
   </view>
 </view>

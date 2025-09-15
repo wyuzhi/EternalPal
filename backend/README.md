@@ -274,6 +274,12 @@ sudo systemctl start eternalpal
 sudo systemctl enable eternalpal
 ```
 
+# 查看eternalpal服务状态
+sudo systemctl status eternalpal
+
+# 查看服务实时日志
+sudo journalctl -u eternalpal -f
+
 ### 六、配置Nginx（可选但推荐）
 安装并配置Nginx作为反向代理：
 

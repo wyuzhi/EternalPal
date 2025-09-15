@@ -358,7 +358,7 @@ def create_pet_with_3d_model():
         
         data = request.json
         # 验证必要数据
-        if not data or not data.get('name') or not data.get('user_id'):
+        if not data or not data.get('name') or data.get('user_id') is None:
             logger.error("无效的请求数据")
             return jsonify({'status': 'error', 'message': '缺少必要参数'}), 400
         
@@ -1010,36 +1010,59 @@ def adopt_pet(pet_id):
         if not user_id:
             return jsonify({'status': 'error', 'message': '用户ID不能为空'}), 400
         
-        # 检查宠物是否存在
-        pet = Pet.query.get(pet_id)
-        if not pet:
+        # 检查原始宠物是否存在
+        original_pet = Pet.query.get(pet_id)
+        if not original_pet:
             return jsonify({'status': 'error', 'message': '宠物不存在'}), 404
-        
-        # 检查宠物是否已被领养
-        if pet.user_id is not None:
-            return jsonify({'status': 'error', 'message': '该宠物已被领养'}), 400
         
         # 检查用户是否存在
         user = User.query.get(user_id)
         if not user:
             return jsonify({'status': 'error', 'message': '用户不存在'}), 404
         
-        # 更新宠物的归属用户
-        pet.user_id = user_id
-        pet.intimacy = 0  # 重置亲密度
+        # 检查用户是否已经领养过这只宠物
+        existing_pet = Pet.query.filter_by(
+            name=original_pet.name,
+            type=original_pet.type,
+            user_id=user_id
+        ).first()
         
+        if existing_pet:
+            return jsonify({'status': 'error', 'message': '您已经领养过这只宠物了'}), 400
+        
+        # 创建宠物副本给用户
+        new_pet = Pet(
+            name=original_pet.name,
+            type=original_pet.type,
+            gender=original_pet.gender,
+            personality=original_pet.personality,
+            hobby=original_pet.hobby,
+            story=original_pet.story,
+            description=original_pet.description,
+            generated_image=original_pet.generated_image,
+            model_url=original_pet.model_url,
+            preview_url=original_pet.preview_url,
+            material_url=original_pet.material_url,
+            texture_url=original_pet.texture_url,
+            user_id=user_id,
+            intimacy=0,  # 新宠物亲密度为0
+            user_relation=original_pet.user_relation,
+            status=original_pet.status
+        )
+        
+        db.session.add(new_pet)
         db.session.commit()
         
-        logger.info(f"用户 {user_id} 成功领养宠物 {pet_id}")
+        logger.info(f"用户 {user_id} 成功领养宠物 {pet_id}，创建新宠物ID: {new_pet.id}")
         
         return jsonify({
             'status': 'success',
             'message': '领养成功！',
             'data': {
-                'pet_id': pet.id,
-                'pet_name': pet.name,
+                'pet_id': new_pet.id,
+                'pet_name': new_pet.name,
                 'user_id': user_id,
-                'intimacy': pet.intimacy
+                'intimacy': new_pet.intimacy
             }
         }), 200
         

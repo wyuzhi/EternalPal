@@ -408,7 +408,7 @@
 /* 补充输入框 */
 .form-input-supplement {
   width: 100%;
-  min-height: 100rpx;
+  min-height: 120rpx;
   border: 1rpx solid var(--border-frosted);
   border-radius: var(--r-m);
   padding: var(--p-m);
@@ -694,8 +694,8 @@
 }
 
 .single-upload-box {
-  width: 200rpx;
-  height: 200rpx;
+  width: 100%;
+  height: 300rpx;
   border: 2rpx dashed var(--text-disabled);
   border-radius: var(--r-m);
   display: flex;
@@ -818,6 +818,8 @@
 .pet-avatar {
   width: 100rpx;
   height: 100rpx;
+  background: var(--bg-frosted);
+  backdrop-filter: blur(20rpx);
   border-radius: 50%;
   margin-right: var(--m-l);
   object-fit: cover;

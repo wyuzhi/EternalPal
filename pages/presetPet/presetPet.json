@@ -1,8 +1,7 @@
 {
-  "usingComponents": {
-    "loader": "/components/loader/loader",
-    "popup": "/components/popup/popup"
-  },
-  "navigationBarTitleText": "推荐",
-  "navigationStyle": "default"
+    "usingComponents": {
+        "loader": "/components/loader/loader",
+        "popup": "/components/popup/popup"
+    },
+    "navigationBarTitleText": "Linki World"
 }

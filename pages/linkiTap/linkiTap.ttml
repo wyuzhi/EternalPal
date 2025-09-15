@@ -1,0 +1,93 @@
+<!-- NFC拉起页面 - linkiTap -->
+<view class="container">
+  <!-- 遮罩背景 -->
+  <view class="modal-mask"></view>
+  
+  <!-- 弹窗卡片 -->
+  <view class="card-modal">
+    <!-- 顶部文案 -->
+    <view class="date-section">
+      <text class="date-text" wx:if="{{tapType === 'self'}}">{{currentDate}}</text>
+      <text class="date-text" wx:elif="{{tapType === 'received'}}">@{{targetUserName}} 拍了拍你的Linki灵仔！</text>
+      <text class="date-text" wx:elif="{{tapType === 'sent'}}">你拍了拍 @{{targetUserName}} 的Linki灵仔！</text>
+    </view>
+    
+    <!-- 陪伴天数显示（复用memory页面样式，仅自己拍自己时显示） -->
+    <view class="companion-days" wx:if="{{tapType === 'self'}}">
+      <view class="days-text">
+        <text class="days-prefix">已陪伴你 </text>
+        <view class="flip-counter">
+          <view class="flip-digit" wx:for="{{daysDigits}}" wx:key="index">
+            <view class="flip-card {{item.isAnimating ? 'flipping' : ''}}">
+              <view class="flip-card-inner">
+                <view class="flip-card-front">
+                  <text class="digit">{{item.current}}</text>
+                </view>
+                <view class="flip-card-back">
+                  <text class="digit">{{item.next}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <text class="days-suffix"> 天啦!</text>
+      </view>
+    </view>
+    
+    <!-- 灵仔头像和气泡 -->
+    <view class="chat-section">
+      <!-- 气泡 -->
+      <view class="speech-bubble">
+        <text class="bubble-text">{{greetingText}}</text>
+        <!-- 气泡尖角 -->
+        <view class="bubble-arrow"></view>
+      </view>
+      
+      <!-- 灵仔头像 -->
+      <view class="avatar-container">
+        <image src="{{petAvatar}}" mode="aspectFill" class="pet-avatar"></image>
+      </view>
+    </view>
+    
+    <!-- 按钮区域 -->
+    <view class="action-section">
+      <!-- 自己拍自己：开启今日陪伴 -->
+      <button class="start-companion-btn" wx:if="{{tapType === 'self'}}" bindtap="onStartCompanion">
+        <text class="btn-text">走！今天也要一起玩</text>
+      </button>
+      
+      <!-- 别人拍我：回应拍一拍和忽略 -->
+      <view class="button-group" wx:elif="{{tapType === 'received'}}">
+        <button class="secondary-btn" bindtap="onIgnore">
+          <text class="btn-text">忽略</text>
+        </button>
+        <button class="primary-btn" bindtap="onStartCompanion">
+          <text class="btn-text">回应拍一拍</text>
+        </button>
+      </view>
+      
+      <!-- 我拍别人：发起互动和撤回 -->
+      <view class="button-group" wx:elif="{{tapType === 'sent'}}">
+        <button class="secondary-btn" bindtap="onWithdraw">
+          <text class="btn-text">撤回</text>
+        </button>
+        <button class="primary-btn" bindtap="onStartCompanion">
+          <text class="btn-text">发起互动</text>
+        </button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 测试按钮区域（仅开发环境） -->
+  <!-- <view class="test-section" wx:if="{{debugMode}}">
+    <view class="test-title">测试模式</view>
+    <view class="test-buttons">
+      <button class="test-btn" bindtap="testSwitchScenario" data-scenario="self">自己拍自己</button>
+      <button class="test-btn" bindtap="testSwitchScenario" data-scenario="received">别人拍我</button>
+      <button class="test-btn" bindtap="testSwitchScenario" data-scenario="sent">我拍别人</button>
+    </view>
+  </view> -->
+  
+  <!-- 底部安全区域 -->
+  <view class="safe-area-bottom" style="height: calc({{safeAreaBottom}}rpx + 24rpx);"></view>
+</view>

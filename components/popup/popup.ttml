@@ -1,5 +1,5 @@
-<view class="popup-mask {{show ? 'show' : ''}}" style="z-index: {{zindex}};" bindtap="onMaskClose" catchtouchmove="catchTouchMove">
-  <view class="popup-container {{position}} {{show ? 'show' : ''}}" catchtap="">
+<view tt:if="{{show}}" class="popup-mask" style="z-index: {{zindex}};" bindtap="onMaskTap" catchtouchmove="onTouchMove">
+  <view class="popup-container {{position}}" catchtap="onContainerTap">
     <slot></slot>
   </view>
 </view>

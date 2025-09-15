@@ -77,7 +77,7 @@
               <text class="upload-text">点击上传照片</text>
             </view>
           </view>
-          <view class="form-note">上传一张清晰的宠物照片，有助于生成更准确的3D模型</view>
+          <view class="form-note">上传一张清晰的宠物照片，有助于生成更准确形象</view>
         </view>
       </view>
 
@@ -112,16 +112,23 @@
           <text class="card-title">基本信息</text>
         </view>
         
-        <view class="form-group">
-          <view class="form-label">
-            <text>我的大名</text>
-          </view>
-          <input class="form-input" placeholder="输入我将来的名字" value="{{petName}}" bindinput="inputPetName" maxlength="20"/>
-        </view>
+        <!-- <view class="form-group">
+          
+        </view> -->
 
         <!-- 性别和生日 -->
         <view class="form-row">
           <view class="form-group form-group-half">
+            
+            <view class="form-label">
+            <text>我的大名</text>
+            </view>
+            <input class="form-input" placeholder="输入我将来的名字" value="{{petName}}" bindinput="inputPetName" maxlength="20"/>
+
+          </view>
+
+          <view class="form-group form-group-half">
+            
             <view class="form-label">
               <text>性别</text>
             </view>
@@ -135,9 +142,7 @@
                 <text>女孩</text>
               </label>
             </radio-group>
-          </view>
-
-          <view class="form-group form-group-half">
+            
             <!-- <view class="form-label">
               <text>生日</text>
             </view>
@@ -260,7 +265,7 @@
       <!-- 顶部信息区 -->
       <view class="pet-info-header">
         <image class="pet-avatar" src="/images/logo.svg" mode="aspectFit"></image>
-        <text class="pet-name">{{petName || '我的宠物'}}</text>
+        <text class="pet-name">{{petName || 'Linki灵仔'}}</text>
       </view>
       
       <!-- 占位图容器 -->

@@ -12,23 +12,25 @@
       <view class="choice-button custom-button" bindtap="onCustomClick">
         <image src="/images/guide/wand.svg" mode="aspectFit" class="button-icon"></image>
         <view class="button-text-container">
-          <text class="button-text">亲手捏一只属于你的宝宝</text>
+          <text class="button-text">创建专属于你的灵仔</text>
+          <text class="button-desc">自定义</text>
         </view>
       </view>
 
       <!-- 盲盒按钮 -->
-      <view class="choice-button blindbox-button" bindtap="onBlindBoxClick">
+      <!-- <view class="choice-button blindbox-button" bindtap="onBlindBoxClick">
         <image src="/images/guide/dice.svg" mode="aspectFit" class="button-icon"></image>
         <view class="button-text-container">
           <text class="button-text">惊喜盲盒，猜猜我是谁</text>
         </view>
-      </view>
+      </view> -->
 
       <!-- 领养按钮 -->
       <view class="choice-button adopt-button" bindtap="onAdoptClick">
         <image src="/images/guide/library.svg" mode="aspectFit" class="button-icon"></image>
         <view class="button-text-container">
-          <text class="button-text">我在等你，带我回家！</text>
+          <text class="button-text">我在等你，带我回家</text>
+          <text class="button-desc">云领养</text>
         </view>
       </view>
     </view>
@@ -38,6 +40,7 @@
   <!-- 固定logo、名称 -->
   <view class="logo-section">
     <image src="/images/logo.svg" mode="aspectFit" class="logo"></image>
-    <text class="name">Linki</text>
+    <text class="main-title">遇见属于你的Linki灵仔，让陪伴触手可及</text>
+    <image src="/images/logo_name.svg" mode="aspectFit" class="logo-text"></image>
   </view>
 </view>

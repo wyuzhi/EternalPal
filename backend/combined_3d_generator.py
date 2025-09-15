@@ -847,6 +847,18 @@ def generate_3d_model(image_url=None, prompt=None, pet_id=None):
             logger.info(f"2D图片生成成功，保存路径: {image_path}")
             logger.info(f"2D图片URL: {generated_2d_image_url}")
             
+            # 保存2D图片URL到数据库
+            if pet_id and db and Pet:
+                try:
+                    pet = Pet.query.get(pet_id)
+                    if pet:
+                        pet.d2_url = generated_2d_image_url
+                        db.session.commit()
+                        logger.info(f"已保存2D图片URL到数据库: {generated_2d_image_url}")
+                except Exception as db_error:
+                    logger.error(f"保存2D图片URL到数据库失败: {str(db_error)}")
+                    db.session.rollback()
+            
         except Exception as e:
             logger.error(f"使用ge_router生成2D图片失败: {str(e)}")
             # 如果ge_router生成失败，回退到原有逻辑
@@ -860,7 +872,7 @@ def generate_3d_model(image_url=None, prompt=None, pet_id=None):
         if generated_2d_image_url:
             logger.info(f"开始使用生成的2D图片生成3D模型: {generated_2d_image_url}")
             try:
-                result = client.generate_from_image(generated_2d_image_url)
+                # result = client.generate_from_image(generated_2d_image_url)
                 if result:
                     logger.info(f"3D模型生成成功，任务ID: {result.get('job_id', '未知')}")
                     return process_3d_model_result(result, pet_id)

@@ -295,7 +295,7 @@ page {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 400rpx;
+  margin-bottom: 350rpx;
   padding-top: 120rpx; /* 给固定导航留空间 */
 }
 
@@ -486,17 +486,22 @@ page {
 }
 
 .model-container {
-  width: 400rpx;
-  height: 400rpx;
+  width: 500rpx;
+  height: 500rpx;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: -30rpx 0 20rpx 0;
+  margin: -50rpx 0 20rpx 0;
   position: relative;
   overflow: visible;
   background-color: transparent;
   border: none;
   border-radius: 10rpx;
+  transition: transform 0.1s ease;
+}
+
+.model-container.touching {
+  transform: scale(0.98);
 }
 
 .pet-image {
@@ -544,6 +549,11 @@ page {
   position: relative;
   z-index: 5;
   background-color: transparent;
+  transition: opacity 0.2s ease;
+}
+
+.model-canvas.touching {
+  opacity: 0.9;
 }
 
 .pet-image {

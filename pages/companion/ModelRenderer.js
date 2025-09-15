@@ -140,14 +140,15 @@ class ModelRenderer {
       console.log('[ModelRenderer] 获取Three.js实例成功');
       this.clock = new this.THREE.Clock();
 
-      // 初始化两个渲染器
+      // 初始化两个渲染器 - 优化性能设置
       this.rendererA = new this.THREE.WebGLRenderer({
         canvas: this.offscreenCanvasA,
         alpha: true,
         premultipliedAlpha: false,
         stencil: false,
         preserveDrawingBuffer: true,
-        antialias: true,
+        antialias: false, // 关闭抗锯齿以提升性能
+        powerPreference: "high-performance"
       });
       this.rendererB = new this.THREE.WebGLRenderer({
         canvas: this.offscreenCanvasB,
@@ -155,7 +156,8 @@ class ModelRenderer {
         premultipliedAlpha: false,
         stencil: false,
         preserveDrawingBuffer: true,
-        antialias: true,
+        antialias: false, // 关闭抗锯齿以提升性能
+        powerPreference: "high-performance"
       });
       [this.rendererA, this.rendererB].forEach((r) => {
         r.setPixelRatio(dpr);
@@ -188,7 +190,7 @@ class ModelRenderer {
         0.1,
         1000
       );
-      this.camera.position.set(0, 0, 5);
+      this.camera.position.set(0, 1, 5); // 调整相机Y轴初始位置
       console.log('[ModelRenderer] 相机创建成功，位置:', this.camera.position);
       
       // 添加更强的环境光
@@ -278,19 +280,19 @@ class ModelRenderer {
         const center = box.getCenter(new this.THREE.Vector3());
         const size = box.getSize(new this.THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 4.2 / maxDim; // 进一步放大模型
+        const scale = 5.5 / maxDim; // 适当增大模型显示尺寸
         object.scale.setScalar(scale);
         object.position.sub(center.multiplyScalar(scale));
-        object.position.y += 0.3; // 向上移动模型
-        this.camera.position.set(0, 1, 4);
-        this.camera.lookAt(0, 0, 0);
+        object.position.y += 0.1; // 向上移动模型
+        this.camera.position.set(0, 1.5, 5); // 调整相机位置，降低视角并拉远距离
+        this.camera.lookAt(0, 0.2, 0); // 调整视角焦点，稍微向上看
 
         this.model = object;
         this.scene.add(this.model);
         // 记录基础位置/缩放，供动画偏移使用
         this.baseModelY = this.model.position.y;
         this.baseModelScale = this.model.scale.x;
-        this.renderer.render(this.scene, this.camera);
+        this.render(); // 调用render方法进行渲染
         if (this.ctx2d) {
           this.ctx2d.drawImage(this.displayCanvas, 0, 0, this.canvas.width, this.canvas.height);
         }
@@ -357,8 +359,8 @@ class ModelRenderer {
       
       // 无测试立方体
       
-      // 优化：减少日志输出频率，每300帧输出一次
-      if (frameCount % 300 === 0) {
+      // 优化：减少日志输出频率，每600帧输出一次以提升性能
+      if (frameCount % 600 === 0) {
         console.log('[ModelRenderer] 渲染帧:', frameCount, '场景对象数:', this.scene.children.length);
         if (this.model) {
           console.log('[ModelRenderer] 模型旋转:', this.model.rotation.y, '位置:', this.model.position, '缩放:', this.model.scale);
@@ -412,6 +414,37 @@ class ModelRenderer {
     }
   }
 
+  // 缩放模型方法
+  scaleModel(scaleFactor) {
+    if (this.model) {
+      // 限制缩放范围，避免模型过大或过小
+      const minScale = 0.5;
+      const maxScale = 3.0;
+      
+      const currentScale = this.model.scale.x;
+      const newScale = currentScale * scaleFactor;
+      
+      if (newScale >= minScale && newScale <= maxScale) {
+        this.model.scale.multiplyScalar(scaleFactor);
+        this.baseModelScale = this.model.scale.x; // 更新基础缩放值
+        
+        // 立即渲染以提供实时反馈
+        this.render();
+        console.log('[ModelRenderer] 模型缩放至:', newScale);
+      }
+    }
+  }
+
+  // 手动渲染方法
+  render() {
+    if (this.renderer && this.scene && this.camera) {
+      this.renderer.render(this.scene, this.camera);
+      if (this.ctx2d && this.displayCanvas) {
+        this.ctx2d.drawImage(this.displayCanvas, 0, 0, this.canvas.width, this.canvas.height);
+      }
+    }
+  }
+
   resetModelScale() {
     console.log('[ModelRenderer] 重置模型缩放');
     if (this.model) {
@@ -421,11 +454,13 @@ class ModelRenderer {
       const size = box.getSize(new this.THREE.Vector3());
       
       const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 2 / maxDim;
+      const scale = 6.0 / maxDim; // 使用新的默认缩放比例
       this.model.scale.setScalar(scale);
+      this.baseModelScale = scale; // 更新基础缩放值
       
       this.model.position.copy(center).multiplyScalar(-scale);
-      console.log('[ModelRenderer] 模型缩放已重置');
+      this.render(); // 立即渲染
+      console.log('[ModelRenderer] 模型缩放已重置至:', scale);
     } else {
       console.log('[ModelRenderer] 没有模型可以重置');
     }

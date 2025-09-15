@@ -83,6 +83,7 @@ class Pet(db.Model):
     story = db.Column(db.Text)
     description = db.Column(db.Text)  # 宠物外观描述字段
     generated_image = db.Column(db.String(255))
+    d2_url = db.Column(db.String(255))  # 豆包生成的2D图片URL字段
     model_url = db.Column(db.String(255))
     preview_url = db.Column(db.String(255))
     material_url = db.Column(db.String(255))
@@ -309,6 +310,7 @@ def get_user_latest_pet(user_id):
         'story': latest_pet.story,
         'description': latest_pet.description,  # 宠物外观描述字段
         'generated_image': latest_pet.generated_image,
+        'd2_url': latest_pet.d2_url,  # 豆包生成的2D图片URL
         'model_url': latest_pet.model_url,
         'preview_url': latest_pet.preview_url,
         'created_at': latest_pet.created_at.isoformat(),
@@ -451,6 +453,7 @@ def get_pet(pet_id):
         'story': pet.story,
         'description': pet.description,  # 宠物外观描述字段
         'generated_image': pet.generated_image,
+        'd2_url': pet.d2_url,  # 豆包生成的2D图片URL
         'model_url': pet.model_url,
         'preview_url': pet.preview_url,
         'created_at': pet.created_at.isoformat(),

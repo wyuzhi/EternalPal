@@ -1800,6 +1800,8 @@ Page({
       
       // 记录触摸起始点
       this.touchStartX = e.touches[0].clientX;
+      this.touchStartY = e.touches[0].clientY;
+      this.lastTouchTime = Date.now();
       
       // 检测是否为多点触摸（缩放操作）
       if (e.touches.length === 2) {
@@ -1811,14 +1813,24 @@ Page({
           Math.pow(touch2.clientY - touch1.clientY, 2)
         );
         this.isPinching = true;
+        this.lastPinchDistance = this.initialPinchDistance;
       } else {
         this.isPinching = false;
       }
+      
+      // 添加触摸反馈
+      this.setData({
+        modelStatus: '触摸中'
+      });
     }
   },
 
   handleCanvasTouchMove(e) {
     if (!this.modelRenderer || !this.modelRenderer.model) return;
+    
+    const currentTime = Date.now();
+    const timeDelta = currentTime - (this.lastTouchTime || currentTime);
+    this.lastTouchTime = currentTime;
     
     // 处理缩放操作（双指触摸）
     if (this.isPinching && e.touches.length === 2) {
@@ -1829,27 +1841,40 @@ Page({
         Math.pow(touch2.clientY - touch1.clientY, 2)
       );
       
-      // 计算缩放比例
-      if (this.initialPinchDistance > 0) {
-        const scaleFactor = currentPinchDistance / this.initialPinchDistance;
+      // 使用相对于上一次距离的缩放，提供更平滑的体验
+      if (this.lastPinchDistance > 0) {
+        const scaleFactor = currentPinchDistance / this.lastPinchDistance;
         
-        // 调用ModelRenderer的缩放方法
-        if (Math.abs(scaleFactor - 1) > 0.01) { // 添加阈值，避免微小变化
+        // 降低阈值，提供更灵敏的缩放响应
+        if (Math.abs(scaleFactor - 1) > 0.005) {
           this.modelRenderer.scaleModel(scaleFactor);
-          this.initialPinchDistance = currentPinchDistance; // 更新初始距离
+          this.lastPinchDistance = currentPinchDistance;
         }
       }
     } 
     // 处理旋转操作（单指触摸）
     else if (e.touches.length === 1) {
       const touchX = e.touches[0].clientX;
+      const touchY = e.touches[0].clientY;
       const deltaX = touchX - this.touchStartX;
+      const deltaY = touchY - this.touchStartY;
       
-      // 调整旋转速度，使其更平滑
-      const rotationSpeed = 0.01;
+      // 基于时间的平滑旋转，提供更好的响应性
+      const rotationSpeed = Math.min(0.02, 0.01 + timeDelta * 0.00001);
+      
+      // 水平旋转（Y轴）
       this.modelRenderer.model.rotation.y += deltaX * rotationSpeed;
+      
+      // 可选：添加垂直旋转（X轴），但限制范围
+      const verticalRotation = deltaY * rotationSpeed * 0.5;
+      const newRotationX = this.modelRenderer.model.rotation.x + verticalRotation;
+      if (newRotationX > -Math.PI/3 && newRotationX < Math.PI/3) {
+        this.modelRenderer.model.rotation.x = newRotationX;
+      }
+      
       this.modelRenderer.render();
       this.touchStartX = touchX;
+      this.touchStartY = touchY;
     }
   },
 
@@ -1858,9 +1883,16 @@ Page({
       // 重置触摸状态
       this.isPinching = false;
       this.initialPinchDistance = 0;
+      this.lastPinchDistance = 0;
+      this.lastTouchTime = null;
       
       // 恢复自动旋转
       this.modelRenderer.startAnimation();
+      
+      // 移除触摸反馈
+      this.setData({
+        modelStatus: '就绪'
+      });
     }
   },
   

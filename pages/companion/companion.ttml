@@ -76,12 +76,12 @@
       </view>
     </view>
     
-    <view id="modelContainer" class="model-container">
+    <view id="modelContainer" class="model-container {{modelStatus === '触摸中' ? 'touching' : ''}}">
         <!-- 3D模型显示区域 -->
         <canvas 
           type="2d" 
           id="modelCanvas" 
-          class="model-canvas" 
+          class="model-canvas {{modelStatus === '触摸中' ? 'touching' : ''}}" 
           style="width: 100%; height: 100%;" 
           bindtouchstart="handleCanvasTouchStart"
           bindtouchmove="handleCanvasTouchMove"

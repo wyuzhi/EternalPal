@@ -439,12 +439,10 @@ Page({
     
     console.log('[Memory] 开始加载记忆记录，宠物ID:', petId);
     
-    // 显示加载提示
-    tt.showLoading({
-      title: '正在生成记忆日记...'
-    });
+    // 先加载模拟数据，立即显示给用户
+    that.loadMockRecords();
     
-    // 先获取聊天记录
+    // 后台静默获取聊天记录并生成真实日记
     tt.request({
       url: app.globalData.API_BASE_URL + '/pets/' + petId + '/chat_history',
       method: 'GET',
@@ -452,23 +450,21 @@ Page({
         console.log('[Memory] 获取聊天记录结果:', res);
         
         if (res.data && res.data.status === 'success' && res.data.data && res.data.data.length > 0) {
-          // 处理聊天记录，生成日记内容
-          that.generateDiaryFromChats(res.data.data);
+          // 处理聊天记录，生成日记内容（后台静默进行）
+          that.generateDiaryFromChats(res.data.data, true); // 传入静默标志
         } else {
-          console.log('[Memory] 没有聊天记录，使用模拟数据');
-          that.loadMockRecords();
+          console.log('[Memory] 没有聊天记录，保持使用模拟数据');
         }
       },
       fail: function(error) {
         console.error('[Memory] 获取聊天记录失败:', error);
-        tt.hideLoading();
-        that.loadMockRecords();
+        console.log('[Memory] 保持使用模拟数据');
       }
     });
   },
   
   // 从聊天记录生成日记
-  generateDiaryFromChats: function(chatHistory) {
+  generateDiaryFromChats: function(chatHistory, silent = false) {
     const that = this;
     
     // 将聊天记录按日期分组
@@ -488,8 +484,6 @@ Page({
     
     // 等待所有日记生成完成
     Promise.all(diaryPromises).then(diaryRecords => {
-      tt.hideLoading();
-      
       // 过滤掉失败的记录
       const validRecords = diaryRecords.filter(record => record !== null);
       
@@ -497,19 +491,27 @@ Page({
         // 按日期排序（最新的在前）
         validRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
         
+        // 静默替换数据，不显示加载提示
         that.setData({
           memoryRecords: validRecords
         });
         
-        console.log('[Memory] 成功生成', validRecords.length, '条日记记录');
+        console.log('[Memory] 成功生成', validRecords.length, '条日记记录，已替换模拟数据');
+        
+        // 可选：显示一个轻微的提示告知用户数据已更新
+        if (!silent) {
+          tt.showToast({
+            title: '记忆日记已更新',
+            icon: 'success',
+            duration: 1500
+          });
+        }
       } else {
-        console.log('[Memory] 没有生成有效的日记记录，使用模拟数据');
-        that.loadMockRecords();
+        console.log('[Memory] 没有生成有效的日记记录，保持使用模拟数据');
       }
     }).catch(error => {
       console.error('[Memory] 生成日记失败:', error);
-      tt.hideLoading();
-      that.loadMockRecords();
+      console.log('[Memory] 保持使用模拟数据');
     });
   },
   

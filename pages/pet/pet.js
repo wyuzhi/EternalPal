@@ -5,6 +5,7 @@ Page({
     currentStep: 4, // 初始步骤
     totalSteps: 5,
     petType: '猫咪',
+    customTypeFilled: false, // 自定义类型是否已填写
     petName: '',
     petGender: '',
     petBirthday: '',
@@ -308,7 +309,8 @@ Page({
     // 更新选中状态和位置（包括自定义类型）
     this.setData({
       petType: selectedType,
-      currentIndex: selectedIndex
+      currentIndex: selectedIndex,
+      customTypeFilled: selectedType !== 'custom' // 如果不是自定义类型，重置标记
     })
     
     // 更新轮播位置
@@ -346,7 +348,8 @@ Page({
             
             that.setData({
               petType: inputValue,
-              allPetTypes: allPetTypes
+              allPetTypes: allPetTypes,
+              customTypeFilled: true // 标记自定义类型已填写
             });
             
             console.log('设置自定义宠物类型:', inputValue);
@@ -1150,12 +1153,20 @@ Page({
           })
           return false
         }
+        // 检查自定义类型是否已填写
+        if (this.data.petType === 'custom' && !this.data.customTypeFilled) {
+          tt.showToast({
+            title: '还没填写类型',
+            icon: 'none'
+          })
+          return false
+        }
         return true
       case 2:
         // 步骤2：基本信息
         if (!this.data.petName.trim()) {
           tt.showToast({
-            title: '请输入宠物名称',
+            title: '还没输入我的大名',
             icon: 'none'
           })
           return false
@@ -1339,7 +1350,8 @@ Page({
       petPhotos: [],
       petDescription: '',
       supplementPersonality: '',
-      supplementHobby: ''
+      supplementHobby: '',
+      customTypeFilled: false // 重置自定义类型填写状态
     });
 
   },

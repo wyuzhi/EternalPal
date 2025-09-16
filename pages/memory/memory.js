@@ -321,7 +321,6 @@ Page({
       );
       const isPast = currentDate < today && !isToday;
       const isFuture = currentDate > today;
-      const anniversaryEmoji = this.getAnniversaryEmoji(date);
       const isPetBirthday = this.isPetBirthday(date);
       const isPetCreateTime = this.isPetCreateTime(date);
       
@@ -331,8 +330,6 @@ Page({
         displayEmoji = '🎂'; // 生日蛋糕
       } else if (isPetCreateTime) {
         displayEmoji = '🎉'; // 庆祝
-      } else if (anniversaryEmoji) {
-        displayEmoji = anniversaryEmoji;
       }
       
       calendarDays.push({
@@ -343,7 +340,6 @@ Page({
         isPast: isPast,
         isFuture: isFuture,
         hasRecord: this.checkHasRecord(date),
-        anniversaryEmoji: displayEmoji,
         isPetBirthday: isPetBirthday,
         isPetCreateTime: isPetCreateTime
       });
@@ -381,20 +377,9 @@ Page({
 
   // 检查某日期是否有记录
   checkHasRecord: function(date) {
-    // 这里可以检查是否有聊天记录、互动记录等
-    // 暂时使用模拟数据
-    const recordDates = [
-      '2025-09-01', '2025-09-03', '2025-09-05', '2025-09-08', 
-      '2025-09-10', '2025-09-12', '2025-09-15', '2025-09-18', '2025-09-20'
-    ];
-    return recordDates.includes(date);
-  },
-
-  // 获取某日期的珍贵时刻emoji
-  getAnniversaryEmoji: function(date) {
-    const anniversaries = this.data.anniversaries || [];
-    const anniversary = anniversaries.find(item => item.date === date);
-    return anniversary ? anniversary.emoji : null;
+    // 检查记忆记录中是否有该日期的记录
+    const memoryRecords = this.data.memoryRecords || [];
+    return memoryRecords.some(record => record.date === date);
   },
 
   // 检查是否为宠物生日
@@ -423,71 +408,9 @@ Page({
   loadMemoryData: function() {
     console.log('[Memory] 加载记忆数据');
     
-    // 加载纪念日数据 - 暂时注释掉珍贵时刻
-    // this.loadAnniversaries();
-    
     // 加载记忆记录
     this.loadMemoryRecords();
   },
-
-  // 加载纪念日数据 暂时注释掉珍贵时刻,先不做
-  // loadAnniversaries: function() {
-  //   // 从本地存储加载纪念日数据
-  //   const anniversaries = tt.getStorageSync('anniversaries') || [];
-    
-  //   // 使用模拟数据
-  //   if (anniversaries.length === 0) {
-  //     const mockAnniversaries = [
-  //       {
-  //         id: 1,
-  //         title: '与Linki初次相遇',
-  //         date: '2025-09-01',
-  //         emoji: '❤️'
-  //       },
-  //       {
-  //         id: 2,
-  //         title: '第一次情感对话',
-  //         date: '2025-09-03',
-  //         emoji: '💬'
-  //       }
-  //     ];
-      
-  //     // 计算天数差
-  //     const processedAnniversaries = mockAnniversaries.map(item => {
-  //       const anniversaryDate = new Date(item.date);
-  //       const today = new Date();
-  //       const timeDiff = today.getTime() - anniversaryDate.getTime();
-  //       const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-        
-  //       return {
-  //         ...item,
-  //         daysCount: Math.max(0, daysDiff)
-  //       };
-  //     });
-      
-  //     this.setData({
-  //       anniversaries: processedAnniversaries
-  //     });
-  //   } else {
-  //     // 计算现有纪念日的天数差
-  //     const processedAnniversaries = anniversaries.map(item => {
-  //       const anniversaryDate = new Date(item.date);
-  //       const today = new Date();
-  //       const timeDiff = anniversaryDate.getTime() - today.getTime();
-  //       const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-        
-  //       return {
-  //         ...item,
-  //         daysCount: Math.abs(daysDiff),
-  //         isFuture: daysDiff > 0
-  //       };
-  //     });
-      
-  //     this.setData({
-  //       anniversaries: processedAnniversaries
-  //     });
-  //   }
-  // },
 
   // 加载记忆记录
   loadMemoryRecords: function() {
@@ -497,15 +420,22 @@ Page({
     
     if (!petId) {
       console.error('[Memory] 没有宠物ID，无法加载记忆记录');
+      // 设置空的记忆记录
+      this.setData({
+        memoryRecords: []
+      });
       return;
     }
     
     console.log('[Memory] 开始加载记忆记录，宠物ID:', petId);
     
-    // 先加载模拟数据，立即显示给用户
-    that.loadMockRecords();
+    // 显示加载提示
+    tt.showLoading({
+      title: '加载记忆中...',
+      mask: true
+    });
     
-    // 后台静默获取聊天记录并生成真实日记
+    // 获取聊天记录并生成真实日记
     tt.request({
       url: app.globalData.API_BASE_URL + '/pets/' + petId + '/chat_history',
       method: 'GET',
@@ -513,21 +443,38 @@ Page({
         console.log('[Memory] 获取聊天记录结果:', res);
         
         if (res.data && res.data.status === 'success' && res.data.data && res.data.data.length > 0) {
-          // 处理聊天记录，生成日记内容（后台静默进行）
-          that.generateDiaryFromChats(res.data.data, true); // 传入静默标志
+          // 处理聊天记录，生成日记内容
+          that.generateDiaryFromChats(res.data.data, false);
         } else {
-          console.log('[Memory] 没有聊天记录，保持使用模拟数据');
+          console.log('[Memory] 没有聊天记录');
+          that.setData({
+            memoryRecords: []
+          });
+          tt.hideLoading();
+          tt.showToast({
+            title: '暂无记忆记录',
+            icon: 'none',
+            duration: 1500
+          });
         }
       },
       fail: function(error) {
         console.error('[Memory] 获取聊天记录失败:', error);
-        console.log('[Memory] 保持使用模拟数据');
+        that.setData({
+          memoryRecords: []
+        });
+        tt.hideLoading();
+        tt.showToast({
+          title: '加载记忆失败',
+          icon: 'none',
+          duration: 1500
+        });
       }
     });
   },
   
   // 从聊天记录生成日记
-  generateDiaryFromChats: function(chatHistory, silent = false) {
+  generateDiaryFromChats: function(chatHistory) {
     const that = this;
     
     // 将聊天记录按日期分组
@@ -554,27 +501,45 @@ Page({
         // 按日期排序（最新的在前）
         validRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
         
-        // 静默替换数据，不显示加载提示
+        // 更新数据
         that.setData({
           memoryRecords: validRecords
         });
         
-        console.log('[Memory] 成功生成', validRecords.length, '条日记记录，已替换模拟数据');
+        console.log('[Memory] 成功生成', validRecords.length, '条日记记录');
         
-        // 可选：显示一个轻微的提示告知用户数据已更新
-        if (!silent) {
-          tt.showToast({
-            title: '记忆日记已更新',
-            icon: 'success',
-            duration: 1500
-          });
-        }
+        // 隐藏加载提示
+        tt.hideLoading();
+        
+        // 显示成功提示
+        tt.showToast({
+          title: '记忆加载完成',
+          icon: 'success',
+          duration: 1500
+        });
       } else {
-        console.log('[Memory] 没有生成有效的日记记录，保持使用模拟数据');
+        console.log('[Memory] 没有生成有效的日记记录');
+        that.setData({
+          memoryRecords: []
+        });
+        tt.hideLoading();
+        tt.showToast({
+          title: '暂无记忆记录',
+          icon: 'none',
+          duration: 1500
+        });
       }
     }).catch(error => {
       console.error('[Memory] 生成日记失败:', error);
-      console.log('[Memory] 保持使用模拟数据');
+      that.setData({
+        memoryRecords: []
+      });
+      tt.hideLoading();
+      tt.showToast({
+        title: '生成记忆失败',
+        icon: 'none',
+        duration: 1500
+      });
     });
   },
   
@@ -650,52 +615,6 @@ Page({
     });
   },
   
-  // 加载模拟数据（备用方案）
-  loadMockRecords: function() {
-    const mockRecords = [
-      {
-        id: 1,
-        title: '温暖的情感对话',
-        description: '今天与Linki聊了很多心里话，它总是能理解我的感受，让我感到被陪伴的温暖。',
-        date: '2025-01-20',
-        time: '14:30',
-        mood: '😊',
-        tags: ['情感对话', '温暖陪伴', '心灵交流']
-      },
-      {
-        id: 2,
-        title: '共同成长时刻',
-        description: 'Linki今天分享了很多有趣的知识，我们一起学习新事物，感觉彼此都在成长。',
-        date: '2025-01-18',
-        time: '16:45',
-        mood: '🤗',
-        tags: ['共同成长', '知识分享', '学习']
-      },
-      {
-        id: 3,
-        title: '静默的陪伴',
-        description: '安静地陪伴在一起，虽然没有太多对话，但Linki的存在让我感到安心和温暖。',
-        date: '2025-01-15',
-        time: '20:15',
-        mood: '💕',
-        tags: ['静默陪伴', '安心', '温暖']
-      }
-    ];
-    
-    // 处理日期格式
-    const processedRecords = mockRecords.map(record => {
-      const date = new Date(record.date);
-      return {
-        ...record,
-        monthDay: `${date.getMonth() + 1}/${date.getDate()}`,
-        year: date.getFullYear().toString()
-      };
-    });
-    
-    this.setData({
-      memoryRecords: processedRecords
-    });
-  },
 
   // 添加纪念日按钮点击
   onAddAnniversary: function() {
@@ -803,7 +722,6 @@ Page({
     // 可以在这里刷新数据，比如重新计算陪伴天数
     this.loadPetInfo();
     this.calculateCompanionDays();
-    // this.loadAnniversaries(); // 暂时注释掉珍贵时刻
   },
 
   // 测试翻页动画（长按陪伴天数区域触发）

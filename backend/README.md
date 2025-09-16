@@ -259,9 +259,9 @@ After=network.target
 [Service]
 User=www-data
 Group=www-data
-WorkingDirectory=/var/www/eternalpal/backend
-Environment="PATH=/var/www/eternalpal/backend/venv/bin"
-ExecStart=/var/www/eternalpal/backend/venv/bin/gunicorn -w 4 -b 0.0.0.0:5001 app:app
+WorkingDirectory=/var/www/eternalpal/EternalPal/backend
+Environment="PATH=/var/www/eternalpal/EternalPal/backend/venv/bin"
+ExecStart=/var/www/eternalpal/EternalPal/backend/venv/bin/gunicorn -w 4 -b 0.0.0.0:5001 app:app 
 Restart=always
 
 [Install]

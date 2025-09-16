@@ -75,6 +75,7 @@ Page({
     dislikeBtnAnimating: false, // 点踩状态
     petId: null, // 宠物ID
     previewUrl: '', // 宠物预览图片URL
+    d2_url: '', // 宠物2D头像URL
     supplementPersonality: '', // 补充性格描述
     supplementHobby: '', // 补充爱好描述
     showRegenerateModal: false, // 是否显示重新生成弹窗
@@ -124,6 +125,7 @@ Page({
             generationProgress: 100,
             petId: latestPet.id,
             previewUrl: latestPet.preview_url || '',
+            d2_url: latestPet.d2_url || '', // 宠物2D头像URL
             generatedPetImage: latestPet.generated_image || '/images/pet_sample.png',
             currentStep: 5
           });
@@ -794,6 +796,7 @@ Page({
       modelGenerationStatus: 'completed',
       modelGenerationProgress: 100,
       previewUrl: statusData.preview_url || '',
+      d2_url: statusData.d2_url || '', // 宠物2D头像URL
       generatedPetImage: statusData.preview_url || ''
     })
     
@@ -1340,6 +1343,7 @@ Page({
       dislikeBtnAnimating: false,
       petId: '', // 清空petId
       previewUrl: '',
+      d2_url: '', // 清空宠物2D头像URL
       // 清空用户填写的宠物信息，让用户重新填写
       petName: '',
       petGender: 'male',
@@ -1827,6 +1831,7 @@ Page({
             that.setData({
               generationProgress: 100,
               previewUrl: res.data.preview_url || '',
+              d2_url: res.data.d2_url || '', // 宠物2D头像URL
               generatedPetImage: res.data.generated_image || '/images/pet_sample.png',
             })
             

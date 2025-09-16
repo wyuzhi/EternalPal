@@ -83,8 +83,35 @@ Page({
   formatTimestamp: function(timestamp) {
     if (!timestamp) return '';
     
+    // 处理时间戳格式问题
+    let validTimestamp = timestamp;
+    
+    // 如果是字符串格式的时间戳，尝试转换
+    if (typeof timestamp === 'string') {
+      // 如果是ISO格式的字符串，直接使用
+      if (timestamp.includes('T') || timestamp.includes('-')) {
+        validTimestamp = new Date(timestamp).getTime();
+      } else {
+        // 如果是纯数字字符串，转换为数字
+        validTimestamp = parseInt(timestamp, 10);
+      }
+    }
+    
+    // 验证时间戳是否有效（不能是1970年1月1日或更早）
+    if (!validTimestamp || validTimestamp <= 0 || validTimestamp < 86400000) {
+      // 如果时间戳无效，使用当前时间
+      console.warn('[Companion] 无效的时间戳，使用当前时间:', timestamp);
+      validTimestamp = Date.now();
+    }
+    
     const now = new Date();
-    const messageDate = new Date(timestamp);
+    const messageDate = new Date(validTimestamp);
+    
+    // 再次验证日期是否有效
+    if (isNaN(messageDate.getTime()) || messageDate.getFullYear() < 2020) {
+      console.warn('[Companion] 日期无效，使用当前时间:', validTimestamp);
+      messageDate.setTime(Date.now());
+    }
     
     // 获取今天的开始时间（00:00:00）
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -125,14 +152,48 @@ Page({
     if (!currentMessage || !currentMessage.timestamp) return false;
     if (!previousMessage || !previousMessage.timestamp) return true;
     
-    const currentTime = new Date(currentMessage.timestamp);
-    const previousTime = new Date(previousMessage.timestamp);
+    // 验证时间戳有效性
+    const currentTimestamp = this.validateTimestamp(currentMessage.timestamp);
+    const previousTimestamp = this.validateTimestamp(previousMessage.timestamp);
+    
+    if (!currentTimestamp || !previousTimestamp) return true;
+    
+    const currentTime = new Date(currentTimestamp);
+    const previousTime = new Date(previousTimestamp);
     
     // 如果时间差超过5分钟，显示时间戳
     const timeDiff = currentTime.getTime() - previousTime.getTime();
     const fiveMinutes = 5 * 60 * 1000; // 5分钟的毫秒数
     
     return timeDiff > fiveMinutes;
+  },
+
+  // 验证时间戳有效性
+  validateTimestamp: function(timestamp) {
+    if (!timestamp) return null;
+    
+    let validTimestamp = timestamp;
+    
+    // 如果是字符串格式的时间戳，尝试转换
+    if (typeof timestamp === 'string') {
+      if (timestamp.includes('T') || timestamp.includes('-')) {
+        validTimestamp = new Date(timestamp).getTime();
+      } else {
+        validTimestamp = parseInt(timestamp, 10);
+      }
+    }
+    
+    // 验证时间戳是否有效（不能是1970年1月1日或更早）
+    if (!validTimestamp || validTimestamp <= 0 || validTimestamp < 86400000) {
+      return null;
+    }
+    
+    const date = new Date(validTimestamp);
+    if (isNaN(date.getTime()) || date.getFullYear() < 2020) {
+      return null;
+    }
+    
+    return validTimestamp;
   },
 
   // 为消息数组添加时间分隔符
@@ -150,20 +211,26 @@ Page({
       
       // 如果需要显示时间戳，先添加时间分隔符
       if (this.shouldShowTimestamp(currentMessage, previousMessage)) {
+        // 确保时间戳有效
+        const validTimestamp = this.validateTimestamp(currentMessage.timestamp) || Date.now();
+        
         result.push({
-          id: `time-separator-${currentMessage.timestamp}`,
+          id: `time-separator-${validTimestamp}`,
           type: 'time-separator',
-          timestamp: currentMessage.timestamp,
-          formattedTimestamp: this.formatTimestamp(currentMessage.timestamp),
+          timestamp: validTimestamp,
+          formattedTimestamp: this.formatTimestamp(validTimestamp),
           isSeparator: true
         });
       }
       
-      // 添加当前消息
-      result.push({
+      // 添加当前消息，确保时间戳有效
+      const messageWithValidTimestamp = {
         ...currentMessage,
+        timestamp: this.validateTimestamp(currentMessage.timestamp) || Date.now(),
         isSeparator: false
-      });
+      };
+      
+      result.push(messageWithValidTimestamp);
     }
     
     return result;

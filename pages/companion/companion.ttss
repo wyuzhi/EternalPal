@@ -293,8 +293,9 @@ page {
   top: 25%;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
-  /* max-width: 400rpx; */
+  max-width: 100%;
+  width: auto;
+  /* min-width: 400rpx; */
   z-index: 20;
   animation: bubbleAppear 0.3s ease-out;
 }

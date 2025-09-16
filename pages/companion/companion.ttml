@@ -169,13 +169,13 @@
       <view class="function-area {{!showUIElements ? 'hide' : ''}}">
         <!-- <view class="function-item {{isVideoActive ? 'active' : ''}}" bindtap="onVideoTap">
           <image src="/images/mainPage/video.svg" class="function-icon"></image>
-        </view> -->
+        </view>
         <view class="function-item" bindtap="onMicTap">
           <image src="/images/mainPage/{{isMicOn ? 'mic' : 'micOff'}}.svg" class="function-icon"></image>
         </view>
         <view class="function-item" bindtap="onSpeakerTap">
           <image src="/images/mainPage/{{isSpeakerOn ? 'speaker' : 'speakerOff'}}.svg" class="function-icon"></image>
-        </view>
+        </view> -->
         <view class="function-item {{isArActive ? 'active' : ''}}" bindtap="onArTap">
           <image src="/images/mainPage/ar.svg" class="function-icon"></image>
         </view>

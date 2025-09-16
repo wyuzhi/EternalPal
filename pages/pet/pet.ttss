@@ -137,13 +137,16 @@
   cursor: not-allowed;
   background-color: var(--bg-disabled);
   color: var(--text-disabled);
-  border-color: var(--border-disabled);
+  border: none;
+  /* border-color: var(--border-disabled); */
+  min-height: 60rpx; /* 确保没有文本时标签仍保持最小高度 */
 }
 
 .pet-type-label.disabled.active {
   background-color: var(--bg-disabled);
   color: var(--text-disabled);
-  border-color: var(--border-disabled);
+  border: none;
+  /* border-color: var(--border-disabled); */
   transform: none;
 }
 
@@ -928,13 +931,22 @@
   margin-bottom: var(--m-l);
 }
 
+/* 统一进度条容器样式 */
+.progress-container {
+  width: 600rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: var(--m-l);
+}
+
 /* 进度信息区 */
 .progress-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--m-s);
-  width: 600rpx;
+  width: 100%;
 }
 
 .progress-percent {
@@ -948,24 +960,46 @@
   color: var(--text-tertiary);
 }
 
-/* 全局3D模型生成进度条 */
+/* 统一所有进度条基础样式 */
+.progress-bar,
 .floating-model-progress-bar {
+  width: 100%;
+  height: 20rpx;
+  background-color: var(--bg-secondary);
+  border-radius: var(--r-pill);
+  box-shadow: 0 1rpx 1rpx var(--shadow-light);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 统一所有进度条样式 - 以step4为准 */
+.floating-model-progress-bar {
+  width: 100%;
+  height: 20rpx;
+  background-color: var(--bg-secondary);
+  border-radius: var(--r-pill);
+  box-shadow: 0 1rpx 1rpx var(--shadow-light);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 当进度条作为全局覆盖层时的特殊定位 */
+.floating-model-progress-bar.global-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: var(--p-s) var(--p-m);
-  border-radius: var(--r-m);
   z-index: 100;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(10rpx);
-  border: 1rpx solid rgba(255, 255, 255, 0.2);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  height: auto;
+  width: auto;
 }
 
 .floating-model-progress-bar .progress-label {
@@ -976,16 +1010,15 @@
   font-weight: 500;
 }
 
-/* 小猫跑动进度条容器 */
-.floating-model-progress-bar .cat-progress-container {
-  width: 100%;
+/* 全局覆盖层时的进度条容器 */
+.floating-model-progress-bar.global-overlay .cat-progress-container {
+  width: 600rpx;
   height: 60rpx;
   position: relative;
   margin-bottom: var(--m-s);
 }
 
-/* 进度条轨道 */
-.floating-model-progress-bar .progress-track {
+.floating-model-progress-bar.global-overlay .progress-track {
   width: 100%;
   height: 8rpx;
   background-color: var(--bg-secondary);
@@ -996,26 +1029,28 @@
   overflow: hidden;
 }
 
-/* 进度条填充 */
-.floating-model-progress-bar .progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #7968E5, #E076D6, #FF7787);
-  border-radius: var(--r-pill);
-  transition: width 0.8s ease;
+/* 统一进度条容器 - 默认为step4样式 */
+.floating-model-progress-bar .cat-progress-container {
+  width: 100%;
+  height: 20rpx;
   position: relative;
+  margin-bottom: 0;
 }
 
-/* 进度条光效 */
-.floating-model-progress-bar .progress-fill::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
-  animation: shimmer 2s infinite;
+/* 统一进度条轨道 - 默认为step4样式 */
+.floating-model-progress-bar .progress-track {
+  width: 100%;
+  height: 20rpx;
+  background-color: var(--bg-secondary);
+  border-radius: var(--r-pill);
+  position: static;
+  transform: none;
+  overflow: hidden;
 }
+
+/* 进度条填充 - 已在上面统一定义 */
+
+/* 进度条光效 - 已在上面统一定义 */
 
 /* 跑动的小猫 */
 .floating-model-progress-bar .running-cat {
@@ -1073,17 +1108,6 @@
   color: var(--text-tertiary);
   text-align: center;
   font-weight: 500;
-}
-
-/* 步骤4专用进度条样式 */
-.floating-model-progress-bar.step4-progress {
-  position: relative;
-  top: auto;
-  left: auto;
-  right: auto;
-  bottom: auto;
-  margin: var(--m-l) var(--p-m) var(--m-m) var(--p-m);
-  width: calc(100% - var(--p-m) * 2);
 }
 
 /* 错误对话框样式 */
@@ -1202,33 +1226,25 @@
   transform: scale(0.95);
 }
 
-/* 进度条 */
-.progress-container {
-  width: 600rpx;
-  height: 20rpx;
-  background-color: var(--bg-secondary);
-  border-radius: var(--r-pill);
-  margin-bottom: var(--m-l);
-  box-shadow: 0 1rpx 1rpx var(--shadow-light);
-  position: relative;
-  overflow: hidden;
-}
-
-.progress-bar {
+/* 进度条填充样式 - 统一所有进度条 */
+.progress-bar,
+.floating-model-progress-bar .progress-fill {
   height: 100%;
   background: linear-gradient(90deg, #7968E5, #E076D6, #FF7787);
-  border-radius: 8rpx;
-  transition: width 0.5s ease;
+  border-radius: var(--r-pill);
+  transition: width 0.8s ease;
   position: relative;
 }
-.progress-bar::after {
+/* 统一进度条光效 */
+.progress-bar::after,
+.floating-model-progress-bar .progress-fill::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
   animation: shimmer 2s infinite;
 }
 

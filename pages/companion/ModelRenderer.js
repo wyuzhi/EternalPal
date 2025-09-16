@@ -280,12 +280,12 @@ class ModelRenderer {
         const center = box.getCenter(new this.THREE.Vector3());
         const size = box.getSize(new this.THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 5.5 / maxDim; // 适当增大模型显示尺寸
+        const scale = 5 / maxDim; // 减小模型显示尺寸，避免过大
         object.scale.setScalar(scale);
         object.position.sub(center.multiplyScalar(scale));
-        object.position.y += 0.1; // 向上移动模型
-        this.camera.position.set(0, 1.5, 5); // 调整相机位置，降低视角并拉远距离
-        this.camera.lookAt(0, 0.2, 0); // 调整视角焦点，稍微向上看
+        object.position.y += 0.05; // 稍微向上移动模型，留出呼吸动画空间
+        this.camera.position.set(0, 1.2, 6); // 调整相机位置，拉远距离以显示完整模型
+        this.camera.lookAt(0, 0.1, 0); // 调整视角焦点，稍微向上看
 
         this.model = object;
         this.scene.add(this.model);
@@ -348,11 +348,11 @@ class ModelRenderer {
         if (this.rotationEnabled) {
           this.model.rotation.y += 0.3 * delta * intensity;
         }
-        // 上下浮动
-        const bob = Math.sin(t * 2.0) * 0.06 * intensity; // 约6%单位
+        // 上下浮动 - 减小幅度避免被遮挡
+        const bob = Math.sin(t * 2.0) * 0.03 * intensity; // 减小到3%单位
         this.model.position.y = this.baseModelY + bob;
-        // 轻微呼吸缩放
-        const breathe = 1.0 + Math.sin(t * 1.6) * 0.02 * intensity;
+        // 轻微呼吸缩放 - 减小幅度保持模型在画布内
+        const breathe = 1.0 + Math.sin(t * 1.6) * 0.015 * intensity; // 减小缩放幅度
         const s = this.baseModelScale * breathe;
         this.model.scale.setScalar(s);
       }
@@ -454,7 +454,7 @@ class ModelRenderer {
       const size = box.getSize(new this.THREE.Vector3());
       
       const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 6.0 / maxDim; // 使用新的默认缩放比例
+      const scale = 5 / maxDim; // 使用与初始化一致的缩放比例
       this.model.scale.setScalar(scale);
       this.baseModelScale = scale; // 更新基础缩放值
       

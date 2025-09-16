@@ -358,9 +358,7 @@ Page({
       { id: 8, text: '陪我聊聊天', isTest: false },
       { id: 9, text: '吃饭了没', isTest: false },
       { id: 10, text: '我们去散步吧', isTest: false },
-      { id: 11, text: '给你买了逗猫棒', isTest: false },
       { id: 12, text: '好想你啊', isTest: false },
-      { id: 13, text: '今天好冷', isTest: false }
     ];
     
     // 模拟AI回复数据
@@ -613,7 +611,7 @@ Page({
         petType: options.petType || '',
         generatedPetImage: options.generatedPetImage || '',
         // 设置默认占位图片URL，确保即使preview_url为空也能显示图片
-        preview_url: options.preview_url || 'images/petTypes/dog.svg',
+        preview_url: options.preview_url || 'images/logo.svg',
         model_url: options.model_url || '',
         petId: options.petId || ''
       });
@@ -628,7 +626,7 @@ Page({
     } else if (!this.data.preview_url) {
       // 如果没有preview_url，设置一个默认值用于演示
       this.setData({
-        preview_url: 'images/petTypes/dog.svg',
+        preview_url: 'images/logo.svg',
         petName: '模拟宠物',
         petType: 'dog',
         isImageMode: true,

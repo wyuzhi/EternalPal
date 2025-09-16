@@ -8,7 +8,7 @@ Page({
       // 宠物信息
       petName: '',
       petBirthday: '', // 宠物生日
-      petCreateTime: '', // 宠物创建时间
+      createdDate: '', // 宠物创建时间
     
     // 日历相关
     currentYear: new Date().getFullYear(),
@@ -102,11 +102,11 @@ Page({
         this.setData({
           petName: currentPet.name,
           petBirthday: currentPet.birthday || '',
-          petCreateTime: currentPet.createTime || ''
+          petCreateTime: currentPet.created_at || ''
         });
         console.log('[Memory] 宠物名称:', currentPet.name);
         console.log('[Memory] 宠物生日:', currentPet.birthday);
-        console.log('[Memory] 宠物创建时间:', currentPet.createTime);
+        console.log('[Memory] 宠物创建时间:', currentPet.created_at);
       } else {
         console.log('[Memory] 未找到宠物信息');
       }
@@ -325,11 +325,11 @@ Page({
       const isPetCreateTime = this.isPetCreateTime(date);
       
       // 确定显示的emoji，优先级：宠物生日 > 宠物创建时间 > 珍贵时刻
-      let displayEmoji = null;
+      let anniversaryEmoji = null;
       if (isPetBirthday) {
-        displayEmoji = '🎂'; // 生日蛋糕
+        anniversaryEmoji = '🎂'; // 生日蛋糕
       } else if (isPetCreateTime) {
-        displayEmoji = '🎉'; // 庆祝
+        anniversaryEmoji = '🎉'; // 庆祝
       }
       
       calendarDays.push({
@@ -341,7 +341,8 @@ Page({
         isFuture: isFuture,
         hasRecord: this.checkHasRecord(date),
         isPetBirthday: isPetBirthday,
-        isPetCreateTime: isPetCreateTime
+        isPetCreateTime: isPetCreateTime,
+        anniversaryEmoji: anniversaryEmoji
       });
     }
     

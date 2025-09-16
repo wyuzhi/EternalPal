@@ -289,11 +289,10 @@ page {
 
 /* 当前对话气泡样式 */
 .current-chat-bubble {
-  position: absolute;
-  top: 25%;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 100%;
+  /* position: relative; */
+  /* padding: 0 var(--p-l); */
+  margin-bottom: 640rpx;
+  max-width: 90%;
   width: auto;
   /* min-width: 400rpx; */
   z-index: 20;
@@ -413,15 +412,15 @@ page {
 @keyframes bubbleAppear {
   0% {
     opacity: 0;
-    transform: translateX(-50%) translateY(20rpx) scale(0.9);
+    transform:  translateY(20rpx) scale(0.9);
   }
   50% {
     opacity: 1;
-    transform: translateX(-50%) translateY(-5rpx) scale(1.02);
+    transform:  translateY(-5rpx) scale(1.02);
   }
   100% {
     opacity: 1;
-    transform: translateX(-50%) translateY(0) scale(1);
+    transform:  translateY(0) scale(1);
   }
 }
 
@@ -429,15 +428,15 @@ page {
 @keyframes bubbleDisappear {
   0% {
     opacity: 1;
-    transform: translateX(-50%) translateY(0) scale(1);
+    transform:  translateY(0) scale(1);
   }
   50% {
     opacity: 1;
-    transform: translateX(-50%) translateY(2rpx) scale(0.98);
+    transform:  translateY(2rpx) scale(0.98);
   }
   100% {
     opacity: 0;
-    transform: translateX(-50%) translateY(10rpx) scale(0.95);
+    transform:  translateY(10rpx) scale(0.95);
   }
 }
 

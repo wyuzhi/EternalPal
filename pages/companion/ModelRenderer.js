@@ -280,7 +280,7 @@ class ModelRenderer {
         const center = box.getCenter(new this.THREE.Vector3());
         const size = box.getSize(new this.THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 5 / maxDim; // 减小模型显示尺寸，避免过大
+        const scale = 6 / maxDim; // 减小模型显示尺寸，避免过大
         object.scale.setScalar(scale);
         object.position.sub(center.multiplyScalar(scale));
         object.position.y += 0.05; // 稍微向上移动模型，留出呼吸动画空间
@@ -454,7 +454,7 @@ class ModelRenderer {
       const size = box.getSize(new this.THREE.Vector3());
       
       const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 5 / maxDim; // 使用与初始化一致的缩放比例
+      const scale = 6 / maxDim; // 使用与初始化一致的缩放比例
       this.model.scale.setScalar(scale);
       this.baseModelScale = scale; // 更新基础缩放值
       

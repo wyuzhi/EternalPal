@@ -173,6 +173,7 @@ Page({
     petType: '',
     generatedPetImage: '',
     preview_url: '',
+    d2_url: '', // 宠物2D头像URL
     model_url: '',// 模型obj
     material_url: '',// 模型材质
     texture_url: '',// 模型纹理
@@ -663,6 +664,7 @@ Page({
             generatedPetImage: petInfo.generated_image || '',
             // 设置默认占位图片URL，确保即使preview_url为空也能显示图片
             preview_url: petInfo.preview_url || '/images/dog.png',
+            d2_url: petInfo.d2_url || '', // 宠物2D头像URL
             model_url: petInfo.model_url || '',// 模型obj
             material_url: petInfo.material_url || '',// 模型材质
             texture_url: petInfo.texture_url || '',// 模型纹理
@@ -929,6 +931,7 @@ Page({
         petType: updatedPet.type,
         generatedPetImage: updatedPet.generated_image || '',
         preview_url: updatedPet.preview_url || '',
+        d2_url: updatedPet.d2_url || '', // 宠物2D头像URL
         model_url: updatedPet.model_url || ''
       });
       
@@ -1713,13 +1716,14 @@ Page({
       petType: this.data.petType,
       petId: this.data.petId,
       preview_url: this.data.preview_url,
+      d2_url: this.data.d2_url, // 宠物2D头像URL
       generatedPetImage: this.data.generatedPetImage,
       intimacyPoints: this.data.intimacyPoints,
       intimacyLevel: this.data.intimacyLevel
     };
     
     // 构建跳转URL
-    const url = `/pages/petProfile/petProfile?petName=${encodeURIComponent(petInfo.petName)}&petType=${encodeURIComponent(petInfo.petType)}&petId=${encodeURIComponent(petInfo.petId)}&preview_url=${encodeURIComponent(petInfo.preview_url)}&generatedPetImage=${encodeURIComponent(petInfo.generatedPetImage)}&intimacyPoints=${petInfo.intimacyPoints}&intimacyLevel=${petInfo.intimacyLevel}`;
+    const url = `/pages/petProfile/petProfile?petName=${encodeURIComponent(petInfo.petName)}&petType=${encodeURIComponent(petInfo.petType)}&petId=${encodeURIComponent(petInfo.petId)}&preview_url=${encodeURIComponent(petInfo.preview_url)}&d2_url=${encodeURIComponent(petInfo.d2_url)}&generatedPetImage=${encodeURIComponent(petInfo.generatedPetImage)}&intimacyPoints=${petInfo.intimacyPoints}&intimacyLevel=${petInfo.intimacyLevel}`;
     
     console.log('[Companion] 跳转URL:', url);
     

@@ -683,9 +683,11 @@ Page({
           // 如果页面已经ready且还没有初始化3D渲染器，则立即初始化
           if (that.pageReady && petInfo.id && petInfo.id !== 'mock' && !that.modelRenderer) {
             console.log('[Companion] 页面已ready，立即初始化3D渲染器');
-            setTimeout(() => {
-              that.init3DRenderer();
-            }, 200);
+            that.init3DRenderer();
+          } else if (!that.pageReady) {
+            console.log('[Companion] 页面尚未ready，将在onReady中初始化3D渲染器');
+          } else if (that.modelRenderer) {
+            console.log('[Companion] 3D渲染器已存在，跳过初始化');
           }
           
           // 获取聊天记录
@@ -904,12 +906,10 @@ Page({
       this.scrollToBottom();
     }, 500);
     
-    // 如果有真实宠物ID且未初始化3D渲染器，则尝试初始化
+    // 如果有真实宠物ID且未初始化3D渲染器，则立即初始化
     if (this.data.petId && this.data.petId !== 'mock' && !this.modelRenderer) {
       console.log('[Companion] onReady中检测到需要初始化3D渲染器');
-      setTimeout(() => {
-        this.init3DRenderer();
-      }, 200);
+      this.init3DRenderer();
     } else {
       console.log('[Companion] onReady中跳过3D渲染器初始化，petId:', this.data.petId, 'modelRenderer存在:', !!this.modelRenderer);
     }

@@ -26,7 +26,7 @@
       <view class="pet-type-labels">
         <!-- 3D模型生成进度条 - 覆盖在标签文字上方 -->
         <view wx:if="{{showModelProgress && modelGenerationStarted && (currentStep === 2 || currentStep === 3 || currentStep === 4)}}" class="floating-model-progress-bar global-overlay">
-          <view class="progress-label">正在为你生成Linki形象...</view>
+          <view class="progress-label">正你的宠物正在赶来...</view>
           <view class="cat-progress-container">
             <view class="progress-track">
               <view class="progress-fill" style="width: {{modelGenerationProgress}}%;"></view>

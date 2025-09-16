@@ -80,12 +80,12 @@ Page({
     showRegenerateModal: false, // 是否显示重新生成弹窗
     
     // 3D模型生成状态管理
-    modelGenerationStarted: true, // 是否已开始3D模型生成
+    modelGenerationStarted: false, // 是否已开始3D模型生成
     modelTaskId: null, // 3D模型生成任务ID
     modelGenerationStatus: 'pending', // 3D模型生成状态: pending, generating, completed, failed
     modelGenerationProgress: 0, // 3D模型生成进度 (0-100)
     modelGenerationError: null, // 3D模型生成错误信息
-    showModelProgress: true, // 是否显示3D模型生成进度条
+    showModelProgress: false, // 是否显示3D模型生成进度条
     modelCheckInterval: null, // 3D模型状态检查定时器
     progressSimulationInterval: null, // 模拟进度条定时器
     

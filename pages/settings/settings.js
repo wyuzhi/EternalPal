@@ -169,17 +169,50 @@ Page({
       const petId = currentPet.id;
 
       // 删除本地存储的宠物相关数据
-      const keysToRemove = [
-        'currentPet',
-        'petProfile_' + petId,
-        'chatHistory_' + petId,
-        'intimacyData_' + petId,
-        'petSettings_' + petId
-      ];
-
+      const keysToRemove = ['currentPet'];
+      
+      // 如果有petId，删除特定宠物的数据
+      if (petId) {
+        keysToRemove.push(
+          'petProfile_' + petId,
+          'chatHistory_' + petId,
+          'intimacyData_' + petId,
+          'petSettings_' + petId
+        );
+      }
+      
+      // 清理所有相关的存储键
       keysToRemove.forEach(key => {
-        tt.removeStorageSync(key);
+        try {
+          tt.removeStorageSync(key);
+          console.log('已清理存储键:', key);
+        } catch (error) {
+          console.warn('清理存储键失败:', key, error);
+        }
       });
+      
+      // 额外清理：查找并删除所有可能的宠物相关数据
+      try {
+        const storageInfo = tt.getStorageInfoSync();
+        const allKeys = storageInfo.keys || [];
+        const petRelatedKeys = allKeys.filter(key => 
+          key.startsWith('petProfile_') || 
+          key.startsWith('chatHistory_') || 
+          key.startsWith('intimacyData_') || 
+          key.startsWith('petSettings_')
+        );
+        
+        petRelatedKeys.forEach(key => {
+          try {
+            tt.removeStorageSync(key);
+            console.log('额外清理存储键:', key);
+          } catch (error) {
+            console.warn('额外清理存储键失败:', key, error);
+          }
+        });
+      } catch (error) {
+        console.warn('获取存储信息失败:', error);
+      }
 
       // 如果有宠物ID，尝试从服务器删除
       if (petId) {
@@ -189,7 +222,12 @@ Page({
           success: (res) => {
             tt.hideLoading();
             console.log('服务器删除结果:', res);
-            this.showDeleteSuccess();
+            if (res.statusCode === 200) {
+              this.showDeleteSuccess();
+            } else {
+              console.error('服务器删除失败，状态码:', res.statusCode);
+              this.showDeleteSuccess(); // 本地数据已清除，仍然显示成功
+            }
           },
           fail: (error) => {
             tt.hideLoading();
@@ -216,15 +254,17 @@ Page({
   showDeleteSuccess: function() {
     tt.showToast({
       title: '宠物数据已删除',
-      icon: 'success'
+      icon: 'success',
+      duration: 2000
     });
 
     // 延迟跳转到宠物选择页面
     setTimeout(() => {
+      // 使用reLaunch确保清理页面栈，避免用户返回到已删除宠物的页面
       tt.reLaunch({
-        url: '/pages/pet/pet'
+        url: '/pages/guide/guide'
       });
-    }, 1500);
+    }, 2000);
   },
 
   // 关于应用

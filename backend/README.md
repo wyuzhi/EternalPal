@@ -185,7 +185,7 @@ sudo yum install python3 python3-pip python3-venv git -y  # CentOS
 ```bash
 # 创建项目目录
 mkdir -p /var/www/eternalpal
-cd /var/www/eternalpal
+cd /var/www/eternalpal/EternalPal
 
 # 克隆代码（假设您使用git管理代码）
 git clone <您的项目仓库地址> .
@@ -217,7 +217,7 @@ nano .env
 在.env文件中，修改以下配置：
 ```
 # 数据库URL - 可继续使用SQLite或切换到MySQL/PostgreSQL
-DATABASE_URL=sqlite:////var/www/eternalpal/backend/eternal_pal.db
+DATABASE_URL=sqlite:////var/www/eternalpal/EternalPal/backend/eternal_pal.db
 
 # 应用URL配置 - 设置为您的域名或服务器IP
 APP_URL=http://您的域名或服务器IP:5001

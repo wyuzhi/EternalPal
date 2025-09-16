@@ -22,3 +22,11 @@ miniprogram_npm/
 node_modules/
 
 /sample
+
+# 后端本地文件
+backend/chat_history/
+backend/images/
+backend/models/
+backend/storage/
+backend/uploads/
+backend/temp_images/

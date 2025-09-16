@@ -185,7 +185,7 @@ sudo yum install python3 python3-pip python3-venv git -y  # CentOS
 ```bash
 # 创建项目目录
 mkdir -p /var/www/eternalpal
-cd /var/www/eternalpal
+cd /var/www/eternalpal/EternalPal
 
 # 克隆代码（假设您使用git管理代码）
 git clone <您的项目仓库地址> .

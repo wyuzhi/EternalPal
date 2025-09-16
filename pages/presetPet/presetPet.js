@@ -341,10 +341,14 @@ Page({
           // 关闭弹窗
           that.closeAdoptModal();
           
-          // 延迟跳转到companion页面
+          // 获取后端返回的新宠物ID
+          const newPetId = res.data.data && res.data.data.pet_id ? res.data.data.pet_id : selectedPet.id;
+          console.log('跳转到companion页面，使用宠物ID:', newPetId);
+          
+          // 延迟跳转到companion页面，使用新创建的宠物ID
           setTimeout(() => {
             tt.navigateTo({
-              url: '/pages/companion/companion?petId=' + selectedPet.id
+              url: '/pages/companion/companion?petId=' + newPetId
             });
           }, 1500);
         } else {

@@ -2,7 +2,7 @@ const app = getApp();
 
 Page({
   data: {
-    currentStep: 1, // 初始步骤
+    currentStep: 4, // 初始步骤
     totalSteps: 5,
     petType: '猫咪',
     petName: '',
@@ -79,12 +79,12 @@ Page({
     showRegenerateModal: false, // 是否显示重新生成弹窗
     
     // 3D模型生成状态管理
-    modelGenerationStarted: false, // 是否已开始3D模型生成
+    modelGenerationStarted: true, // 是否已开始3D模型生成
     modelTaskId: null, // 3D模型生成任务ID
     modelGenerationStatus: 'pending', // 3D模型生成状态: pending, generating, completed, failed
     modelGenerationProgress: 0, // 3D模型生成进度 (0-100)
     modelGenerationError: null, // 3D模型生成错误信息
-    showModelProgress: false, // 是否显示3D模型生成进度条
+    showModelProgress: true, // 是否显示3D模型生成进度条
     modelCheckInterval: null, // 3D模型状态检查定时器
     progressSimulationInterval: null, // 模拟进度条定时器
     
@@ -262,17 +262,17 @@ Page({
   },
 
   onReady: function() {
-    // 页面渲染完成后，如果当前是步骤4，则创建粒子效果
-    if (this.data.currentStep === 4) {
-      this.createParticleEffect()
-    }
+    // // 页面渲染完成后，如果当前是步骤4，则创建粒子效果
+    // if (this.data.currentStep === 4) {
+    //   this.createParticleEffect()
+    // }
   },
 
   // 监听步骤变化，当进入步骤4时创建粒子效果
   observers: {
     'currentStep': function(newStep) {
       // 管理3D模型进度条显示
-      if (newStep >= 2 && newStep <= 4 && this.data.modelGenerationStarted) {
+      if (newStep >= 2 && newStep <= 5 && this.data.modelGenerationStarted) {
         this.setData({
           showModelProgress: true
         })
@@ -282,14 +282,14 @@ Page({
         })
       }
       
-      // 管理粒子效果和步骤4的新逻辑
-      if (newStep === 4) {
-        this.createParticleEffect()
-        // 新的步骤4逻辑：从80%开始，30秒内到99%，只进行状态轮询
-      } else {
-        // 离开步骤4时，清理粒子效果
-        this.clearParticleEffect()
-      }
+      // // 管理粒子效果和步骤4的新逻辑
+      // if (newStep === 4) {
+      //   this.createParticleEffect()
+      //   // 新的步骤4逻辑：从80%开始，30秒内到99%，只进行状态轮询
+      // } else {
+      //   // 离开步骤4时，清理粒子效果
+      //   this.clearParticleEffect()
+      // }
     }
   },
 
@@ -548,20 +548,6 @@ Page({
       petDescription: e.detail.value
     })
   },
-
-  // 创建Linki
-  createPet: function() {
-    // 验证当前步骤表单
-    if (!this.validateCurrentStep()) return
-
-    // 输出收集的所有数据作为调试信息
-    console.log('收集的宠物信息数据:', JSON.stringify(this.data, null, 2))
-
-    this.setData({
-      currentStep: 4
-    })
-  },
-
 
 
 
@@ -822,14 +808,12 @@ Page({
     }
   },
 
-  // 步骤4的新逻辑：从80%开始，30秒内到99%，只进行状态轮询
+  // 步骤4逻辑：延续步骤2和3的进度条，不重新初始化
   startStep4Logic: function() {
     console.log('开始步骤4逻辑：延续之前的3D模型生成进度')
     
-    // 设置初始状态
+    // 更新生成步骤文字，但不重置进度条状态
     this.setData({
-      modelGenerationStatus: 'generating',
-      showModelProgress: true,
       generationStepText: '正在完善细节...',
       estimatedTimeRemaining: '约30秒'
     })
@@ -841,41 +825,7 @@ Page({
     console.log('准备调用 startTipsRotation')
     this.startTipsRotation()
 
-    // 清除之前的定时器
-    if (this.data.progressSimulationInterval) {
-      clearInterval(this.data.progressSimulationInterval)
-    }
-    if (this.data.modelCheckInterval) {
-      clearInterval(this.data.modelCheckInterval)
-    }
-
-    // 启动进度条模拟：从当前进度延续到99%
-    const currentModelProgress = this.data.modelGenerationProgress || 0
-    const startProgress = Math.max(currentModelProgress, 80) // 确保至少从80%开始
-    const endProgress = 99
-    const duration = 30000 // 30秒
-    const interval = 100 // 每100ms更新一次
-    const progressIncrement = (endProgress - startProgress) / (duration / interval)
-    
-    console.log('步骤4进度条：从', startProgress + '%', '延续到', endProgress + '%')
-    let currentProgress = startProgress
-    const progressInterval = setInterval(() => {
-      currentProgress += progressIncrement
-      if (currentProgress >= endProgress) {
-        currentProgress = endProgress
-        clearInterval(progressInterval)
-      }
-      
-      this.setData({
-        modelGenerationProgress: Math.floor(currentProgress)
-      })
-    }, interval)
-
-    this.setData({
-      progressSimulationInterval: progressInterval
-    })
-
-    // 启动状态轮询
+    // 继续状态轮询（不清除之前的定时器，让进度条自然延续）
     if (this.data.petId) {
       this.startModelStatusPolling(this.data.petId)
     }
@@ -1143,6 +1093,12 @@ Page({
       })
     }
 
+    // 从第三步进入第四步时，更新宠物详细信息到数据库
+    if (currentStep === 3 && nextStep === 4) {
+      console.log('[步骤切换] 从第三步进入第四步，开始更新宠物详细信息')
+      this.updatePetDetailsToDatabase()
+    }
+
     // 如果进入步骤4，启动步骤4的逻辑
     if (nextStep === 4) {
       console.log('[步骤4] 进入步骤4，启动3D模型完善逻辑')
@@ -1398,21 +1354,21 @@ Page({
 
 
   // 保存宠物并跳转到 companion 页面
-  savePet: function() {
+  // 更新宠物详细信息到数据库（从第三步到第四步时调用）
+  updatePetDetailsToDatabase: function() {
     const that = this;
     
     // 检查是否有宠物ID
     if (!this.data.petId) {
+      console.error('[宠物信息更新] 宠物ID不存在，无法更新');
       tt.showToast({
-        title: '宠物ID不存在，无法保存',
+        title: '宠物ID不存在，无法更新',
         icon: 'none'
       });
       return;
     }
     
-    tt.showLoading({
-      title: '正在保存宠物信息...'
-    });
+    console.log('[宠物信息更新] 开始更新宠物详细信息到数据库');
     
     // 准备要更新的宠物信息
     const updateData = {
@@ -1426,7 +1382,7 @@ Page({
       description: this.data.petDescription
     };
     
-    console.log('准备更新的宠物信息:', updateData);
+    console.log('[宠物信息更新] 准备更新的宠物信息:', updateData);
     
     // 调用后端API更新宠物信息
     tt.request({
@@ -1434,48 +1390,67 @@ Page({
       method: 'PUT',
       data: updateData,
       success: function(res) {
-        tt.hideLoading();
-        console.log('宠物信息更新响应:', res);
+        console.log('[宠物信息更新] 宠物信息更新响应:', res);
         
         if (res.statusCode === 200 && res.data && res.data.status === 'success') {
-          // 更新成功，跳转到伴侣页面
+          console.log('[宠物信息更新] 宠物详细信息更新成功');
           tt.showToast({
-            title: '宠物信息保存成功！',
-            icon: 'success'
+            title: '宠物信息已更新',
+            icon: 'success',
+            duration: 1000
           });
-          
-          setTimeout(() => {
-            tt.navigateTo({
-              url: '/pages/companion/companion',
-              success: function(res) {
-                console.log('跳转成功', res)
-              },
-              fail: function(err) {
-                console.error('跳转失败', err)
-                tt.showToast({
-                  title: '跳转失败',
-                  icon: 'none'
-                })
-              }
-            });
-          }, 1500);
         } else {
           // 更新失败，显示错误信息
+          console.error('[宠物信息更新] 更新失败:', res.data?.message);
           tt.showToast({
-            title: '保存失败：' + (res.data?.message || '未知错误'),
+            title: '信息更新失败：' + (res.data?.message || '未知错误'),
             icon: 'none'
           });
         }
       },
       fail: function(error) {
-        tt.hideLoading();
-        console.error('更新宠物信息失败:', error);
+        console.error('[宠物信息更新] 更新宠物信息失败:', error);
         tt.showToast({
-          title: '网络错误，保存失败',
+          title: '网络错误，信息更新失败',
           icon: 'none'
         });
       }
     });
+  },
+
+  savePet: function() {
+    console.log('[步骤5] 完成宠物创建流程，准备跳转到伴侣页面');
+    
+    // 检查是否有宠物ID
+    if (!this.data.petId) {
+      tt.showToast({
+        title: '宠物ID不存在，无法跳转',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    // 显示完成提示并跳转到伴侣页面
+    tt.showToast({
+      title: '宠物创建完成！',
+      icon: 'success'
+    });
+    
+    setTimeout(() => {
+      tt.navigateTo({
+        url: '/pages/companion/companion',
+        success: function(res) {
+          console.log('[步骤5] 跳转到伴侣页面成功', res)
+        },
+        fail: function(err) {
+          console.error('[步骤5] 跳转到伴侣页面失败', err)
+          tt.showToast({
+            title: '跳转失败',
+            icon: 'none'
+          })
+        }
+      });
+    }, 1500);
   },
 
   // 创建粒子效果

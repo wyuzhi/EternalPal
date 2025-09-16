@@ -234,19 +234,22 @@
       </view>
       <!-- 生成步骤提示 -->
       <view class="generation-step-text">{{generationStepText}}</view>
-      
-      <!-- 进度信息 -->
-      <view class="progress-info">
-        <text class="progress-percent">{{generationProgress}}%</text>
-        <text class="remaining-time">剩余时间：{{estimatedTimeRemaining}}</text>
+      <!-- 3D模型生成进度条 - 步骤4专用 -->
+      <view wx:if="{{showModelProgress && modelGenerationStarted}}" class="floating-model-progress-bar step4-progress">
+        <view class="progress-label">小猫正在为你生成3D模型...</view>
+        <view class="cat-progress-container">
+          <view class="progress-track">
+            <view class="progress-fill" style="width: {{modelGenerationProgress}}%;"></view>
+          </view>
+          <view class="running-cat" style="left: {{modelGenerationProgress}}%;">
+            <image src="/images/guide/cat-running.svg" class="cat-icon" mode="aspectFit"></image>
+            <view class="cat-shadow"></view>
+          </view>
+        </view>
+        <view class="progress-text">{{modelGenerationProgress}}% 完成</view>
       </view>
-      
-      <!-- 进度条 -->
-      <view class="progress-container">
-        <view class="progress-bar" style="width: {{generationProgress}}%;"></view>
-      </view>
-    
-      
+
+
       <!-- 小贴士滚动区 -->
       <view class="tips-scroll-container">
         <view class="tips-scroll-content">

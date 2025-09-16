@@ -1073,6 +1073,17 @@
   font-weight: 500;
 }
 
+/* 步骤4专用进度条样式 */
+.floating-model-progress-bar.step4-progress {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  margin: var(--m-l) var(--p-m) var(--m-m) var(--p-m);
+  width: calc(100% - var(--p-m) * 2);
+}
+
 /* 错误对话框样式 */
 .error-dialog-overlay {
   position: fixed;

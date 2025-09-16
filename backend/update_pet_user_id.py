@@ -21,7 +21,7 @@ try:
     print()
     
     # 首先查询id为5的宠物当前信息
-    cursor.execute("SELECT id, name, user_id FROM pet WHERE id = 4")
+    cursor.execute("SELECT id, name, user_id FROM pet WHERE id = 6")
     pet_info = cursor.fetchone()
     
     if not pet_info:
@@ -31,7 +31,7 @@ try:
         print(f"找到宠物: ID={pet_id}, 名称={pet_name}, 当前user_id={current_user_id}")
         
         # 更新user_id为1
-        cursor.execute("UPDATE pet SET user_id = 1 WHERE id = 4")
+        cursor.execute("UPDATE pet SET user_id = 1 WHERE id = 6")
         
         # 检查是否有行被更新
         if cursor.rowcount > 0:

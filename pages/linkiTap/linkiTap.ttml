@@ -1,5 +1,5 @@
 <!-- NFC拉起页面 - linkiTap -->
-<view class="container">
+<view class="container" bindtap="onDoubleTap">
   <!-- 遮罩背景 -->
   <view class="modal-mask"></view>
   
@@ -50,7 +50,7 @@
     </view>
     
     <!-- 按钮区域 -->
-    <view class="action-section">
+    <view class="action-section" catchtap="stopPropagation">
       <!-- 自己拍自己：开启今日陪伴 -->
       <button class="start-companion-btn" wx:if="{{tapType === 'self'}}" bindtap="onStartCompanion">
         <text class="btn-text">走！今天也要一起玩</text>

@@ -173,6 +173,7 @@ Page({
     petType: '',
     generatedPetImage: '',
     preview_url: '',
+    d2_url: '', // 宠物2D头像URL
     model_url: '',// 模型obj
     material_url: '',// 模型材质
     texture_url: '',// 模型纹理
@@ -359,9 +360,7 @@ Page({
       { id: 8, text: '陪我聊聊天', isTest: false },
       { id: 9, text: '吃饭了没', isTest: false },
       { id: 10, text: '我们去散步吧', isTest: false },
-      { id: 11, text: '给你买了逗猫棒', isTest: false },
       { id: 12, text: '好想你啊', isTest: false },
-      { id: 13, text: '今天好冷', isTest: false }
     ];
     
     // 模拟AI回复数据
@@ -614,7 +613,7 @@ Page({
         petType: options.petType || '',
         generatedPetImage: options.generatedPetImage || '',
         // 设置默认占位图片URL，确保即使preview_url为空也能显示图片
-        preview_url: options.preview_url || 'images/petTypes/dog.svg',
+        preview_url: options.preview_url || 'images/logo.svg',
         model_url: options.model_url || '',
         petId: options.petId || ''
       });
@@ -629,7 +628,7 @@ Page({
     } else if (!this.data.preview_url) {
       // 如果没有preview_url，设置一个默认值用于演示
       this.setData({
-        preview_url: 'images/petTypes/dog.svg',
+        preview_url: 'images/logo.svg',
         petName: '模拟宠物',
         petType: 'dog',
         isImageMode: true,
@@ -666,6 +665,7 @@ Page({
             generatedPetImage: petInfo.generated_image || '',
             // 设置默认占位图片URL，确保即使preview_url为空也能显示图片
             preview_url: petInfo.preview_url || '/images/dog.png',
+            d2_url: petInfo.d2_url || '', // 宠物2D头像URL
             model_url: petInfo.model_url || '',// 模型obj
             material_url: petInfo.material_url || '',// 模型材质
             texture_url: petInfo.texture_url || '',// 模型纹理
@@ -1085,6 +1085,7 @@ Page({
         petType: updatedPet.type,
         generatedPetImage: updatedPet.generated_image || '',
         preview_url: updatedPet.preview_url || '',
+        d2_url: updatedPet.d2_url || '', // 宠物2D头像URL
         model_url: updatedPet.model_url || ''
       });
       
@@ -1875,13 +1876,14 @@ Page({
       petType: this.data.petType,
       petId: this.data.petId,
       preview_url: this.data.preview_url,
+      d2_url: this.data.d2_url, // 宠物2D头像URL
       generatedPetImage: this.data.generatedPetImage,
       intimacyPoints: this.data.intimacyPoints,
       intimacyLevel: this.data.intimacyLevel
     };
     
     // 构建跳转URL
-    const url = `/pages/petProfile/petProfile?petName=${encodeURIComponent(petInfo.petName)}&petType=${encodeURIComponent(petInfo.petType)}&petId=${encodeURIComponent(petInfo.petId)}&preview_url=${encodeURIComponent(petInfo.preview_url)}&generatedPetImage=${encodeURIComponent(petInfo.generatedPetImage)}&intimacyPoints=${petInfo.intimacyPoints}&intimacyLevel=${petInfo.intimacyLevel}`;
+    const url = `/pages/petProfile/petProfile?petName=${encodeURIComponent(petInfo.petName)}&petType=${encodeURIComponent(petInfo.petType)}&petId=${encodeURIComponent(petInfo.petId)}&preview_url=${encodeURIComponent(petInfo.preview_url)}&d2_url=${encodeURIComponent(petInfo.d2_url)}&generatedPetImage=${encodeURIComponent(petInfo.generatedPetImage)}&intimacyPoints=${petInfo.intimacyPoints}&intimacyLevel=${petInfo.intimacyLevel}`;
     
     console.log('[Companion] 跳转URL:', url);
     

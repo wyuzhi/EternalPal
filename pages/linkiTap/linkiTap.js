@@ -28,7 +28,12 @@ Page({
     debugMode: false,
     
     // 系统信息
-    safeAreaBottom: 0
+    safeAreaBottom: 0,
+    
+    // 双击切换场景相关
+    lastTapTime: 0,
+    tapCount: 0,
+    isSwitching: false
   },
 
   onLoad: function (options) {
@@ -424,46 +429,96 @@ Page({
     }, 1500);
   },
 
-  // 添加测试按钮（开发环境）
-  addTestButtons: function() {
-    console.log('[LinkiTap] 添加测试按钮');
-    // 这里可以添加测试按钮的逻辑，比如显示测试面板
-    tt.showModal({
-      title: '测试模式',
-      content: '当前场景: ' + this.data.tapType + '\n目标用户: ' + this.data.targetUserName,
-      showCancel: false,
-      confirmText: '确定'
-    });
+
+  // 阻止事件冒泡
+  stopPropagation: function(e) {
+    // 空函数，用于阻止事件冒泡
   },
 
-  // 测试方法：切换场景
-  testSwitchScenario: function(e) {
-    const scenario = e.currentTarget.dataset.scenario;
-    console.log('[LinkiTap] 测试切换场景:', scenario);
+  // 双击切换场景功能
+  onDoubleTap: function(e) {
+    const currentTime = Date.now();
+    const timeDiff = currentTime - this.data.lastTapTime;
     
-    let url = '/pages/linkiTap/linkiTap?debug=true';
+    // 如果两次点击间隔小于500ms，认为是双击
+    if (timeDiff < 500) {
+      this.data.tapCount++;
+      if (this.data.tapCount >= 2) {
+        this.switchScenario();
+        this.data.tapCount = 0;
+      }
+    } else {
+      this.data.tapCount = 1;
+    }
+    
+    this.data.lastTapTime = currentTime;
+  },
+
+  // 切换场景
+  switchScenario: function() {
+    if (this.data.isSwitching) {
+      return; // 防止重复切换
+    }
+    
+    this.setData({
+      isSwitching: true
+    });
+    
+    const scenarios = ['self', 'received', 'sent'];
+    const currentIndex = scenarios.indexOf(this.data.tapType);
+    const nextIndex = (currentIndex + 1) % scenarios.length;
+    const nextScenario = scenarios[nextIndex];
+    
+    console.log('[LinkiTap] 双击切换场景:', this.data.tapType, '->', nextScenario);
+    
+    // 显示切换提示
+    const scenarioNames = {
+      'self': '自己拍自己',
+      'received': '别人拍我',
+      'sent': '我拍别人'
+    };
+    
+    tt.showToast({
+      title: `切换到: ${scenarioNames[nextScenario]}`,
+      icon: 'none',
+      duration: 800
+    });
+    
+    // 直接更新场景数据
+    this.updateScenarioData(nextScenario);
+    
+    // 重置切换状态
+    setTimeout(() => {
+      this.setData({
+        isSwitching: false
+      });
+    }, 500);
+  },
+
+  // 更新场景数据
+  updateScenarioData: function(scenario) {
+    let targetUserName = '';
+    let targetUserAvatar = '';
     
     switch(scenario) {
-      case 'self':
-        // 自己拍自己
-        break;
       case 'received':
-        url += '&type=received&targetUser=测试用户';
+        targetUserName = 'Jason';
+        targetUserAvatar = '/images/logo.svg';
         break;
       case 'sent':
-        url += '&type=sent&targetUser=目标用户';
+        targetUserName = 'Tom';
+        targetUserAvatar = '/images/logo.svg';
         break;
     }
     
-    tt.redirectTo({
-      url: url,
-      success: function() {
-        console.log('[LinkiTap] 场景切换成功');
-      },
-      fail: function(error) {
-        console.error('[LinkiTap] 场景切换失败:', error);
-      }
+    this.setData({
+      tapType: scenario,
+      targetUserName: targetUserName,
+      targetUserAvatar: targetUserAvatar
     });
+    
+    // 重新设置开场白
+    this.setGreeting();
   },
 
   // 页面分享

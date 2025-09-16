@@ -76,7 +76,7 @@
           <view class="pet-image-container">
             <image 
               class="pet-image" 
-              src="{{item.2d_url || '/images/logo.svg'}}" 
+              src="{{item.d2_url || '/images/logo.svg'}}" 
               mode="aspectFill"
               lazy-load="true"
             />
@@ -120,7 +120,7 @@
           <view class="pet-image-container">
             <image 
               class="pet-image" 
-              src="{{item.2d_url || '/images/logo.svg'}}" 
+              src="{{item.d2_url || '/images/logo.svg'}}" 
               mode="aspectFill"
               lazy-load="true"
             />
@@ -172,7 +172,7 @@
         <view class="adopt-pet-info">
           <image 
             class="adopt-pet-image" 
-            src="{{selectedPet.preview_url || '/static/images/default-pet.png'}}" 
+            src="{{selectedPet.d2_url || '/static/images/default-pet.png'}}" 
             mode="aspectFill"
           />
           <view class="adopt-pet-details">
@@ -237,7 +237,7 @@
           <view class="card-pet-image">
             <image 
               class="pet-card-image" 
-              src="{{selectedPet.2d_url || '/images/logo.svg'}}" 
+              src="{{selectedPet.d2_url || '/images/logo.svg'}}" 
               mode="aspectFill"
             />
           </view>

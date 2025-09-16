@@ -2,7 +2,7 @@ const app = getApp();
 
 Page({
   data: {
-    currentStep: 4, // 初始步骤
+    currentStep: 1, // 初始步骤
     totalSteps: 5,
     petType: '猫咪',
     customTypeFilled: false, // 自定义类型是否已填写

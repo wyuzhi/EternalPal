@@ -25,16 +25,16 @@
       <!-- 宠物类型标签 -->
       <view class="pet-type-labels">
         <!-- 3D模型生成进度条 - 覆盖在标签文字上方 -->
-        <view wx:if="{{showModelProgress && modelGenerationStarted && (currentStep === 2 || currentStep === 3 || currentStep === 4)}}" class="floating-model-progress-bar">
-          <view class="progress-label">小猫正在为你生成3D模型...</view>
+        <view wx:if="{{showModelProgress && modelGenerationStarted && (currentStep === 2 || currentStep === 3 || currentStep === 4)}}" class="floating-model-progress-bar global-overlay">
+          <view class="progress-label">正在为你生成Linki形象...</view>
           <view class="cat-progress-container">
             <view class="progress-track">
               <view class="progress-fill" style="width: {{modelGenerationProgress}}%;"></view>
             </view>
-            <view class="running-cat" style="left: {{modelGenerationProgress}}%;">
+            <!-- <view class="running-cat" style="left: {{modelGenerationProgress}}%;">
               <image src="/images/guide/cat-running.svg" class="cat-icon" mode="aspectFit"></image>
               <view class="cat-shadow"></view>
-            </view>
+            </view> -->
           </view>
           <view class="progress-text">{{modelGenerationProgress}}% 完成</view>
         </view>
@@ -46,7 +46,7 @@
           data-type="{{item.type}}"
           data-index="{{index}}"
         >
-          {{item.name}}
+          <text wx:if="{{currentStep === 1}}">{{item.name}}</text>
         </view>
       </view>
     </view>
@@ -239,21 +239,26 @@
       </view>
       <!-- 生成步骤提示 -->
       <view class="generation-step-text">{{generationStepText}}</view>
+      
       <!-- 3D模型生成进度条 - 步骤4专用 -->
-      <view wx:if="{{showModelProgress && modelGenerationStarted}}" class="floating-model-progress-bar step4-progress">
-        <view class="progress-label">小猫正在为你生成3D模型...</view>
-        <view class="cat-progress-container">
-          <view class="progress-track">
-            <view class="progress-fill" style="width: {{modelGenerationProgress}}%;"></view>
-          </view>
-          <view class="running-cat" style="left: {{modelGenerationProgress}}%;">
-            <image src="/images/guide/cat-running.svg" class="cat-icon" mode="aspectFit"></image>
-            <view class="cat-shadow"></view>
+      <view class="progress-container">
+        <view class="progress-info">
+          <text class="remaining-time"></text><!-- 剩余时间：{{estimatedTimeRemaining}} -->
+          <text class="progress-percent">{{modelGenerationProgress}}%</text>
+        </view>
+        <view wx:if="{{showModelProgress && modelGenerationStarted}}" class="floating-model-progress-bar">
+          <!-- <view class="progress-label">正在为你生成3D模型...</view> -->
+          <view class="cat-progress-container">
+            <view class="progress-track">
+              <view class="progress-fill" style="width: {{modelGenerationProgress}}%;"></view>
+            </view>
+            <!-- <view class="running-cat" style="left: {{modelGenerationProgress}}%;">
+              <image src="/images/guide/cat-running.svg" class="cat-icon" mode="aspectFit"></image>
+              <view class="cat-shadow"></view>
+            </view> -->
           </view>
         </view>
-        <view class="progress-text">{{modelGenerationProgress}}% 完成</view>
       </view>
-
 
       <!-- 小贴士滚动区 -->
       <view class="tips-scroll-container">
@@ -332,9 +337,9 @@
       
       <!-- 步骤2: 返回 + 继续 -->
       <view wx:if="{{currentStep === 2}}" class="button-group">
-        <button class="back-btn {{modelGenerationStarted ? 'disabled' : ''}}" bindtap="prevStep">
+        <!-- <button class="back-btn {{modelGenerationStarted ? 'disabled' : ''}}" bindtap="prevStep">
           <image class="back-icon" src="/images/guide/continue.svg" mode="aspectFit"></image>
-        </button>
+        </button> -->
         <button class="next-btn" bindtap="nextStep">
           <text class="btn-text">继续</text>
           <image class="btn-icon" src="/images/guide/continue.svg" mode="aspectFit"></image>

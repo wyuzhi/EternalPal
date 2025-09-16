@@ -293,8 +293,8 @@ page {
   top: 25%;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
-  max-width: 400rpx;
+  width: 90%;
+  /* max-width: 400rpx; */
   z-index: 20;
   animation: bubbleAppear 0.3s ease-out;
 }
@@ -387,7 +387,7 @@ page {
   align-items: center;
   padding: var(--p-l);
   z-index: 99;
-  animation: bubbleAppear 0.3s ease-out;
+  animation: userMessageAppear 0.3s ease-out;
 }
 
 .user-message-bubble {
@@ -440,9 +440,45 @@ page {
   }
 }
 
+/* 用户消息出现动画 */
+@keyframes userMessageAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(20rpx) scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-5rpx) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 用户消息消失动画 */
+@keyframes userMessageDisappear {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(2rpx) scale(0.98);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(10rpx) scale(0.95);
+  }
+}
+
 /* 气泡消失状态 */
-.current-chat-bubble.hide, .user-message-display.hide {
+.current-chat-bubble.hide {
   animation: bubbleDisappear 0.3s ease-out;
+}
+
+.user-message-display.hide {
+  animation: userMessageDisappear 0.3s ease-out;
 }
 
 /* 加载覆盖层 */

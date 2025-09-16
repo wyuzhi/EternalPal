@@ -22,7 +22,7 @@
           </view>
         </view>
       </view>
-      <text class="days-suffix"> 天啦!</text>
+      <text class="days-suffix"> 天啦！</text>
     </view>
     <text class="days-subtitle">一起的日子，每天都算数</text>
   </view>

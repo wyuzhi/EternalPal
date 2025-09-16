@@ -29,8 +29,8 @@
         
         <view class="setting-item">
         <view class="setting-info">
-            <text class="setting-label">宠物语音回复</text>
-            <text class="setting-desc">自动播放宠物回复的语音</text>
+            <text class="setting-label">灵仔语音回复</text>
+            <text class="setting-desc">自动播放灵仔回复的语音</text>
         </view>
         <switch checked="{{settings.enableVoiceReply}}" bindchange="onVoiceReplyToggle" color="var(--primary-color)"></switch>
         </view>
@@ -71,8 +71,8 @@
     
     <view class="setting-item clickable danger" bindtap="onDeletePetData">
       <view class="setting-info">
-        <text class="setting-label">删除宠物数据</text>
-        <text class="setting-desc">删除当前宠物的所有数据，此操作不可恢复</text>
+        <text class="setting-label">删除灵仔数据</text>
+        <text class="setting-desc">删除当前灵仔的所有数据，此操作不可恢复</text>
       </view>
     </view>
   </view>

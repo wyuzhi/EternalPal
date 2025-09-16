@@ -1,12 +1,12 @@
 <view class="container">
   <!-- 背景图片层 -->
-  <image src="/images/scenario/spring_sunny.png" mode="aspectFill" class="background-image"></image>
+  <image src="/images/scenario/spring_sunny.jpg" mode="aspectFill" class="background-image"></image>
   
   <!-- 顶部导航 -->
   <view class="header">
     <!-- 点击打开记忆页面：/pages/memory/memory，包含陪伴天数、本月日历（打卡）、记忆记录、纪念日 -->
     <view class="header-icon" bindtap="onMemoryTap">
-      <image src="/images/mainPage/memory.svg" mode="aspectFit" class="memory-icon"></image>
+      <image src="/images/petProfile/date.svg" mode="aspectFit" class="memory-icon"></image>
     </view>
     
     <!-- 宠物信息 -->
@@ -19,7 +19,7 @@
         </view>
         <!-- 细节 -->
         <view class="pet-details">
-          <text class="pet-name">{{petName || '我的宠物'}}</text>
+          <text class="pet-name">{{petName || '我的Linki灵仔'}}</text>
           <view class="mood-status">
             <text class="mood-emoji">{{moodEmoji || '😊'}}</text>
             <text class="mood-text">{{moodText || '开心'}}</text>

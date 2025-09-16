@@ -334,8 +334,6 @@ def create_pet():
             gender=data.get('gender'),
             personality=data.get('personality'),
             hobby=data.get('hobby'),
-            personalities_desc=data.get('personalities_desc'),  # 性格描述字段
-            hobbies_desc=data.get('hobbies_desc'),  # 爱好描述字段
             story=data.get('story'),
             description=data.get('description'),  # 宠物外观描述字段
             generated_image=data.get('generated_image'),

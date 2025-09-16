@@ -1383,12 +1383,24 @@ Page({
     console.log('[宠物信息更新] 开始更新宠物详细信息到数据库');
     
     // 准备要更新的宠物信息
+    // 将补充性格描述合并到selectedPersonalities中
+    const allPersonalities = [...this.data.selectedPersonalities];
+    if (this.data.supplementPersonality && this.data.supplementPersonality.trim()) {
+      allPersonalities.push(this.data.supplementPersonality.trim());
+    }
+    
+    // 将补充爱好描述合并到selectedHobbies中
+    const allHobbies = [...this.data.selectedHobbies];
+    if (this.data.supplementHobby && this.data.supplementHobby.trim()) {
+      allHobbies.push(this.data.supplementHobby.trim());
+    }
+    
     const updateData = {
       name: this.data.petName,
       type: this.data.petType,
       gender: this.data.petGender,
-      personality: this.data.selectedPersonalities.join(', '),
-      hobby: this.data.selectedHobbies.join(', '),
+      personality: allPersonalities.join(', '),
+      hobby: allHobbies.join(', '),
       story: this.data.petStory,
       user_relation: this.data.userRelation,
       description: this.data.petDescription
@@ -1560,6 +1572,18 @@ Page({
     
     // TODO: 需要在宠物记录中添加反馈统计字段
     // 建议数据库加: total_likes, total_dislikes, feedback_score 等字段
+    // 将补充性格描述合并到selectedPersonalities中
+    const allPersonalities = [...that.data.selectedPersonalities];
+    if (that.data.supplementPersonality && that.data.supplementPersonality.trim()) {
+      allPersonalities.push(that.data.supplementPersonality.trim());
+    }
+    
+    // 将补充爱好描述合并到selectedHobbies中
+    const allHobbies = [...that.data.selectedHobbies];
+    if (that.data.supplementHobby && that.data.supplementHobby.trim()) {
+      allHobbies.push(that.data.supplementHobby.trim());
+    }
+    
     // TODO：创建独立的用户反馈表记录用户对宠物的具体反馈
     tt.request({
       url: app.globalData.API_BASE_URL + '/pets',
@@ -1569,10 +1593,10 @@ Page({
         type: taskInfo.petType,
         gender: that.data.petGender,
         // birthday: that.data.petBirthday,
-        personality: that.data.selectedPersonalities.join(','),
-        hobby: that.data.selectedHobbies.join(','),
+        personality: allPersonalities.join(','),
+        hobby: allHobbies.join(','),
         story: that.data.petStory,
-        description:that.data.petDescription,
+        description: that.data.petDescription,
         generated_image: that.data.petPhotos && that.data.petPhotos.length > 0 ? that.data.petPhotos[0] : '',
         user_relation: that.data.userRelation, // 宠物对用户的称呼
         user_id: taskInfo.userId

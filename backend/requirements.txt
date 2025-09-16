@@ -11,4 +11,4 @@ openai>=1.0.0
 pyttsx3>=2.90
 gTTS>=2.3.0
 # 可选：fish_audio_sdk (需要Python 3.10+)
-# fish_audio_sdk
+# fish_au

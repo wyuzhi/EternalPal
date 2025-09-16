@@ -100,8 +100,8 @@
         </view>
         <!-- 加载提示 -->
         <view tt:if="{{!modelLoaded}}" class="loading-overlay">
-          <loader size="50px" color="#333" speed="0.8s"></loader>
-          <progress tt:if="{{loadingProgress > 0 && loadingProgress < 100}}" percent="{{loadingProgress}}" stroke-width="4" activeColor="#07c160" backgroundColor="#EBEBEB" class="loading-progress"></progress>
+          <image tt:if="{{generatedPetImage}}" src="{{generatedPetImage}}" mode="aspectFit" class="loading-pet-image"></image>
+          <text class="loading-simple-text">{{modelPlaceholderText || '小主莫急，我的3d形象正在飞速赶来'}}</text>
         </view>
     </view>
   </view>

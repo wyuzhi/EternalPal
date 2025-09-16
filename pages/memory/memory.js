@@ -429,12 +429,6 @@ Page({
     
     console.log('[Memory] 开始加载记忆记录，宠物ID:', petId);
     
-    // 显示加载提示
-    tt.showLoading({
-      title: '加载记忆中...',
-      mask: true
-    });
-    
     // 获取聊天记录并生成真实日记
     tt.request({
       url: app.globalData.API_BASE_URL + '/pets/' + petId + '/chat_history',
@@ -511,12 +505,12 @@ Page({
         // 隐藏加载提示
         tt.hideLoading();
         
-        // 显示成功提示
-        tt.showToast({
-          title: '记忆加载完成',
-          icon: 'success',
-          duration: 1500
-        });
+        // // 显示成功提示
+        // tt.showToast({
+        //   title: '记忆加载完成',
+        //   icon: 'success',
+        //   duration: 1500
+        // });
       } else {
         console.log('[Memory] 没有生成有效的日记记录');
         that.setData({

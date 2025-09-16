@@ -30,3 +30,5 @@ backend/models/
 backend/storage/
 backend/uploads/
 backend/temp_images/
+backend/eternal_pal.db
+backend/.env

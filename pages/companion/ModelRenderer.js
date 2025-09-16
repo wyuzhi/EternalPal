@@ -31,6 +31,11 @@ class ModelRenderer {
   // 在抖音小程序环境中安全加载纹理（优先使用 canvas.createImage）
   loadTextureFromUrl(textureUrl) {
     return new Promise((resolve, reject) => {
+      if (!textureUrl) {
+        resolve(null);
+        return;
+      }
+      
       try {
         const creator = (this.offscreenCanvas && this.offscreenCanvas.createImage)
           || (this.canvas && this.canvas.createImage);
@@ -38,6 +43,7 @@ class ModelRenderer {
           const img = creator();
           img.onload = () => {
             try {
+              console.log('[ModelRenderer] 纹理图片加载完成:', textureUrl);
               const tex = new this.THREE.Texture(img);
               // 纹理质量与颜色空间配置（避免失真/偏灰）
               const isPOT = (n) => (n & (n - 1)) === 0;
@@ -62,15 +68,22 @@ class ModelRenderer {
               }
               tex.needsUpdate = true;
               resolve(tex);
-            } catch (e) { reject(e); }
+            } catch (e) { 
+              console.error('[ModelRenderer] 创建纹理对象失败:', e);
+              reject(e); 
+            }
           };
-          img.onerror = (e) => reject(e);
+          img.onerror = (e) => {
+            console.error('[ModelRenderer] 纹理图片加载失败:', e);
+            reject(new Error('纹理图片加载失败: ' + textureUrl));
+          };
           img.src = textureUrl;
           return;
         }
         // 兜底：使用Three自带的TextureLoader
         const loader = new this.THREE.TextureLoader();
         loader.load(textureUrl, (tex) => {
+          console.log('[ModelRenderer] 纹理加载成功:', textureUrl);
           tex.flipY = this.textureFlipY ? true : false;
           tex.minFilter = this.THREE.LinearFilter;
           tex.magFilter = this.THREE.LinearFilter;
@@ -83,8 +96,12 @@ class ModelRenderer {
             tex.encoding = this.THREE.sRGBEncoding;
           }
           resolve(tex);
-        }, undefined, (err) => reject(err));
+        }, undefined, (err) => {
+          console.error('[ModelRenderer] 纹理加载失败:', err);
+          reject(err);
+        });
       } catch (e) {
+        console.error('[ModelRenderer] 创建纹理加载器失败:', e);
         reject(e);
       }
     });
@@ -241,29 +258,34 @@ class ModelRenderer {
         }
         if (textureUrl) {
           this.loadTextureFromUrl(textureUrl).then((texture) => {
-            object.traverse((child) => {
-              if (child.isMesh) {
-                const material = child.material ? child.material.clone() : new this.THREE.MeshStandardMaterial();
-                material.map = texture;
-                material.needsUpdate = true;
-                // 统一使用物理或标准材质，启用金属和粗糙度默认值，贴图以 sRGB 显示
-                material.metalness = material.metalness != null ? material.metalness : 0.1;
-                material.roughness = material.roughness != null ? material.roughness : 0.6;
-                child.material = material;
-              }
-            });
+            if (texture) {
+              object.traverse((child) => {
+                if (child.isMesh) {
+                  const material = child.material ? child.material.clone() : new this.THREE.MeshStandardMaterial();
+                  material.map = texture;
+                  material.needsUpdate = true;
+                  // 统一使用物理或标准材质，启用金属和粗糙度默认值，贴图以 sRGB 显示
+                  material.metalness = material.metalness != null ? material.metalness : 0.1;
+                  material.roughness = material.roughness != null ? material.roughness : 0.6;
+                  child.material = material;
+                }
+              });
+              console.log('[ModelRenderer] 纹理应用成功');
+            }
           }).catch((e) => {
             console.warn('[ModelRenderer] 纹理加载失败，继续默认材质:', e);
           });
           // OBJ 的 UV 有时需要翻转V轴，提供快速测试开关
           if (this.textureFlipY) {
-            object.traverse((child) => {
-              if (child.isMesh && child.material && child.material.map) {
-                child.material.map.center = new this.THREE.Vector2(0.5, 0.5);
-                child.material.map.rotation = Math.PI; // 180度旋转等价于U/V翻转
-                child.material.map.needsUpdate = true;
-              }
-            });
+            setTimeout(() => {
+              object.traverse((child) => {
+                if (child.isMesh && child.material && child.material.map) {
+                  child.material.map.center = new this.THREE.Vector2(0.5, 0.5);
+                  child.material.map.rotation = Math.PI; // 180度旋转等价于U/V翻转
+                  child.material.map.needsUpdate = true;
+                }
+              });
+            }, 100); // 延迟100ms确保纹理完全加载
           }
         } else {
           let applied = 0;

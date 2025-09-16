@@ -452,7 +452,6 @@ page {
   left: 0;
   right: 0;
   bottom: 0;
-  /* background-color: rgba(255, 249, 240, 0.9); */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -461,9 +460,17 @@ page {
   z-index: 10;
 }
 
-.loading-progress {
-  width: 80%;
-  margin-top: 10px;
+.loading-simple-text {
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+}
+
+.loading-pet-image {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 20rpx;
+  margin-bottom: 20rpx;
 }
 
 /* 调试信息样式 */

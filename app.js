@@ -3,7 +3,7 @@ App({
     userInfo: null,
     hasLogin: false,
     hasGetUserProfile: false, // 是否已获取用户详细信息
-    API_BASE_URL: 'http://localhost:5001/api',
+    API_BASE_URL: 'http://115.190.57.202:5001/api',
     // 新增请求配置
     requestConfig: {
       timeout: 120000, // 设置为120秒

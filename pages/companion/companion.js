@@ -342,6 +342,7 @@ Page({
   // 3D模型渲染器实例
   modelRenderer: null,
   isInitializing3D: false, // 防止重复初始化的标记
+  loadedModels: new Map(), // 已加载的3D模型缓存
 
   // 初始化快捷话术
   initQuickReplies: function() {
@@ -844,6 +845,134 @@ Page({
   },
   
   // 加载3D模型
+  /*
+  // 模型文件缓存
+  modelCache: new Map(),
+  
+  // 网络状态检测
+  checkNetworkStatus: function() {
+    return new Promise((resolve) => {
+      tt.getNetworkType({
+        success: (res) => {
+          const networkType = res.networkType;
+          console.log('[Companion] 网络类型:', networkType);
+          
+          // 判断网络质量
+          let quality = 'good';
+          if (networkType === 'none') {
+            quality = 'none';
+          } else if (networkType === '2g') {
+            quality = 'poor';
+          } else if (networkType === '3g') {
+            quality = 'fair';
+          } else if (networkType === '4g' || networkType === '5g' || networkType === 'wifi') {
+            quality = 'good';
+          }
+          
+          resolve({ networkType, quality });
+        },
+        fail: () => {
+          console.warn('[Companion] 获取网络状态失败，假设网络良好');
+          resolve({ networkType: 'unknown', quality: 'good' });
+        }
+      });
+    });
+  },
+  
+  // 预加载模型文件（并行加载）
+  preloadModelFiles: function(modelUrl, materialUrl, textureUrl) {
+    const that = this;
+    const cacheKey = `${modelUrl}_${materialUrl || ''}_${textureUrl || ''}`;
+    
+    // 检查缓存
+    if (this.modelCache.has(cacheKey)) {
+      console.log('[Companion] 模型文件已缓存，跳过预加载');
+      return Promise.resolve(this.modelCache.get(cacheKey));
+    }
+    
+    console.log('[Companion] 开始并行预加载模型文件');
+    const promises = [];
+    const fileTypes = [];
+    
+    // 预加载OBJ文件
+    if (modelUrl) {
+      fileTypes.push('obj');
+      promises.push(
+        new Promise((resolve) => {
+          tt.request({
+            url: modelUrl,
+            method: 'GET',
+            success: (res) => {
+               if (res.statusCode === 200) {
+                 console.log('[Companion] OBJ模型文件下载完成');
+                 resolve({ type: 'obj', url: modelUrl, data: res.data });
+               } else {
+                 console.warn('[Companion] OBJ文件预加载失败: HTTP', res.statusCode);
+                 resolve(null);
+               }
+             },
+             fail: (error) => {
+               console.warn('[Companion] OBJ文件预加载失败:', error);
+               resolve(null);
+             }
+          });
+        })
+      );
+    }
+    
+    // 预加载材质文件
+    if (materialUrl) {
+      fileTypes.push('mtl');
+      promises.push(
+        new Promise((resolve) => {
+          tt.request({
+            url: materialUrl,
+            method: 'GET',
+            success: (res) => {
+               if (res.statusCode === 200) {
+                 console.log('[Companion] 材质文件下载完成');
+                 resolve({ type: 'mtl', url: materialUrl, data: res.data });
+               } else {
+                 console.warn('[Companion] 材质文件预加载失败: HTTP', res.statusCode);
+                 resolve(null);
+               }
+             },
+             fail: (error) => {
+               console.warn('[Companion] 材质文件预加载失败:', error);
+               resolve(null);
+             }
+          });
+        })
+      );
+    }
+    
+    // 纹理文件由ModelRenderer自己处理，这里跳过预加载
+    if (textureUrl) {
+      console.log('[Companion] 纹理文件将由ModelRenderer处理:', textureUrl);
+    }
+    
+    console.log('[Companion] 并行加载文件类型:', fileTypes);
+    
+    return Promise.all(promises).then(results => {
+      const cache = {};
+      let successCount = 0;
+      
+      results.forEach(result => {
+        if (result) {
+          cache[result.type] = result;
+          successCount++;
+        }
+      });
+      
+      // 缓存结果
+      this.modelCache.set(cacheKey, cache);
+      console.log(`[Companion] 模型文件预加载完成，成功: ${successCount}/${promises.length}`);
+      
+      return cache;
+    });
+  },
+  */
+
   load3DModel: function(modelUrl) {
     console.log('[Companion] 开始加载3D模型，URL:', modelUrl);
     const that = this;
@@ -853,33 +982,60 @@ Page({
       return;
     }
     
-    // 初始化加载状态
-    console.log('[Companion] 设置加载状态');
-    that.setData({
-      modelPlaceholderText: '模型加载中...',
-      loadingProgress: 0,
-      modelStatus: '加载中',
-      modelMessage: '正在下载模型文件'
-    });
-    
-    console.log('[Companion] 调用ModelRenderer.loadOBJModel');
-    this.modelRenderer.loadOBJModel(modelUrl, this.data.material_url, this.data.texture_url).then((model) => {
-      console.log('[Companion] 3D模型加载成功');
+    // 检查是否已经加载过这个模型
+    const modelKey = `${modelUrl}_${this.data.material_url || ''}_${this.data.texture_url || ''}`;
+    if (this.loadedModels.has(modelKey)) {
+      console.log('[Companion] 模型已缓存，直接使用');
+      const cachedModel = this.loadedModels.get(modelKey);
       
-      // 模型加载成功后启动动画循环
-            console.log('[Companion] 启动动画循环');
-            // 设置旋转状态
-            that.modelRenderer.setRotationEnabled(that.data.modelRotationEnabled);
-            that.modelRenderer.startAnimation();
+      // 直接使用缓存的模型
+      if (this.modelRenderer.model) {
+        this.modelRenderer.scene.remove(this.modelRenderer.model);
+      }
+      this.modelRenderer.model = cachedModel.clone();
+      this.modelRenderer.scene.add(this.modelRenderer.model);
+      
+      // 启动动画循环
+      that.modelRenderer.setRotationEnabled(that.data.modelRotationEnabled);
+      that.modelRenderer.startAnimation();
       
       that.setData({
         modelLoaded: true,
         modelPlaceholderText: '',
         isImageMode: false,
         firstLoadSuccess: true,
-        loadingProgress: 100,
-        modelStatus: '加载成功',
-        modelMessage: '模型已就绪，动画运行中'
+        modelStatus: '加载成功'
+      });
+      return;
+    }
+    
+    // 初始化加载状态
+    console.log('[Companion] 设置加载状态');
+    that.setData({
+      modelPlaceholderText: '小主莫急，我的3d形象正在飞速赶来',
+      modelStatus: '加载中'
+    });
+    
+    console.log('[Companion] 调用ModelRenderer.loadOBJModel');
+    this.modelRenderer.loadOBJModel(modelUrl, this.data.material_url, this.data.texture_url).then((model) => {
+      console.log('[Companion] 3D模型加载成功');
+      
+      // 缓存加载的模型
+      that.loadedModels.set(modelKey, model.clone());
+      console.log('[Companion] 模型已缓存，下次加载将更快');
+      
+      // 模型加载成功后启动动画循环
+      console.log('[Companion] 启动动画循环');
+      // 设置旋转状态
+      that.modelRenderer.setRotationEnabled(that.data.modelRotationEnabled);
+      that.modelRenderer.startAnimation();
+      
+      that.setData({
+        modelLoaded: true,
+        modelPlaceholderText: '',
+        isImageMode: false,
+        firstLoadSuccess: true,
+        modelStatus: '加载成功'
       });
     }).catch((error) => {
       console.error('[Companion] 加载3D模型异常:', error);
@@ -888,9 +1044,7 @@ Page({
         modelLoaded: false,
         modelPlaceholderText: '加载3D模型失败: ' + error.message,
         isImageMode: false,
-        loadingProgress: 0,
-        modelStatus: '加载失败',
-        modelMessage: error.message || '模型文件加载错误'
+        modelStatus: '加载失败'
       });
     });
   },
@@ -971,6 +1125,12 @@ Page({
       clearTimeout(this.delayShowTimer);
       this.delayShowTimer = null;
     }
+    
+    // 注意：这里不清理模型缓存，让缓存在应用生命周期内保持
+    // 这样切换聊天模式或重新进入页面时可以快速加载
+    // 如果需要释放内存，可以取消注释下面的代码：
+    // this.loadedModels.clear();
+    // console.log('[Companion] 模型缓存已清理');
   },
   
   // 测试3D模型渲染功能

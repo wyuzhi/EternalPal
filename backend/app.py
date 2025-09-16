@@ -1075,6 +1075,8 @@ def get_system_pets():
                 'personality': pet.personality,
                 'hobbies': pet.hobby,  # 注意数据库字段名是hobby
                 'story': pet.story,
+                'user_relation': pet.user_relation,
+                'd2_url':pet.d2_url,    
                 'description': pet.description,
                 'preview_url': pet.preview_url,
                 'model_url': pet.model_url,

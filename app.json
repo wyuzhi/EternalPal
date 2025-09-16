@@ -11,7 +11,9 @@
     "pages/linkiTap/linkiTap"
   ],
   "window": {
-    "navigationBarTitleText": "Linki"
+    "navigationBarTitleText": "Linki",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTextStyle": "black"
   },
   "privacy": {
     "requiredPrivateInfos": [

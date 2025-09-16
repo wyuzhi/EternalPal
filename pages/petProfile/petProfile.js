@@ -18,6 +18,7 @@ Page({
     
     // 图片
     petImage: '',
+    d2_url: '', // 宠物2D头像URL
     generatedPetImage: '',
     // modelUrl: '',
     
@@ -171,6 +172,7 @@ Page({
       
       // 图片和模型
       petImage: petInfo.preview_url || petInfo.generated_image || '',
+      d2_url: petInfo.d2_url || '', // 宠物2D头像URL
       generatedPetImage: petInfo.generated_image || '',
       modelUrl: petInfo.model_url || '',
       
